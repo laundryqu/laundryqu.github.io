@@ -3792,40 +3792,74 @@
     }
 
     // Helper meminta stream kamera langsung saat tombol diklik (tanpa jeda await sebelumnya)
+    // Helper meminta stream kamera langsung saat tombol diklik (Sistem Timeout Anti-Hang)
     async function getDirectCameraStream() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        const err = new Error('Browser tidak mendukung WebRTC getUserMedia.');
+        const err = new Error('Browser tidak mendukung akses kamera.');
         err.name = 'NotSupportedError';
         throw err;
       }
-      try {
-        return await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: currentCameraFacingMode } },
-          audio: false
+
+      return new Promise((resolve, reject) => {
+        let isDone = false;
+        
+        // Timeout 5 detik: Jika browser nge-hang/stuck tanpa memunculkan pop-up, kita paksa error
+        const timer = setTimeout(() => {
+          if (!isDone) {
+            isDone = true;
+            const err = new Error('Browser menahan akses kamera tanpa merespon (Timeout).');
+            err.name = 'TimeoutError';
+            reject(err);
+          }
+        }, 5000);
+
+        const attemptCamera = async () => {
+          try {
+            return await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: { ideal: currentCameraFacingMode } },
+              audio: false
+            });
+          } catch (firstErr) {
+            // Jika kamera belakang gagal, coba kamera apa saja (webcam laptop)
+            return await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          }
+        };
+
+        attemptCamera().then(stream => {
+          if (!isDone) {
+            isDone = true;
+            clearTimeout(timer);
+            resolve(stream);
+          } else {
+            // Jika terlanjur timeout tapi akhirnya nyala, matikan agar tidak bocor
+            stream.getTracks().forEach(t => t.stop());
+          }
+        }).catch(err => {
+          if (!isDone) {
+            isDone = true;
+            clearTimeout(timer);
+            reject(err);
+          }
         });
-      } catch (firstErr) {
-        // Fallback ke kamera apa pun yang tersedia di Laptop / PC
-        return await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: false
-        });
-      }
+      });
     }
 
-    // Helper pesan panduan jika izin kamera diblokir oleh Browser / Windows / VS Code
+    // Helper pesan panduan jika izin kamera diblokir oleh Browser / Windows
     function getCameraErrorGuideHtml(err) {
       const errName = (err && err.name) ? err.name : 'UnknownError';
       const isVsCodeWebview = /vscode|electron/i.test(navigator.userAgent);
 
       let causeText = 'Kamera belum diizinkan atau tidak terdeteksi.';
       if (isVsCodeWebview) {
-        causeText = 'Anda membuka web ini di dalam tab internal VS Code. Buka alamat localhost di browser Google Chrome / Edge.';
+        causeText = 'Anda membuka web di tab internal VS Code. Buka localhost di Google Chrome/Edge langsung.';
       } else if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
-        causeText = 'Izin kamera DIBLOKIR oleh pengaturan Browser atau Windows Anda.';
+        causeText = 'Izin kamera DIBLOKIR secara permanen oleh Browser atau Pengaturan Windows Anda.';
       } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
-        causeText = 'Tidak ada perangkat kamera/webcam yang terdeteksi aktif di perangkat ini.';
+        causeText = 'Tidak ada perangkat kamera/webcam yang terhubung di perangkat ini.';
       } else if (errName === 'NotReadableError' || errName === 'TrackStartError') {
-        causeText = 'Kamera sedang dipakai oleh aplikasi lain (Zoom, Meet, atau tab browser lain).';
+        causeText = 'Kamera sedang dipakai oleh aplikasi lain (Zoom, Meet, atau kamera bawaan).';
+      } else if (errName === 'TimeoutError') {
+        causeText = 'Pop-up izin kamera tidak merespon (Stuck). Hal ini sering terjadi jika Windows 10/11 memblokir akses kamera untuk Desktop Apps, atau izin browser tersembunyi.';
       }
 
       return `
@@ -3834,25 +3868,29 @@
             <i class="fa-solid fa-video-slash"></i>
           </div>
           <div class="space-y-1">
-            <p class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Status Kamera: ${errName}</p>
+            <p class="text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">Status: ${errName}</p>
             <p class="text-xs font-bold text-slate-100 leading-relaxed">${causeText}</p>
           </div>
-          <div class="text-left bg-slate-800/90 p-3 rounded-xl border border-slate-700 text-[11px] text-slate-300 space-y-1">
-            <p class="font-extrabold text-cyan-300">Cara Mengaktifkan Izin Kamera:</p>
-            <p>1. Klik <strong>ikon pengaturan / gembok</strong> di sebelah kiri alamat <code>${location.host || 'localhost'}</code> pada bar atas browser.</p>
-            <p>2. Ubah <strong>Camera (Kamera)</strong> menjadi <strong>Allow (Izinkan)</strong>.</p>
-            <p>3. Klik tombol biru di bawah untuk mencoba lagi.</p>
+          <div class="text-left bg-slate-800/90 p-3.5 rounded-xl border border-slate-700 text-[11px] text-slate-300 space-y-1.5 shadow-inner">
+            <p class="font-extrabold text-cyan-300"><i class="fa-solid fa-wrench"></i> Cara Mengatasi:</p>
+            <p>1. Klik <strong>Ikon Pengaturan (Tanda Gembok / 🔒)</strong> di pojok kiri atas (sebelah alamat <code>laundryqu.github.io</code>).</p>
+            <p>2. Cari menu <strong>Kamera (Camera)</strong> dan ubah menjadi <strong>Izinkan (Allow)</strong>.</p>
+            <p>3. <i>(Khusus Windows)</i> Buka Settings Windows > Privacy & Security > Camera > Aktifkan "Let desktop apps access your camera".</p>
           </div>
           <button
             type="button"
             onclick="window.retryCameraPermissionNow()"
-            class="w-full py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md transition-all"
+            class="w-full py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md transition-all mt-2"
           >
             <i class="fa-solid fa-rotate-right"></i>
-            <span>Minta Ulang Izin & Nyalakan Kamera</span>
+            <span>Coba Muat Ulang Kamera</span>
           </button>
         </div>
       `;
+    }
+
+    async function retryCameraPermissionNow() {
+      await openQrScannerModal(qrScanTargetMode);
     }
 
     async function retryCameraPermissionNow() {
@@ -4555,7 +4593,6 @@
 
     // Ekspos semua fungsi ke window agar onclick="window.namaFungsi()" 100% selalu aktif
     Object.assign(window, {
-      retryCameraPermissionNow,
       switchTab,
       goToHeroSlide,
       nextHeroSlide,
