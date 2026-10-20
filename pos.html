@@ -147,10 +147,6 @@
       border-top: 1px dashed #334155;
       margin: 4px 0;
     }
-    .thermal-double-divider {
-      border-top: 2px solid #0f172a;
-      margin: 4px 0;
-    }
     .thermal-express-banner {
       background-color: #0f172a;
       color: #ffffff;
@@ -244,7 +240,7 @@
   <div id="sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden md:hidden no-print"></div>
 
   <!-- =========================================================================
-       SIDEBAR NAVIGASI (DRAWER DI HP & STATIS DI DESKTOP)
+       SIDEBAR NAVIGASI (9 MODUL)
   ========================================================================== -->
   <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-slate-900 text-white flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shrink-0 shadow-2xl no-print">
     <!-- Brand Header -->
@@ -270,8 +266,8 @@
       <span id="live-clock-sidebar" class="font-mono text-slate-300 text-[11px]">00:00</span>
     </div>
 
-    <!-- Menu Navigasi 8 Modul -->
-    <nav class="flex-1 overflow-y-auto p-3 space-y-1.5">
+    <!-- Menu Navigasi 9 Modul -->
+    <nav class="flex-1 overflow-y-auto p-3 space-y-1">
       <button type="button" id="btn-tab-kasir" onclick="switchTab('kasir')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-bold transition bg-sky-600 text-white shadow-md">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-cash-register w-5 text-center"></i>
@@ -295,24 +291,31 @@
         <span id="nav-badge-pelunasan" class="px-2 py-0.5 text-[11px] font-mono font-bold rounded-full bg-rose-500 text-white">0</span>
       </button>
 
+      <button type="button" id="btn-tab-laporanharian" onclick="switchTab('laporanharian')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <span class="flex items-center justify-start gap-3 truncate">
+          <i class="fa-solid fa-file-Lines w-5 text-center"></i>
+          <span class="truncate">4. Laporan Harian Kasir</span>
+        </span>
+      </button>
+
       <button type="button" id="btn-tab-karyawan" onclick="switchTab('karyawan')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-users-gear w-5 text-center"></i>
-          <span class="truncate">4. Data Karyawan</span>
+          <span class="truncate">5. Data Karyawan</span>
         </span>
       </button>
 
       <button type="button" id="btn-tab-member" onclick="switchTab('member')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-id-card-clip w-5 text-center"></i>
-          <span class="truncate">5. Member & Portal QR</span>
+          <span class="truncate">6. Member & Portal QR</span>
         </span>
       </button>
 
       <button type="button" id="btn-tab-stok" onclick="switchTab('stok')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-boxes-stacked w-5 text-center"></i>
-          <span class="truncate">6. Stok & Pengeluaran</span>
+          <span class="truncate">7. Stok & Pengeluaran</span>
         </span>
         <span id="nav-badge-stok" class="hidden px-2 py-0.5 text-[11px] font-mono font-bold rounded-full bg-red-600 text-white">!</span>
       </button>
@@ -320,7 +323,7 @@
       <button type="button" id="btn-tab-keuangan" onclick="switchTab('keuangan')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-chart-pie w-5 text-center"></i>
-          <span class="truncate">7. Keuangan & Gaji Alur</span>
+          <span class="truncate">8. Keuangan & Gaji</span>
         </span>
         <i class="fa-solid fa-lock text-xs text-amber-400"></i>
       </button>
@@ -328,7 +331,7 @@
       <button type="button" id="btn-tab-setting" onclick="switchTab('setting')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-sliders w-5 text-center"></i>
-          <span class="truncate">8. Pengaturan & Paket</span>
+          <span class="truncate">9. Pengaturan & Paket</span>
         </span>
         <i class="fa-solid fa-lock text-xs text-amber-400"></i>
       </button>
@@ -352,7 +355,6 @@
 
     <!-- 4 KARTU RINGKASAN STATISTIK ATAS -->
     <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      <!-- Card 1: Sedang Diproses -->
       <div onclick="switchTab('progres')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
         <div>
           <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sedang Diproses</p>
@@ -364,7 +366,6 @@
         </div>
       </div>
 
-      <!-- Card 2: Siap Ambil / Antar -->
       <div onclick="switchTab('progres')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
         <div>
           <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Siap Ambil / Antar</p>
@@ -376,7 +377,6 @@
         </div>
       </div>
 
-      <!-- Card 3: Total Piutang (DP / Belum Bayar) -->
       <div onclick="switchTab('pelunasan')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
         <div>
           <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Piutang</p>
@@ -388,7 +388,6 @@
         </div>
       </div>
 
-      <!-- Card 4: Peringatan Stok Menipis -->
       <div onclick="switchTab('stok')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
         <div>
           <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Stok Menipis</p>
@@ -409,7 +408,7 @@
       <!-- HEADER PEMILIHAN KASIR / TAMPILAN KASIR AKTIF BESAR BERWARNA BIRU -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 sm:p-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
-          <!-- State 1: Belum Pilih Kasir (Instruksi Pilih Karyawan) -->
+          <!-- State 1: Belum Pilih Kasir -->
           <div id="kasir-gate-header-info">
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-700">
               <i class="fa-solid fa-user-check"></i> Pilih Karyawan Kasir
@@ -418,7 +417,7 @@
             <p class="text-xs text-slate-500">Klik nama karyawan yang bertugas di bawah ini agar form pembuatan nota terbuka.</p>
           </div>
 
-          <!-- State 2: Sudah Pilih Kasir (Tampilkan Nama Karyawan Besar & Berwarna Biru + Ganti Kasir) -->
+          <!-- State 2: Sudah Pilih Kasir (Nama Besar & Berwarna Biru + Ganti Kasir) -->
           <div id="kasir-selected-banner" class="hidden flex flex-wrap items-center gap-4">
             <div>
               <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Kasir Penerima Nota:</span>
@@ -431,7 +430,7 @@
             </div>
           </div>
 
-          <!-- Preview Nomor Nota & Pintasan Cetak Ulang -->
+          <!-- Preview Nomor Nota (Tanpa #) & Pintasan Cetak Ulang -->
           <div class="flex items-center gap-2.5 ml-auto">
             <button type="button" onclick="scrollToReprintSection()" class="px-3.5 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-extrabold transition flex items-center gap-1.5">
               <i class="fa-solid fa-clock-rotate-left"></i> Cetak Ulang Nota
@@ -445,20 +444,18 @@
 
         <!-- Daftar Pilihan Karyawan (Disembunyikan Otomatis Setelah Dipilih) -->
         <div id="radio-kasir-staff-wrapper" class="pt-3 border-t border-slate-100">
-          <div id="radio-kasir-staff" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <!-- Diisi dinamis oleh JS -->
-          </div>
+          <div id="radio-kasir-staff" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
         </div>
       </div>
 
-      <!-- STEP 2: CONTAINER FORM NOTA & PRATINJAU STRUK (TERSEMBUNYI SEBELUM KARYAWAN DIPILIH) -->
+      <!-- STEP 2: CONTAINER FORM NOTA & PRATINJAU STRUK -->
       <div id="kasir-workspace-container" class="hidden grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
 
         <!-- PANEL KIRI: FORM INPUT TRANSAKSI KASIR (7 KOLOM) -->
         <div class="xl:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-xs p-4 sm:p-6 space-y-6">
           <form id="form-kasir-order" onsubmit="submitNewOrder(event)" class="space-y-6">
 
-            <!-- 1. Radio Button Kategori Pelanggan (Pelanggan Umum vs Pelanggan Member) -->
+            <!-- 1. Kategori Pelanggan (Umum vs Member) -->
             <div class="space-y-3">
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">
                 <i class="fa-solid fa-users text-sky-600 mr-1"></i> Kategori Pelanggan <span class="text-rose-500">*</span>
@@ -496,7 +493,7 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <span id="kasir-member-tier-name" class="font-extrabold text-sm text-slate-900">-</span>
-                      <span id="kasir-member-tier-id" class="ml-1.5 font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700">#0000</span>
+                      <span id="kasir-member-tier-id" class="ml-1.5 font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700">0000</span>
                     </div>
                     <span id="kasir-member-tier-badge" class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800">SILVER (Diskon 5%)</span>
                   </div>
@@ -508,7 +505,51 @@
               </div>
             </div>
 
-            <!-- 2. Pilihan Paket Layanan (Ditempatkan Sebelum Berat/Set/Stelan agar Label Berubah Dinamis) -->
+            <!-- 2. Input Pelanggan, ALAMAT PELANGGAN (Selalu Tampil), Berat/Set/Stelan & Jumlah Pakaian (Pcs) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  Nama Pelanggan <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" id="kasir-cust-name" required oninput="updateReceiptPreview()" placeholder="Contoh: Ahmad Fauzi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  No. HP / WhatsApp <span class="text-rose-500">*</span>
+                </label>
+                <input type="tel" id="kasir-cust-phone" required oninput="updateReceiptPreview()" placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              </div>
+
+              <!-- KOLOM ALAMAT PELANGGAN (SELALU TAMPIL) -->
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  <i class="fa-solid fa-location-dot text-sky-600 mr-1"></i> Alamat Pelanggan
+                </label>
+                <input type="text" id="kasir-cust-address" oninput="updateReceiptPreview()" placeholder="Ketik alamat rumah / patokan lokasi pelanggan..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  <span id="kasir-weight-label">Berat Cucian (Kg)</span> <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                  <input type="text" id="kasir-weight" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan angka..." class="w-full px-3.5 py-2.5 pr-20 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                  <span id="kasir-weight-unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">Kg</span>
+                </div>
+                <p id="kasir-bundle-info" class="hidden text-[11px] font-bold text-indigo-700 mt-1"></p>
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  Jumlah Pakaian (Pcs) <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                  <input type="text" id="kasir-pcs" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan jumlah pcs..." class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">Pcs</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. PILIH PAKET LAYANAN (TEPAT DI BAWAH BERAT CUCIAN / JUMLAH PAKAIAN + CARI + SCROLL) -->
             <div class="space-y-3 pt-2 border-t border-slate-100">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">
@@ -519,8 +560,14 @@
                 </button>
               </div>
 
-              <!-- Radio Button Paket Layanan -->
-              <div id="radio-service-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <!-- Kolom Pencarian Paket Layanan -->
+              <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="kasir-service-search" oninput="renderKasirServiceRadios()" placeholder="Cari nama paket layanan (misal: Express, Setrika, Bundle 7Kg)..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              </div>
+
+              <!-- Radio Button Paket Layanan (Scrollable max-h-60 agar tidak panjang ke bawah) -->
+              <div id="radio-service-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto p-1 border border-slate-200 rounded-2xl bg-slate-50/60">
                 <!-- Diisi dinamis oleh JS -->
               </div>
 
@@ -537,47 +584,13 @@
                     <thead class="bg-indigo-100 text-indigo-900 font-bold">
                       <tr>
                         <th class="p-2">Paket Layanan</th>
-                        <th class="p-2 text-center">Qty</th>
+                        <th class="p-2 text-center">Qty / Hitungan</th>
                         <th class="p-2 text-right">Subtotal</th>
                         <th class="p-2 text-center">Hapus</th>
                       </tr>
                     </thead>
                     <tbody id="multi-service-cart-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
                   </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- 3. Input Wajib: Nama Pelanggan, No. HP/WA, Berat/Set/Stelan (Default Kosong), Jumlah Pakaian Pcs (Default Kosong) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  Nama Pelanggan <span class="text-rose-500">*</span>
-                </label>
-                <input type="text" id="kasir-cust-name" required oninput="updateReceiptPreview()" placeholder="Contoh: Ahmad Fauzi" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  No. HP / WhatsApp <span class="text-rose-500">*</span>
-                </label>
-                <input type="tel" id="kasir-cust-phone" required oninput="updateReceiptPreview()" placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  <span id="kasir-weight-label">Berat Cucian (Kg)</span> <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <input type="text" id="kasir-weight" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan angka..." class="w-full px-3.5 py-2.5 pr-16 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                  <span id="kasir-weight-unit" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">Kg</span>
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  Jumlah Pakaian (Pcs) <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <input type="text" id="kasir-pcs" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan jumlah pcs..." class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">Pcs</span>
                 </div>
               </div>
             </div>
@@ -633,10 +646,6 @@
 
                 <div id="pickup-map" class="border border-slate-300 shadow-inner"></div>
 
-                <div>
-                  <input type="text" id="kasir-cust-address" oninput="updateReceiptPreview()" placeholder="Alamat lengkap / patokan rumah pelanggan..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-white p-3 rounded-xl border border-slate-200 text-xs">
                   <div>
                     <span class="text-slate-400 block text-[10px] uppercase font-bold">Koordinat Pelanggan</span>
@@ -679,7 +688,7 @@
                     <i class="fa-solid fa-microphone"></i> Voice
                   </button>
                 </div>
-                <input type="text" id="kasir-cloth-details" oninput="updateReceiptPreview()" placeholder="Misal: Ada baju putih luntur / rincian..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                <input type="text" id="kasir-cloth-details" oninput="updateReceiptPreview()" placeholder="Misal: Ada pakaian luntur / rincian..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
               </div>
             </div>
 
@@ -689,9 +698,7 @@
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                   <i class="fa-solid fa-spray-can-sparkles text-sky-600 mr-1"></i> Pilihan Aroma Parfum
                 </label>
-                <div id="radio-perfume-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <!-- Diisi dinamis oleh JS -->
-                </div>
+                <div id="radio-perfume-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
               </div>
               <div class="sm:col-span-5">
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
@@ -704,7 +711,7 @@
               </div>
             </div>
 
-            <!-- 7. Pembayaran Otomatis (Status Otomatis, QRIS & Transfer Nonaktif, Nominal Bayar) -->
+            <!-- 7. Pembayaran Otomatis -->
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -802,11 +809,8 @@
             <!-- Area Cetak Gabungan Struk 1 & Struk 2 (#printArea) -->
             <div id="printArea" class="space-y-4">
 
-              <!-- ============================================================
-                   STRUK 1: COMPACT LENGKAP + 7 KETENTUAN + TTD KASIR
-              ============================================================= -->
+              <!-- STRUK 1: COMPACT LENGKAP + 7 KETENTUAN + TTD KASIR -->
               <div id="receipt-one-box" class="thermal-paper rounded-lg border border-slate-300 page-break-receipt">
-                <!-- Header Toko Padat -->
                 <div class="text-center">
                   <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 1 - NOTA PELANGGAN</div>
                   <img id="receipt-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 mx-auto object-contain mb-0.5" />
@@ -816,17 +820,15 @@
                   <div id="receipt-store-phone" class="text-[8.5px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
                 </div>
 
-                <!-- Banner Penanda Express / Super Express (Muncul Otomatis Jika Dipilih) -->
                 <div id="receipt-express-banner" class="hidden thermal-express-banner">
                   ⚡ LAYANAN EXPRESS ⚡
                 </div>
 
                 <div class="thermal-divider"></div>
 
-                <!-- Info Transaksi Padat -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between">
-                    <span>NOTA: <strong id="receipt-nota-id" class="text-[11px] font-extrabold">#000001</strong></span>
+                    <span>NO. NOTA: <strong id="receipt-nota-id" class="text-[11px] font-extrabold">000001</strong></span>
                     <span id="receipt-cust-type" class="font-bold">Umum</span>
                   </div>
                   <div class="flex justify-between">
@@ -842,6 +844,10 @@
                     <strong id="receipt-cust-name" class="truncate max-w-[150px]">-</strong>
                   </div>
                   <div class="flex justify-between">
+                    <span>Alamat:</span>
+                    <span id="receipt-cust-address" class="truncate max-w-[160px] text-right">-</span>
+                  </div>
+                  <div class="flex justify-between">
                     <span>Kurir/Rak:</span>
                     <span><span id="receipt-delivery-type">Datang Sendiri</span> / <strong id="receipt-rack">-</strong></span>
                   </div>
@@ -849,7 +855,6 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Rincian Layanan Padat -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div id="receipt-items-list" class="space-y-0.5 font-semibold"></div>
                   <div class="flex justify-between pt-0.5 border-t border-dotted border-slate-300">
@@ -866,7 +871,6 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Rincian Biaya Padat -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between">
                     <span>Subtotal / Ongkir:</span>
@@ -892,15 +896,14 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- 7 Ketentuan Baru Nota Laundry (Padat & Mudah Dibaca) -->
                 <div class="text-[8px] leading-tight space-y-0.5">
                   <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
                   <ol class="list-decimal pl-3 space-y-0">
                     <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-                    <li>Komplain kami terima maks 1x24 jam sejak pakaian diambil</li>
-                    <li>Pelanggan wajib memberitahu jika ada pakaian yg luntur.</li>
+                    <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
+                    <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
                     <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-                    <li>Barang tertinggal di saku bukan tanggung jawab kami.</li>
+                    <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
                     <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
                     <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
                   </ol>
@@ -908,7 +911,6 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Baris Bawah: QR Code di Kiri + Tanda Tangan Kasir di Kanan (Sangat Hemat Kertas) -->
                 <div class="flex items-center justify-between gap-2 pt-1">
                   <div class="text-center">
                     <div id="receipt-qrcode" class="bg-white p-0.5 rounded inline-block"></div>
@@ -927,9 +929,7 @@
                 --- &#9986; POTONG DI SINI (STRUK 2 ARSIP / TTD PELANGGAN) &#9986; ---
               </div>
 
-              <!-- ============================================================
-                   STRUK 2: COMPACT RINGKAS + QR + 7 KETENTUAN + TTD PELANGGAN
-              ============================================================= -->
+              <!-- STRUK 2: COMPACT RINGKAS + QR + 7 KETENTUAN + TTD PELANGGAN -->
               <div id="receipt-two-box" class="thermal-paper rounded-lg border border-slate-300">
                 <div class="text-center">
                   <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 2 - ARSIP KASIR</div>
@@ -939,18 +939,16 @@
                   <div id="receipt2-store-phone" class="text-[8.5px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
                 </div>
 
-                <!-- Banner Penanda Express / Super Express di Struk 2 -->
                 <div id="receipt2-express-banner" class="hidden thermal-express-banner">
                   ⚡ LAYANAN EXPRESS ⚡
                 </div>
 
                 <div class="thermal-divider"></div>
 
-                <!-- Hanya Field yang Diminta untuk Struk 2 -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between">
                     <span>NO. NOTA:</span>
-                    <strong id="receipt2-nota-id" class="text-[11px] font-extrabold">#000001</strong>
+                    <strong id="receipt2-nota-id" class="text-[11px] font-extrabold">000001</strong>
                   </div>
                   <div class="flex justify-between">
                     <span>Tgl Masuk:</span>
@@ -980,15 +978,14 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- 7 Ketentuan Baru Nota Laundry (Struk 2) -->
                 <div class="text-[8px] leading-tight space-y-0.5">
                   <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
                   <ol class="list-decimal pl-3 space-y-0">
                     <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-                    <li>Komplain kami terima maks 1x24 jam sejak pakaian diambil</li>
-                    <li>Pelanggan wajib memberitahu jika ada pakaian yg luntur.</li>
+                    <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
+                    <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
                     <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-                    <li>Barang tertinggal di saku bukan tanggung jawab kami.</li>
+                    <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
                     <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
                     <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
                   </ol>
@@ -996,7 +993,6 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Baris Bawah: QR Code di Kiri + Tanda Tangan Pelanggan di Kanan -->
                 <div class="flex items-center justify-between gap-2 pt-1">
                   <div class="text-center">
                     <div id="receipt2-qrcode" class="bg-white p-0.5 rounded inline-block"></div>
@@ -1016,16 +1012,14 @@
 
       </div>
 
-      <!-- =====================================================================
-           SEKSI RIWAYAT NOTA & CETAK ULANG NOTA (REPRINT)
-      ====================================================================== -->
+      <!-- SEKSI RIWAYAT NOTA, CETAK ULANG & HAPUS NOTA ADMIN (SEMUA NOMOR NOTA TERJAGA) -->
       <div id="reprint-history-section" class="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div>
             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-800">
-              <i class="fa-solid fa-print"></i> Arsip &amp; Cetak Ulang Struk
+              <i class="fa-solid fa-print"></i> Arsip Semua Nomor Nota &amp; Cetak Ulang
             </span>
-            <h3 class="text-base font-extrabold text-slate-900 mt-1">Riwayat Nota &amp; Cetak Ulang (Struk 1, Struk 2, atau Struk 3)</h3>
+            <h3 class="text-base font-extrabold text-slate-900 mt-1">Riwayat Seluruh Nomor Nota (Termasuk Nota Lunas &amp; Jejak Hapus Admin)</h3>
           </div>
           <div class="relative w-full sm:w-64">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -1033,28 +1027,24 @@
           </div>
         </div>
 
-        <div class="overflow-x-auto max-h-72">
+        <div class="overflow-x-auto max-h-80">
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold sticky top-0">
               <tr>
                 <th class="p-2.5 rounded-l-xl">No. Nota</th>
                 <th class="p-2.5">Waktu Masuk</th>
-                <th class="p-2.5">Pelanggan</th>
+                <th class="p-2.5">Pelanggan &amp; Alamat</th>
                 <th class="p-2.5">Paket Layanan</th>
                 <th class="p-2.5 text-right">Total &amp; Status</th>
-                <th class="p-2.5 text-center rounded-r-xl">Aksi Cetak Ulang Nota</th>
+                <th class="p-2.5 text-center rounded-r-xl">Aksi Cetak / Hapus Admin</th>
               </tr>
             </thead>
-            <tbody id="reprint-history-tbody" class="divide-y divide-slate-100 font-medium">
-              <!-- Diisi dinamis oleh JS -->
-            </tbody>
+            <tbody id="reprint-history-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- =====================================================================
-           POP-UP FLOATING RINCIAN KALKULASI TAGIHAN (MENGIKUTI SCROLL)
-      ====================================================================== -->
+      <!-- POP-UP FLOATING RINCIAN KALKULASI TAGIHAN (MENGIKUTI SCROLL) -->
       <div id="floating-calc-popup" class="hidden fixed bottom-4 right-4 z-40 w-80 sm:w-96 bg-slate-900/95 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-sky-500/40 floating-calc-popup no-print">
         <div class="flex items-center justify-between px-4 py-3 bg-slate-950/80 rounded-t-2xl border-b border-slate-800 cursor-pointer" onclick="toggleFloatingCalcPopup()">
           <div class="flex items-center gap-2">
@@ -1072,7 +1062,6 @@
         </div>
 
         <div id="floating-calc-body" class="p-4 space-y-2.5 text-xs">
-          <!-- Checkbox Otomatis Ribuan (.000) Default Ter-Cek di Rincian Kalkulasi Tagihan -->
           <div class="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 flex items-center justify-between">
             <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-amber-300">
               <input type="checkbox" id="kasir-auto-thousand" checked onchange="handleAutoThousandToggle(this.checked)" class="w-4 h-4 rounded text-sky-500 focus:ring-sky-400" />
@@ -1176,7 +1165,7 @@
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200">
             <div class="space-y-1">
               <div class="flex flex-wrap items-center gap-2">
-                <span id="wf-nota-id" class="font-mono text-2xl font-extrabold text-slate-900">#000001</span>
+                <span id="wf-nota-id" class="font-mono text-2xl font-extrabold text-slate-900">000001</span>
                 <span id="wf-express-badge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-600 text-white animate-pulse">⚡ EXPRESS</span>
                 <span id="wf-payment-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-700">LUNAS</span>
                 <span id="wf-delivery-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-sky-100 text-sky-700">Datang Sendiri</span>
@@ -1188,6 +1177,7 @@
               <p class="text-sm font-bold text-slate-700">
                 Pelanggan: <span id="wf-cust-name" class="text-slate-900">-</span>
                 (<span id="wf-cust-phone" class="font-mono text-xs text-sky-600">-</span>)
+                &bull; Alamat: <span id="wf-cust-address" class="text-xs text-slate-600">-</span>
               </p>
               <p id="wf-service-summary" class="text-xs text-slate-500 font-medium">Paket: -</p>
             </div>
@@ -1208,14 +1198,13 @@
               <button type="button" onclick="sendWorkflowWaUpdate()" class="px-3.5 py-2 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition">
                 <i class="fa-brands fa-whatsapp"></i> Kabari WA
               </button>
-              <button type="button" onclick="deleteOrderAdmin()" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition">
-                <i class="fa-solid fa-trash-can"></i> Hapus
+              <button type="button" onclick="deleteOrderAdmin(selectedWorkflowOrderId)" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition">
+                <i class="fa-solid fa-trash-can"></i> Hapus (Admin)
               </button>
             </div>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <!-- Form Merinci Pakaian & Tombol Cetak Struk 3 -->
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div>
@@ -1267,7 +1256,6 @@
               </div>
             </div>
 
-            <!-- Form & Daftar Tambah Barang Ditemukan di Pakaian -->
             <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-3">
               <div class="flex items-center justify-between">
                 <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-900">
@@ -1306,7 +1294,6 @@
     <section id="tab-pelunasan" class="tab-panel hidden space-y-5">
       <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
 
-        <!-- KIRI: DAFTAR NOTA DP & BELUM BAYAR (7 KOLOM) -->
         <div class="xl:col-span-7 bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div>
@@ -1353,7 +1340,6 @@
           <div id="pelunasan-list" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
         </div>
 
-        <!-- KANAN: FORM PELUNASAN LENGKAP KETIKA NOTA DIKLIK (5 KOLOM) -->
         <div class="xl:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4 sticky top-6">
           <div id="pelunasan-form-empty" class="py-12 text-center space-y-2 text-slate-400">
             <i class="fa-solid fa-cash-register text-4xl text-slate-300"></i>
@@ -1365,7 +1351,7 @@
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <span class="text-[11px] font-bold uppercase text-rose-600">Formulir Pembayaran / Pelunasan</span>
-                <h3 class="text-lg font-extrabold text-slate-900">Nota <span id="settle-nota-id" class="font-mono text-sky-600">#000001</span></h3>
+                <h3 class="text-lg font-extrabold text-slate-900">Nota <span id="settle-nota-id" class="font-mono text-sky-600">000001</span></h3>
               </div>
               <span id="settle-current-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-rose-100 text-rose-700">BELUM BAYAR</span>
             </div>
@@ -1473,7 +1459,98 @@
     </section>
 
     <!-- =======================================================================
-         TAB 4: DATA KARYAWAN (#tab-karyawan)
+         TAB 4: LAPORAN HARIAN KASIR / KARYAWAN (#tab-laporanharian) - TANPA PASSWORD
+    ======================================================================== -->
+    <section id="tab-laporanharian" class="tab-panel hidden space-y-5">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800">
+              <i class="fa-solid fa-clipboard-check"></i> Laporan Operasional Harian Karyawan
+            </span>
+            <h2 class="text-xl font-extrabold text-slate-900 mt-1">Laporan Keuangan Harian &amp; Audit Urutan Nomor Nota</h2>
+            <p class="text-xs text-slate-500">Halaman ini dapat diakses langsung oleh karyawan untuk pelaporan setoran harian. Seluruh nomor nota (termasuk yang dihapus Admin) tetap tercatat berurutan.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input type="date" id="daily-report-date-picker" onchange="renderDailyEmployeeReport()" class="px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-extrabold font-mono" />
+            <button type="button" onclick="printReportSection('laporanharian')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-print"></i> Cetak Laporan Harian
+            </button>
+            <button type="button" onclick="downloadPdfReport('laporanharian')" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-file-pdf"></i> Download PDF Harian
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Kartu Ringkasan Harian -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+            <span class="text-xs font-bold uppercase text-emerald-700">Uang Masuk Hari Ini (Tunai)</span>
+            <h3 id="daily-total-income" class="text-2xl font-extrabold font-mono text-emerald-900 mt-1">Rp 0</h3>
+            <p class="text-[11px] text-emerald-700 mt-1">Dari nota aktif (Nota dihapus tidak dihitung)</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200">
+            <span class="text-xs font-bold uppercase text-rose-700">Pengeluaran Hari Ini</span>
+            <h3 id="daily-total-expense" class="text-2xl font-extrabold font-mono text-rose-900 mt-1">Rp 0</h3>
+            <p class="text-[11px] text-rose-700 mt-1">Belanja operasional harian</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200">
+            <span class="text-xs font-bold uppercase text-sky-700">Setoran Bersih Kas Harian</span>
+            <h3 id="daily-net-cash" class="text-2xl font-extrabold font-mono text-sky-900 mt-1">Rp 0</h3>
+            <p class="text-[11px] text-sky-700 mt-1">Uang masuk dikurangi pengeluaran hari ini</p>
+          </div>
+        </div>
+
+        <!-- Tabel 1: Audit Urutan Nomor Nota Harian (Termasuk Nota Dihapus Admin) -->
+        <div class="space-y-2">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">
+            <i class="fa-solid fa-list-ol text-sky-600 mr-1"></i> Daftar Nota Masuk Tanggal Ini (Jejak Nomor Nota Lengkap)
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold">
+                <tr>
+                  <th class="p-3 rounded-l-xl">No. Nota</th>
+                  <th class="p-3">Jam &amp; Kasir</th>
+                  <th class="p-3">Pelanggan</th>
+                  <th class="p-3">Layanan</th>
+                  <th class="p-3 text-right">Total Nota</th>
+                  <th class="p-3 text-right">Uang Dibayar</th>
+                  <th class="p-3 text-center">Status / Audit Admin</th>
+                  <th class="p-3 text-center rounded-r-xl">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="daily-orders-audit-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tabel 2: Rincian Mutasi Kas Harian -->
+        <div class="space-y-2 pt-3 border-t border-slate-100">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-800">
+            <i class="fa-solid fa-money-bill-transfer text-emerald-600 mr-1"></i> Rincian Arus Kas Masuk &amp; Keluar Tanggal Ini
+          </h3>
+          <div class="overflow-x-auto max-h-72">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-700 uppercase font-extrabold">
+                <tr>
+                  <th class="p-3 rounded-l-xl">Jam</th>
+                  <th class="p-3">Keterangan</th>
+                  <th class="p-3">Kategori</th>
+                  <th class="p-3 text-center">Jenis</th>
+                  <th class="p-3 text-right rounded-r-xl">Nominal</th>
+                </tr>
+              </thead>
+              <tbody id="daily-cashflow-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         TAB 5: DATA KARYAWAN (#tab-karyawan)
     ======================================================================== -->
     <section id="tab-karyawan" class="tab-panel hidden space-y-5">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
@@ -1592,7 +1669,7 @@
     </section>
 
     <!-- =======================================================================
-         TAB 5: MEMBER, KARTU QR & PORTAL PELANGGAN (#tab-member)
+         TAB 6: MEMBER, KARTU QR & PORTAL PELANGGAN (#tab-member)
     ======================================================================== -->
     <section id="tab-member" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
@@ -1773,7 +1850,7 @@
     </section>
 
     <!-- =======================================================================
-         TAB 6: STOK BARANG & CATAT PENGELUARAN OPERASIONAL (#tab-stok)
+         TAB 7: STOK BARANG & CATAT PENGELUARAN OPERASIONAL (#tab-stok)
     ======================================================================== -->
     <section id="tab-stok" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
@@ -1836,7 +1913,7 @@
               <i class="fa-solid fa-money-bill-transfer"></i> Kas Keluar Operasional
             </span>
             <h2 class="text-lg font-extrabold text-slate-900 mt-1">Catat Pengeluaran Operasional</h2>
-            <p class="text-xs text-slate-500">Otomatis memotong Laba Bersih di Laporan Keuangan.</p>
+            <p class="text-xs text-slate-500">Otomatis memotong Kas Harian dan Laba Bersih di Laporan Keuangan.</p>
           </div>
 
           <form id="form-expense" onsubmit="saveOperationalExpense(event)" class="space-y-4">
@@ -1918,7 +1995,7 @@
     </section>
 
     <!-- =======================================================================
-         TAB 7: LAPORAN KEUANGAN & SISTEM GAJI PROPORSIONAL ALUR (#tab-keuangan)
+         TAB 8: KEUANGAN (BULANAN/TAHUNAN) & GAJI ALUR (#tab-keuangan) - KHUSUS ADMIN
     ======================================================================== -->
     <section id="tab-keuangan" class="tab-panel hidden space-y-6">
 
@@ -1928,7 +2005,7 @@
         </div>
         <div>
           <h2 class="text-lg font-extrabold text-slate-900">Area Terproteksi Password Admin</h2>
-          <p class="text-xs text-slate-500 mt-1">Masukkan password admin untuk mengakses Laporan Keuangan &amp; Sistem Gaji Proporsional Alur (Default: <code>1234</code>).</p>
+          <p class="text-xs text-slate-500 mt-1">Masukkan password Supervisor / Manajer / Direktur untuk mengakses Laporan Keuangan Bulanan/Tahunan &amp; Sistem Gaji.</p>
         </div>
         <div class="flex gap-2">
           <input type="password" id="finance-pass-input" onkeydown="if(event.key==='Enter') unlockFinanceTab()" placeholder="Password Admin..." class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-center font-mono text-sm font-bold focus:outline-none focus:ring-2 focus:ring-sky-500" />
@@ -1940,21 +2017,19 @@
 
       <div id="finance-unlocked-content" class="hidden space-y-6">
 
+        <!-- BAGIAN 1: FILTER PERIODE BULANAN & TAHUNAN (HARIAN SUDAH DIKELUARKAN KE MENU 4) -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-5">
           <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                <i class="fa-solid fa-chart-line"></i> Finansial &amp; Pembukuan Laundry QU
+              <span id="finance-active-admin-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                <i class="fa-solid fa-user-tie"></i> Diakses oleh: Admin
               </span>
-              <h2 class="text-xl font-extrabold text-slate-900 mt-1">Laporan Arus Kas &amp; Laba Bersih</h2>
+              <h2 class="text-xl font-extrabold text-slate-900 mt-1">Laporan Keuangan Bulanan &amp; Tahunan</h2>
+              <p class="text-xs text-slate-500">Laporan Harian kini berada di menu <strong>4. Laporan Harian Kasir</strong>.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
               <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200">
-                <label class="cursor-pointer">
-                  <input type="radio" name="finance_period" value="Harian" onchange="renderFinanceReport()" class="peer sr-only" />
-                  <span class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-white peer-checked:text-slate-900 peer-checked:shadow-2xs inline-block">Harian</span>
-                </label>
                 <label class="cursor-pointer">
                   <input type="radio" name="finance_period" value="Bulanan" checked onchange="renderFinanceReport()" class="peer sr-only" />
                   <span class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 peer-checked:bg-white peer-checked:text-slate-900 peer-checked:shadow-2xs inline-block">Bulanan</span>
@@ -1965,7 +2040,7 @@
                 </label>
               </div>
 
-              <input type="date" id="finance-date-picker" onchange="renderFinanceReport()" class="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold font-mono" />
+              <input type="month" id="finance-month-picker" onchange="renderFinanceReport()" class="px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold font-mono" />
               <button type="button" onclick="lockAdminPanels()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold flex items-center gap-1.5">
                 <i class="fa-solid fa-lock"></i> Kunci Admin
               </button>
@@ -1980,9 +2055,9 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
-              <span class="text-xs font-bold uppercase text-emerald-700">Total Pemasukan (Uang Masuk)</span>
+              <span class="text-xs font-bold uppercase text-emerald-700">Total Pemasukan Periode Ini</span>
               <h3 id="fin-total-income" class="text-2xl font-extrabold font-mono text-emerald-900 mt-1">Rp 0</h3>
-              <p class="text-[11px] text-emerald-700 mt-1">Dari pembayaran nota lunas &amp; cicilan DP</p>
+              <p class="text-[11px] text-emerald-700 mt-1">Dari pembayaran nota aktif (tidak termasuk nota dihapus)</p>
             </div>
             <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200">
               <span class="text-xs font-bold uppercase text-rose-700">Total Pengeluaran Operasional</span>
@@ -2012,6 +2087,7 @@
           </div>
         </div>
 
+        <!-- BAGIAN 2: SISTEM GAJI & BONUS PERSENTASE OMSET BERDASARKAN 7 ALUR PEKERJAAN -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-5">
           <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
@@ -2088,18 +2164,17 @@
     </section>
 
     <!-- =======================================================================
-         TAB 8: PENGATURAN TOKO, PRINTER THERMAL, PAKET LAYANAN & VOUCHER (#tab-setting)
+         TAB 9: PENGATURAN TOKO, USER ADMIN, PRINTER, PAKET BUNDLE & VOUCHER (#tab-setting)
     ======================================================================== -->
     <section id="tab-setting" class="tab-panel hidden space-y-6">
 
-      <!-- Layar Kunci Password Admin (#setting-lock-screen) -->
       <div id="setting-lock-screen" class="max-w-md mx-auto my-8 bg-white rounded-2xl border border-slate-200 p-6 text-center shadow-md space-y-4">
         <div class="w-14 h-14 rounded-2xl bg-slate-900 text-sky-400 flex items-center justify-center text-2xl mx-auto">
           <i class="fa-solid fa-sliders"></i>
         </div>
         <div>
-          <h2 class="text-lg font-extrabold text-slate-900">Pengaturan Sistem, Printer &amp; Paket Layanan</h2>
-          <p class="text-xs text-slate-500 mt-1">Masukkan password admin untuk mengubah profil toko, pengaturan printer thermal, paket layanan, parfum, dan voucher (Default: <code>1234</code>).</p>
+          <h2 class="text-lg font-extrabold text-slate-900">Pengaturan Sistem, User Admin &amp; Paket Layanan</h2>
+          <p class="text-xs text-slate-500 mt-1">Masukkan password Supervisor / Manajer / Direktur untuk membuka pengaturan.</p>
         </div>
         <div class="flex gap-2">
           <input type="password" id="setting-pass-input" onkeydown="if(event.key==='Enter') unlockSettingTab()" placeholder="Password Admin..." class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-center font-mono text-sm font-bold focus:outline-none focus:ring-2 focus:ring-sky-500" />
@@ -2109,17 +2184,17 @@
         </div>
       </div>
 
-      <!-- Konten Pengaturan (#setting-unlocked-content) -->
       <div id="setting-unlocked-content" class="hidden space-y-6">
 
         <!-- 1. Form Identitas Toko & Pengaturan Printer Thermal -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-          <!-- Identitas Toko (7 Kolom) -->
           <div class="xl:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h2 class="text-lg font-extrabold text-slate-900">Identitas Toko, Logo &amp; Keamanan Admin</h2>
-                <p class="text-xs text-slate-500">Perubahan otomatis diterapkan pada Sidebar, Header Struk 1-3, Kartu Member, dan Peta Kurir.</p>
+                <span id="setting-active-admin-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                  <i class="fa-solid fa-user-tie"></i> Diakses oleh: Admin
+                </span>
+                <h2 class="text-lg font-extrabold text-slate-900 mt-1">Identitas Toko &amp; Logo</h2>
               </div>
               <button type="button" onclick="lockAdminPanels()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold flex items-center gap-1.5">
                 <i class="fa-solid fa-lock"></i> Kunci Admin
@@ -2140,7 +2215,7 @@
                 <input type="text" id="set-store-phone" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold" />
               </div>
               <div>
-                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Admin <span class="text-rose-500">*</span></label>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Master Fallback <span class="text-rose-500">*</span></label>
                 <input type="text" id="set-admin-password" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold" />
               </div>
               <div class="md:col-span-2">
@@ -2272,46 +2347,100 @@
           </div>
         </div>
 
-        <!-- 2. Form Daftar Paket Layanan (Support Kg, Pcs, Set, Stelan + Edit + Toggle Default) -->
+        <!-- 2. MANAJEMEN USER ADMIN (SUPERVISOR, MANAJER, DIREKTUR DENGAN PASSWORD MASING-MASING) -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+          <div class="border-b border-slate-100 pb-3">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
+              <i class="fa-solid fa-user-lock"></i> Otoritas Multi-Admin
+            </span>
+            <h2 class="text-lg font-extrabold text-slate-900 mt-1">Manajemen User Admin (Supervisor, Manajer, Direktur)</h2>
+            <p class="text-xs text-slate-500">Setiap user Admin memiliki password masing-masing untuk membuka menu Keuangan/Pengaturan serta menghapus nota (tercatat di log audit Laporan Harian).</p>
+          </div>
+
+          <form onsubmit="saveAdminUser(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 items-end">
+            <input type="hidden" id="admin-user-edit-id" value="" />
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama Pejabat / Admin <span class="text-rose-500">*</span></label>
+              <input type="text" id="admin-user-name" required placeholder="Contoh: Ust. Ridwan" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold" />
+            </div>
+            <div class="sm:col-span-4">
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Pilih Jabatan <span class="text-rose-500">*</span></label>
+              <div class="grid grid-cols-3 gap-1.5">
+                <label class="cursor-pointer">
+                  <input type="radio" name="admin_user_role" value="Supervisor" checked class="peer sr-only" />
+                  <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700">Supervisor</div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="admin_user_role" value="Manajer" class="peer sr-only" />
+                  <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700">Manajer</div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="admin_user_role" value="Direktur" class="peer sr-only" />
+                  <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-800">Direktur</div>
+                </label>
+              </div>
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Khusus <span class="text-rose-500">*</span></label>
+              <input type="text" id="admin-user-password" required placeholder="Ketik password..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-mono font-extrabold" />
+            </div>
+            <div class="sm:col-span-2 flex gap-1.5">
+              <button type="submit" id="btn-submit-admin-user" class="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow">
+                + Simpan Admin
+              </button>
+              <button type="button" id="btn-cancel-admin-user" onclick="resetAdminUserForm()" class="hidden py-2 px-2.5 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs">
+                Batal
+              </button>
+            </div>
+          </form>
+
+          <div id="setting-admin-users-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- 3. Form Daftar Paket Layanan (Support Kg, Pcs, Set, Stelan, & BUNDLE KG Kelipatan 7Kg / 14Kg) -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-5">
           <div class="border-b border-slate-100 pb-3">
-            <h2 class="text-lg font-extrabold text-slate-900">Manajemen Paket Layanan &amp; Alur Pekerjaan</h2>
-            <p class="text-xs text-slate-500">Mendukung satuan <strong>Kg, Pcs, Set, dan Stelan</strong>. Paket yang mengandung kata <strong>Express</strong> atau <strong>Super Express</strong> otomatis menampilkan penanda khusus pada nota cetak.</p>
+            <h2 class="text-lg font-extrabold text-slate-900">Manajemen Paket Layanan (Termasuk Paket Bundle 7 Kg / 14 Kg)</h2>
+            <p class="text-xs text-slate-500">Untuk membuat <strong>Paket Bundle per 7 Kg atau 14 Kg</strong>, pilih Satuan Hitung <strong>Bundle Kg</strong> lalu isi <strong>Kapasitas Bundle = 7</strong> (atau 14). Jika cucian 6 Kg otomatis dihitung 1 Bundle (7 Kg), jika 8 Kg otomatis dihitung 2 Bundle (14 Kg).</p>
           </div>
 
           <form id="form-service-package" onsubmit="saveServicePackage(event)" class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
             <input type="hidden" id="srv-edit-id" value="" />
 
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-              <div class="sm:col-span-4">
+              <div class="sm:col-span-3">
                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama Paket Layanan <span class="text-rose-500">*</span></label>
-                <input type="text" id="srv-name" required placeholder="Contoh: Cuci Express / Bedcover Set" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold" />
+                <input type="text" id="srv-name" required placeholder="Misal: Paket Bundle 7 Kg" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold" />
               </div>
 
               <div class="sm:col-span-2">
                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Harga (Rp) <span class="text-rose-500">*</span></label>
-                <input type="text" id="srv-price" required oninput="formatThousandInput(this)" placeholder="Contoh: 7.000" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-mono font-extrabold" />
+                <input type="text" id="srv-price" required oninput="formatThousandInput(this)" placeholder="Contoh: 35.000" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-mono font-extrabold" />
               </div>
 
-              <!-- Radio Satuan Hitung: Kg, Pcs, Set, Stelan -->
-              <div class="sm:col-span-3">
+              <!-- Radio Satuan Hitung: Kg, Pcs, Set, Stelan, Bundle Kg -->
+              <div class="sm:col-span-4">
                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Satuan Hitung <span class="text-rose-500">*</span></label>
-                <div class="grid grid-cols-4 gap-1">
+                <div class="grid grid-cols-5 gap-1">
                   <label class="cursor-pointer">
-                    <input type="radio" name="srv_unit" value="Kg" checked class="peer sr-only" />
+                    <input type="radio" name="srv_unit" value="Kg" checked onchange="toggleBundleKgInput()" class="peer sr-only" />
                     <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700">Kg</div>
                   </label>
                   <label class="cursor-pointer">
-                    <input type="radio" name="srv_unit" value="Pcs" class="peer sr-only" />
+                    <input type="radio" name="srv_unit" value="Pcs" onchange="toggleBundleKgInput()" class="peer sr-only" />
                     <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700">Pcs</div>
                   </label>
                   <label class="cursor-pointer">
-                    <input type="radio" name="srv_unit" value="Set" class="peer sr-only" />
+                    <input type="radio" name="srv_unit" value="Set" onchange="toggleBundleKgInput()" class="peer sr-only" />
                     <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700">Set</div>
                   </label>
                   <label class="cursor-pointer">
-                    <input type="radio" name="srv_unit" value="Stelan" class="peer sr-only" />
+                    <input type="radio" name="srv_unit" value="Stelan" onchange="toggleBundleKgInput()" class="peer sr-only" />
                     <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[11px] font-bold peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700">Stelan</div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="srv_unit" value="Bundle" onchange="toggleBundleKgInput()" class="peer sr-only" />
+                    <div class="py-2 rounded-xl border-2 border-slate-200 bg-white text-center text-[10px] font-extrabold peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-800">Bundle Kg</div>
                   </label>
                 </div>
               </div>
@@ -2332,7 +2461,21 @@
               </div>
             </div>
 
-            <!-- Checkbox Pilihan Alur yang Dipakai -->
+            <!-- Box Tambahan Khusus Jika Satuan "Bundle Kg" Dipilih -->
+            <div id="srv-bundle-config-box" class="hidden p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h4 class="text-xs font-extrabold text-indigo-950 uppercase">
+                  <i class="fa-solid fa-box-open mr-1"></i> Pengaturan Kapasitas Paket Bundle (Per Berapa Kg?)
+                </h4>
+                <p class="text-[11px] text-indigo-700">Contoh: Isi <strong>7</strong> untuk Paket Bundle per 7 Kg (Cucian &le; 7 Kg dihitung 7 Kg / 1 Bundle; 8–14 Kg dihitung 14 Kg / 2 Bundle).</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-indigo-900">Kelipatan per:</span>
+                <input type="text" id="srv-bundle-kg" value="7" oninput="formatThousandInput(this)" class="w-20 px-3 py-1.5 rounded-xl border-2 border-indigo-400 bg-white text-center font-mono text-sm font-extrabold text-indigo-900" />
+                <span class="text-xs font-extrabold text-indigo-900">Kg / Bundle</span>
+              </div>
+            </div>
+
             <div class="space-y-2 pt-2 border-t border-slate-200">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <label class="block text-xs font-bold uppercase text-slate-700">
@@ -2387,13 +2530,11 @@
             </div>
           </form>
 
-          <!-- Daftar Paket Layanan Tersimpan -->
           <div id="setting-service-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
         </div>
 
-        <!-- 3. Form Pilihan Aroma Parfum (Support Edit + Toggle Default) & Manajemen Kode Voucher Promo -->
+        <!-- 4. Form Pilihan Aroma Parfum & Kode Voucher Promo -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <!-- Manajemen Aroma Parfum -->
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div>
               <h3 class="text-base font-extrabold text-slate-900">Daftar Pilihan Aroma Parfum</h3>
@@ -2418,7 +2559,6 @@
             <div id="setting-perfume-list" class="space-y-2"></div>
           </div>
 
-          <!-- Manajemen Kode Voucher Promo -->
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <h3 class="text-base font-extrabold text-slate-900">Manajemen Kode Voucher Promo</h3>
             <form onsubmit="saveVoucherPromo(event)" class="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
@@ -2478,14 +2618,13 @@
           <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-extrabold uppercase">
             Nota Tersimpan &amp; Siap Cetak
           </span>
-          <h3 id="modal-print-title" class="font-extrabold text-base mt-0.5">Pratinjau Cetak Nota #000001</h3>
+          <h3 id="modal-print-title" class="font-extrabold text-base mt-0.5">Pratinjau Cetak Nota 000001</h3>
         </div>
         <button type="button" onclick="closePostSavePrintModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Pilihan Tombol Cetak Cepat -->
       <div class="p-3 bg-slate-100 border-b border-slate-200 flex flex-wrap items-center justify-center gap-2">
         <button type="button" onclick="printModalReceiptSelection('BOTH')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold flex items-center gap-1.5 shadow">
           <i class="fa-solid fa-print"></i> Cetak Struk 1 &amp; 2 Sekaligus
@@ -2504,10 +2643,7 @@
         </button>
       </div>
 
-      <!-- Area Pratinjau Struk di Dalam Modal -->
-      <div id="modal-receipt-preview-body" class="p-4 overflow-y-auto bg-slate-50 flex-1 space-y-4">
-        <!-- Diisi dinamis oleh JS -->
-      </div>
+      <div id="modal-receipt-preview-body" class="p-4 overflow-y-auto bg-slate-50 flex-1 space-y-4"></div>
 
       <div class="p-3 bg-white border-t border-slate-200 flex justify-end">
         <button type="button" onclick="closePostSavePrintModal()" class="px-5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-extrabold">
@@ -2550,7 +2686,7 @@
 
   <script>
     // =========================================================================
-    // 1. KONFIGURASI FIREBASE, CLOUDINARY & KOORDINAT LAUNDRY QU
+    // 1. KONFIGURASI FIREBASE UNIVERSAL, CLOUDINARY & KOORDINAT LAUNDRY QU
     // =========================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyDsExL72DMNTQiN_MoaE1fVvdlj5sghn7c",
@@ -2575,6 +2711,7 @@
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
+      // Menggunakan referensi universal permanen sesuai permintaan
       dbRef = firebase.database().ref('laundry_qu_pos');
     } catch (err) {
       console.warn("Firebase berjalan dalam mode fallback LocalStorage:", err);
@@ -2623,17 +2760,17 @@
       <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
       <ol class="list-decimal pl-3 space-y-0">
         <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-        <li>Komplain kami terima maks 1x24 jam sejak pakaian diambil</li>
-        <li>Pelanggan wajib memberitahu jika ada pakaian yg luntur.</li>
+        <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
+        <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
         <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-        <li>Barang tertinggal di saku bukan tanggung jawab kami.</li>
+        <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
         <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
         <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
       </ol>
     `;
 
     // =========================================================================
-    // 3. STATE DATA APLIKASI TANPA DATA DUMMY (KOSONG MURNI)
+    // 3. STATE DATA APLIKASI UNIVERSAL TANPA DATA DUMMY
     // =========================================================================
     const STORAGE_KEY = 'laundry_qu_pos_local';
     let isRemoteUpdating = false;
@@ -2659,6 +2796,7 @@
         printerPageBreak: false,
         printerAutoPrint: false
       },
+      adminUsers: [],
       employees: [],
       services: [],
       perfumes: [],
@@ -2696,6 +2834,7 @@
     let selectedPayrollMonth = new Date().toISOString().slice(0, 7);
     let financeUnlocked = false;
     let settingUnlocked = false;
+    let currentLoggedInAdminLabel = "Admin";
     let isFloatingCalcMinimized = false;
 
     // State Peta Leaflet & QR Scanner
@@ -2707,8 +2846,33 @@
     let html5QrScanner = null;
     let currentQrScanMode = 'global';
 
+    // Helper Verifikasi Password Multi-Admin (Supervisor, Manajer, Direktur, atau Master Fallback)
+    function verifyAdminCredentials(inputPassword) {
+      const pass = String(inputPassword || '').trim();
+      if (!pass) return null;
+
+      const matchedUser = (appData.adminUsers || []).find(u => String(u.password) === pass);
+      if (matchedUser) {
+        return {
+          name: matchedUser.name,
+          role: matchedUser.role,
+          label: `${matchedUser.name} (${matchedUser.role})`
+        };
+      }
+
+      if (pass === String(appData.settings.adminPassword || '1234')) {
+        return {
+          name: 'Master Admin',
+          role: 'Direktur / Owner',
+          label: 'Master Admin'
+        };
+      }
+
+      return null;
+    }
+
     // =========================================================================
-    // 4. FORMAT ANGKA RIBUAN OTOMATIS & NOMOR BERURUT
+    // 4. FORMAT ANGKA RIBUAN OTOMATIS & NOMOR BERURUT (TIDAK PERNAH PAKAI ULANG NOTA DIHAPUS)
     // =========================================================================
     function formatThousandInput(inputEl) {
       if (!inputEl) return;
@@ -2746,6 +2910,7 @@
       return n.toLocaleString('id-ID');
     }
 
+    // Nomor nota dihitung dari seluruh riwayat nota (termasuk yang sudah dihapus admin) agar tidak pernah dipakai ulang
     function getNextOrderId() {
       const orders = appData.orders || [];
       if (orders.length === 0) return "000001";
@@ -2768,7 +2933,6 @@
       return String(maxNum + 1).padStart(4, '0');
     }
 
-    // Deteksi apakah daftar layanan mengandung paket Express / Super Express
     function getExpressHighlightText(itemsList) {
       if (!Array.isArray(itemsList) || itemsList.length === 0) return null;
       const names = itemsList.map(i => String(i.name || '').toLowerCase());
@@ -2782,11 +2946,20 @@
     }
 
     // =========================================================================
-    // 5. SINKRONISASI DATABASE (LOCALSTORAGE + FIREBASE REALTIME DB)
+    // 5. SINKRONISASI DATABASE (LOCALSTORAGE + AUTO-MIGRASI + FIREBASE)
     // =========================================================================
     function loadLocalData() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        let raw = localStorage.getItem(STORAGE_KEY);
+        // Migrasi otomatis jika sebelumnya tersimpan di kunci v5 atau v6
+        if (!raw) {
+          const prevV6 = localStorage.getItem('laundry_qu_pos_v6_clean_local');
+          const prevV5 = localStorage.getItem('laundry_qu_pos_v5_clean_local');
+          raw = prevV6 || prevV5 || null;
+          if (raw) {
+            localStorage.setItem(STORAGE_KEY, raw);
+          }
+        }
         if (raw) {
           const parsed = JSON.parse(raw);
           return mergeWithDefaults(parsed);
@@ -2801,6 +2974,7 @@
       const merged = JSON.parse(JSON.stringify(defaultState));
       if (!data || typeof data !== 'object') return merged;
       if (data.settings) merged.settings = { ...merged.settings, ...data.settings };
+      if (Array.isArray(data.adminUsers)) merged.adminUsers = data.adminUsers;
       if (Array.isArray(data.employees)) merged.employees = data.employees;
       if (Array.isArray(data.services)) merged.services = data.services;
       if (Array.isArray(data.perfumes)) merged.perfumes = data.perfumes;
@@ -2866,7 +3040,7 @@
     }
 
     // =========================================================================
-    // 6. NAVIGASI TAB, MOBILE DRAWER & STATISTIK ATAS
+    // 6. NAVIGASI TAB (9 MODUL), MOBILE DRAWER & STATISTIK ATAS
     // =========================================================================
     function toggleMobileSidebar() {
       const sidebar = document.getElementById('sidebar');
@@ -2883,7 +3057,7 @@
     }
 
     function switchTab(tabName) {
-      const tabs = ['kasir', 'progres', 'pelunasan', 'karyawan', 'member', 'stok', 'keuangan', 'setting'];
+      const tabs = ['kasir', 'progres', 'pelunasan', 'laporanharian', 'karyawan', 'member', 'stok', 'keuangan', 'setting'];
       tabs.forEach(t => {
         const panel = document.getElementById(`tab-${t}`);
         const btn = document.getElementById(`btn-tab-${t}`);
@@ -2912,6 +3086,7 @@
       }
       if (tabName === 'progres') renderProgresOrderRadios();
       if (tabName === 'pelunasan') renderPelunasanList();
+      if (tabName === 'laporanharian') renderDailyEmployeeReport();
       if (tabName === 'keuangan' && financeUnlocked) {
         renderFinanceReport();
         calculatePayrollTable();
@@ -2921,6 +3096,7 @@
     function lockAdminPanels() {
       financeUnlocked = false;
       settingUnlocked = false;
+      currentLoggedInAdminLabel = "Admin";
       document.getElementById('finance-lock-screen')?.classList.remove('hidden');
       document.getElementById('finance-unlocked-content')?.classList.add('hidden');
       document.getElementById('setting-lock-screen')?.classList.remove('hidden');
@@ -2930,11 +3106,12 @@
     }
 
     function updateTopStatistics() {
-      const orders = appData.orders || [];
-      const processingCount = orders.filter(o => o.currentStage < 6).length;
-      const readyCount = orders.filter(o => o.currentStage === 6).length;
+      // Hanya hitung nota yang tidak dihapus admin
+      const activeValidOrders = (appData.orders || []).filter(o => !o.isDeleted);
+      const processingCount = activeValidOrders.filter(o => o.currentStage < 6).length;
+      const readyCount = activeValidOrders.filter(o => o.currentStage === 6).length;
 
-      const unpaidOrders = orders.filter(o => o.payStatus !== 'Lunas');
+      const unpaidOrders = activeValidOrders.filter(o => o.payStatus !== 'Lunas');
       const totalReceivables = unpaidOrders.reduce((acc, o) => acc + Math.max(0, (o.total || 0) - (o.paidAmount || 0)), 0);
 
       const inventoryList = appData.inventory || [];
@@ -3138,7 +3315,7 @@
     }
 
     // =========================================================================
-    // 8. TAB 1: GERBANG KASIR BESAR BIRU, SATUAN SET/STELAN & 2 STRUK COMPACT
+    // 8. TAB 1: KASIR, CARI & SCROLL PAKET, LOGIKA BUNDLE 7KG/14KG & 2 STRUK
     // =========================================================================
     function selectCashierToOpenForm(empName) {
       selectedCashierOnKasir = empName;
@@ -3214,13 +3391,14 @@
       calculateKasirTotal();
     }
 
-    // Mengubah Label "Berat Cucian (Kg)" menjadi "Jumlah Cucian (Set)" atau "Jumlah Cucian (Stelan)" jika paket Set/Stelan dipilih
+    // Mengubah Label Kolom Berat menjadi Set, Stelan, atau Bundle Kg secara Dinamis
     function updateWeightFieldLabelByService() {
       const selectedSrvId = document.querySelector('input[name="kasir_service"]:checked')?.value;
       const srv = (appData.services || []).find(s => s.id === selectedSrvId);
       const labelEl = document.getElementById('kasir-weight-label');
       const unitEl = document.getElementById('kasir-weight-unit');
       const inputEl = document.getElementById('kasir-weight');
+      const bundleInfoEl = document.getElementById('kasir-bundle-info');
       if (!labelEl || !unitEl) return;
 
       const unit = srv ? (srv.unit || 'Kg') : 'Kg';
@@ -3228,15 +3406,88 @@
         labelEl.textContent = 'Jumlah Cucian (Set)';
         unitEl.textContent = 'Set';
         if (inputEl) inputEl.placeholder = 'Masukkan jumlah set...';
+        bundleInfoEl?.classList.add('hidden');
       } else if (unit === 'Stelan') {
         labelEl.textContent = 'Jumlah Cucian (Stelan)';
         unitEl.textContent = 'Stelan';
         if (inputEl) inputEl.placeholder = 'Masukkan jumlah stelan...';
+        bundleInfoEl?.classList.add('hidden');
+      } else if (unit === 'Bundle') {
+        const bKg = Number(srv.bundleKg) || 7;
+        labelEl.textContent = `Berat Timbangan (Paket Bundle per ${bKg} Kg)`;
+        unitEl.textContent = `Kg (Bundle ${bKg}Kg)`;
+        if (inputEl) inputEl.placeholder = `Ketik berat timbangan (Kg)...`;
+        bundleInfoEl?.classList.remove('hidden');
       } else {
         labelEl.textContent = 'Berat Cucian (Kg)';
         unitEl.textContent = 'Kg';
         if (inputEl) inputEl.placeholder = 'Masukkan berat (Kg)...';
+        bundleInfoEl?.classList.add('hidden');
       }
+    }
+
+    // Render Radio Paket Layanan dengan Fitur Pencarian & Scroll
+    function renderKasirServiceRadios() {
+      const srvContainer = document.getElementById('radio-service-list');
+      if (!srvContainer) return;
+
+      const services = appData.services || [];
+      if (services.length === 0) {
+        srvContainer.innerHTML = `
+          <div class="col-span-full p-4 rounded-xl bg-white border border-dashed border-slate-300 text-center text-xs font-bold text-slate-500">
+            Belum ada Data (Tambahkan paket layanan di menu 9. Pengaturan &amp; Paket)
+          </div>
+        `;
+        return;
+      }
+
+      const searchQ = (document.getElementById('kasir-service-search')?.value || '').trim().toLowerCase();
+      const currentSrv = document.querySelector('input[name="kasir_service"]:checked')?.value;
+      const defaultSrv = services.find(s => s.isDefault) || services[0];
+      const activeSrvId = (currentSrv && services.some(s => s.id === currentSrv)) ? currentSrv : defaultSrv.id;
+
+      const filtered = searchQ
+        ? services.filter(s => s.name.toLowerCase().includes(searchQ) || (s.unit || '').toLowerCase().includes(searchQ))
+        : services;
+
+      if (filtered.length === 0) {
+        srvContainer.innerHTML = `
+          <div class="col-span-full p-4 rounded-xl bg-white text-center text-xs font-bold text-slate-400">
+            Paket "${searchQ}" tidak ditemukan.
+          </div>
+        `;
+        return;
+      }
+
+      srvContainer.innerHTML = filtered.map((srv) => {
+        const checked = srv.id === activeSrvId;
+        const unitLabel = srv.estUnit === 'hours' ? 'Jam' : 'Hari';
+        const hasMerinci = Array.isArray(srv.activeStages) && srv.activeStages.includes(1);
+        const isExpress = getExpressHighlightText([{ name: srv.name }]) !== null;
+        const priceUnitLabel = srv.unit === 'Bundle' ? `${srv.bundleKg || 7} Kg` : (srv.unit || 'Kg');
+
+        return `
+          <label class="cursor-pointer">
+            <input type="radio" name="kasir_service" value="${srv.id}" ${checked ? 'checked' : ''} onchange="updateWeightFieldLabelByService(); calculateKasirTotal()" class="peer sr-only" />
+            <div class="p-3 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-sky-600 peer-checked:bg-sky-50 transition flex items-center justify-between gap-2 shadow-2xs">
+              <div>
+                <div class="flex flex-wrap items-center gap-1">
+                  <p class="text-xs font-extrabold text-slate-900">${srv.name}</p>
+                  ${srv.isDefault ? '<span class="px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 text-[9px] font-extrabold">DEFAULT</span>' : ''}
+                  ${isExpress ? '<span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-extrabold">EXPRESS</span>' : ''}
+                  ${srv.unit === 'Bundle' ? `<span class="px-1.5 py-0.5 rounded bg-indigo-600 text-white text-[9px] font-extrabold">BUNDLE ${srv.bundleKg || 7}KG</span>` : ''}
+                </div>
+                <p class="text-[11px] text-slate-500 font-medium mt-0.5">
+                  Estimasi: ${srv.estValue} ${unitLabel} &bull; ${hasMerinci ? '<span class="text-amber-700 font-bold">Wajib Rinci</span>' : '<span class="text-emerald-700 font-bold">Tanpa Rinci</span>'}
+                </p>
+              </div>
+              <span class="font-mono text-xs font-extrabold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200 shrink-0">
+                ${formatRupiah(srv.price)}/${priceUnitLabel}
+              </span>
+            </div>
+          </label>
+        `;
+      }).join('');
     }
 
     function renderKasirOptions() {
@@ -3244,7 +3495,6 @@
       const notaPrev = document.getElementById('kasir-nota-preview');
       if (notaPrev) notaPrev.textContent = nextId;
 
-      // 1. Radio Kasir Penerima
       const staffContainer = document.getElementById('radio-kasir-staff');
       const employees = appData.employees || [];
 
@@ -3253,7 +3503,7 @@
           staffContainer.innerHTML = `
             <div class="col-span-full p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center space-y-2">
               <p class="text-sm font-extrabold text-slate-600">Belum ada Data</p>
-              <p class="text-xs text-slate-500">Silakan tambahkan data karyawan terlebih dahulu pada menu <strong>4. Data Karyawan</strong> untuk mulai membuat nota.</p>
+              <p class="text-xs text-slate-500">Silakan tambahkan data karyawan terlebih dahulu pada menu <strong>5. Data Karyawan</strong> untuk mulai membuat nota.</p>
               <button type="button" onclick="switchTab('karyawan')" class="mt-1 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow">
                 <i class="fa-solid fa-user-plus mr-1"></i> Buka Menu Data Karyawan
               </button>
@@ -3280,54 +3530,9 @@
       }
 
       updateCashierHeaderDisplay();
-
-      // 2. Radio Paket Layanan (Pilih paket default otomatis jika ada)
-      const srvContainer = document.getElementById('radio-service-list');
-      const services = appData.services || [];
-      if (srvContainer) {
-        if (services.length === 0) {
-          srvContainer.innerHTML = `
-            <div class="col-span-full p-4 rounded-xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs font-bold text-slate-500">
-              Belum ada Data (Tambahkan paket layanan di menu 8. Pengaturan &amp; Paket)
-            </div>
-          `;
-        } else {
-          const currentSrv = document.querySelector('input[name="kasir_service"]:checked')?.value;
-          const defaultSrv = services.find(s => s.isDefault) || services[0];
-          const activeSrvId = (currentSrv && services.some(s => s.id === currentSrv)) ? currentSrv : defaultSrv.id;
-
-          srvContainer.innerHTML = services.map((srv) => {
-            const checked = srv.id === activeSrvId;
-            const unitLabel = srv.estUnit === 'hours' ? 'Jam' : 'Hari';
-            const hasMerinci = Array.isArray(srv.activeStages) && srv.activeStages.includes(1);
-            const isExpress = getExpressHighlightText([{ name: srv.name }]) !== null;
-            return `
-              <label class="cursor-pointer">
-                <input type="radio" name="kasir_service" value="${srv.id}" ${checked ? 'checked' : ''} onchange="updateWeightFieldLabelByService(); calculateKasirTotal()" class="peer sr-only" />
-                <div class="p-3 rounded-xl border-2 border-slate-200 bg-slate-50 peer-checked:border-sky-600 peer-checked:bg-sky-50 transition flex items-center justify-between gap-2">
-                  <div>
-                    <div class="flex items-center gap-1.5">
-                      <p class="text-xs font-extrabold text-slate-900">${srv.name}</p>
-                      ${srv.isDefault ? '<span class="px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 text-[9px] font-extrabold">DEFAULT</span>' : ''}
-                      ${isExpress ? '<span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-extrabold">EXPRESS</span>' : ''}
-                    </div>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">
-                      Estimasi: ${srv.estValue} ${unitLabel} &bull; ${hasMerinci ? '<span class="text-amber-700 font-bold">Wajib Rinci</span>' : '<span class="text-emerald-700 font-bold">Tanpa Rinci</span>'}
-                    </p>
-                  </div>
-                  <span class="font-mono text-xs font-extrabold text-sky-700 bg-white px-2.5 py-1 rounded-lg border border-sky-200 shrink-0">
-                    ${formatRupiah(srv.price)}/${srv.unit || 'Kg'}
-                  </span>
-                </div>
-              </label>
-            `;
-          }).join('');
-        }
-      }
-
+      renderKasirServiceRadios();
       updateWeightFieldLabelByService();
 
-      // 3. Radio Aroma Parfum (Pilih parfum default otomatis jika ada)
       const perfContainer = document.getElementById('radio-perfume-list');
       const perfumes = appData.perfumes || [];
       if (perfContainer) {
@@ -3426,7 +3631,7 @@
                 <input type="radio" name="kasir_member_pick" value="${m.id}" ${isChecked ? 'checked' : ''} onchange="selectMemberForKasir('${m.id}')" class="peer sr-only" />
                 <div class="p-2.5 rounded-xl border-2 border-amber-200 bg-white peer-checked:border-amber-600 peer-checked:bg-amber-100/60 transition flex items-center justify-between text-xs">
                   <div class="truncate">
-                    <span class="font-mono font-extrabold text-amber-800">#${m.id}</span>
+                    <span class="font-mono font-extrabold text-amber-800">${m.id}</span>
                     <span class="font-bold text-slate-800 ml-1">${m.name}</span>
                   </div>
                   <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900">${tData.tier} ${tData.discountPct}%</span>
@@ -3458,12 +3663,58 @@
       const tierBox = document.getElementById('kasir-member-tier-box');
       tierBox.classList.remove('hidden');
       document.getElementById('kasir-member-tier-name').textContent = member.name;
-      document.getElementById('kasir-member-tier-id').textContent = `#${member.id}`;
+      document.getElementById('kasir-member-tier-id').textContent = member.id;
       document.getElementById('kasir-member-tier-badge').textContent = `${tData.tier.toUpperCase()} (Diskon ${tData.discountPct}%)`;
       document.getElementById('kasir-member-tier-bar').style.width = `${tData.progressPct}%`;
       document.getElementById('kasir-member-tier-info').textContent = tData.infoText;
 
       calculateKasirTotal();
+    }
+
+    // Perhitungan Item Layanan (Mendukung Kg, Pcs, Set, Stelan, dan Bundle Kelipatan 7Kg / 14Kg)
+    function computeServiceItemCharge(srv, weightOrSetVal, pcsCount) {
+      if (!srv) return null;
+      const unit = srv.unit || 'Kg';
+
+      if (unit === 'Bundle') {
+        const bundleCap = Math.max(1, Number(srv.bundleKg) || 7);
+        const actualKg = Math.max(0, Number(weightOrSetVal) || 0);
+        const bundleMultiples = actualKg > 0 ? Math.ceil(actualKg / bundleCap) : 0;
+        const countedKg = bundleMultiples * bundleCap;
+        const subtotal = Math.round(bundleMultiples * Number(srv.price));
+
+        return {
+          serviceId: srv.id,
+          name: srv.name,
+          price: Number(srv.price),
+          unit: `Bundle ${bundleCap}Kg`,
+          qty: countedKg,
+          actualWeightKg: actualKg,
+          countedWeightKg: countedKg,
+          bundleMultiples,
+          bundleCap,
+          qtyDisplay: actualKg > 0 ? `${actualKg}Kg → ${countedKg}Kg (${bundleMultiples}x)` : `0Kg`,
+          subtotal,
+          estValue: Number(srv.estValue) || 2,
+          estUnit: srv.estUnit || 'days',
+          activeStages: Array.isArray(srv.activeStages) ? srv.activeStages : [1, 2, 3, 4, 5]
+        };
+      }
+
+      const qty = (unit === 'Pcs') ? pcsCount : weightOrSetVal;
+      const subtotal = Math.round(Number(srv.price) * qty);
+      return {
+        serviceId: srv.id,
+        name: srv.name,
+        price: Number(srv.price),
+        unit,
+        qty,
+        qtyDisplay: `${qty} ${unit}`,
+        subtotal,
+        estValue: Number(srv.estValue) || 2,
+        estUnit: srv.estUnit || 'days',
+        activeStages: Array.isArray(srv.activeStages) ? srv.activeStages : [1, 2, 3, 4, 5]
+      };
     }
 
     function addServiceToMultiCart() {
@@ -3474,23 +3725,13 @@
         return;
       }
 
-      const weightVal = parseFormattedNumber(document.getElementById('kasir-weight').value);
-      const pcsVal = parseFormattedNumber(document.getElementById('kasir-pcs').value);
-      const unit = srv.unit || 'Kg';
-      const rawQty = (unit === 'Pcs') ? pcsVal : weightVal;
-      const qtyUsed = rawQty > 0 ? rawQty : 1;
+      const weightVal = parseFormattedNumber(document.getElementById('kasir-weight').value) || 1;
+      const pcsVal = parseFormattedNumber(document.getElementById('kasir-pcs').value) || 1;
+      const calcItem = computeServiceItemCharge(srv, weightVal, pcsVal);
 
       multiServiceCart.push({
-        cartItemId: 'CART-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
-        serviceId: srv.id,
-        name: srv.name,
-        price: Number(srv.price),
-        unit,
-        qty: qtyUsed,
-        subtotal: Math.round(Number(srv.price) * qtyUsed),
-        estValue: Number(srv.estValue) || 2,
-        estUnit: srv.estUnit || 'days',
-        activeStages: Array.isArray(srv.activeStages) ? srv.activeStages : [1, 2, 3, 4, 5]
+        ...calcItem,
+        cartItemId: 'CART-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6)
       });
 
       renderMultiServiceCart();
@@ -3524,7 +3765,7 @@
       tbody.innerHTML = multiServiceCart.map(item => `
         <tr>
           <td class="p-2 font-bold text-slate-800">${item.name}</td>
-          <td class="p-2 text-center font-mono">${item.qty} ${item.unit}</td>
+          <td class="p-2 text-center font-mono">${item.qtyDisplay || (item.qty + ' ' + item.unit)}</td>
           <td class="p-2 text-right font-mono font-bold text-indigo-700">${formatRupiah(item.subtotal)}</td>
           <td class="p-2 text-center">
             <button type="button" onclick="removeMultiCartItem('${item.cartItemId}')" class="text-rose-600 hover:text-rose-800">
@@ -3604,16 +3845,29 @@
       const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value || 'Datang Sendiri';
       const distKm = parseFormattedNumber(document.getElementById('delivery-distance-km')?.value);
       const unitLabel = getActiveWeightUnitLabel();
+      const bundleInfoEl = document.getElementById('kasir-bundle-info');
 
       let subtotal = 0;
       if (multiServiceCart.length > 0) {
         subtotal = multiServiceCart.reduce((acc, item) => acc + item.subtotal, 0);
+        bundleInfoEl?.classList.add('hidden');
       } else {
         const selectedSrvId = document.querySelector('input[name="kasir_service"]:checked')?.value;
         const srv = (appData.services || []).find(s => s.id === selectedSrvId);
         if (srv) {
-          const multiplier = (srv.unit === 'Pcs') ? pcsCount : weightOrSetVal;
-          subtotal = Math.round(Number(srv.price) * multiplier);
+          const calcItem = computeServiceItemCharge(srv, weightOrSetVal, pcsCount);
+          subtotal = calcItem ? calcItem.subtotal : 0;
+
+          if (srv.unit === 'Bundle' && bundleInfoEl) {
+            bundleInfoEl.classList.remove('hidden');
+            if (weightOrSetVal > 0) {
+              bundleInfoEl.innerHTML = `<i class="fa-solid fa-box-open mr-1"></i> Berat timbangan <strong>${weightOrSetVal} Kg</strong> &rarr; Terhitung <strong>${calcItem.countedWeightKg} Kg</strong> (${calcItem.bundleMultiples}x Bundle @${calcItem.bundleCap} Kg = ${formatRupiah(subtotal)})`;
+            } else {
+              bundleInfoEl.innerHTML = `<i class="fa-solid fa-circle-info mr-1"></i> Paket Bundle per ${srv.bundleKg || 7} Kg: Cucian &le; ${srv.bundleKg || 7} Kg dihitung ${srv.bundleKg || 7} Kg, di atasnya berlaku kelipatan ${ (srv.bundleKg || 7) * 2 } Kg, dst.`;
+            }
+          } else {
+            bundleInfoEl?.classList.add('hidden');
+          }
         }
       }
 
@@ -3732,19 +3986,8 @@
       const srv = (appData.services || []).find(s => s.id === selectedSrvId) || appData.services[0];
       if (!srv) return [];
 
-      const unit = srv.unit || 'Kg';
-      const qty = (unit === 'Pcs') ? pcsCount : weightOrSetVal;
-      return [{
-        serviceId: srv.id,
-        name: srv.name,
-        price: Number(srv.price),
-        unit,
-        qty,
-        subtotal: Math.round(Number(srv.price) * qty),
-        estValue: Number(srv.estValue) || 2,
-        estUnit: srv.estUnit || 'days',
-        activeStages: Array.isArray(srv.activeStages) ? srv.activeStages : [1, 2, 3, 4, 5]
-      }];
+      const calcItem = computeServiceItemCharge(srv, weightOrSetVal, pcsCount);
+      return calcItem ? [calcItem] : [];
     }
 
     function computeDeadlineMsFromServices(servicesList, startMs = Date.now()) {
@@ -3782,6 +4025,7 @@
       const notaId = document.getElementById('kasir-nota-preview')?.textContent || '000001';
       const cashierName = selectedCashierOnKasir || '-';
       const custName = document.getElementById('kasir-cust-name')?.value || 'Pelanggan';
+      const custAddress = document.getElementById('kasir-cust-address')?.value || '-';
       const custType = document.querySelector('input[name="cust_category"]:checked')?.value || 'Umum';
       const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value || 'Datang Sendiri';
       const weightOrSetVal = parseFormattedNumber(document.getElementById('kasir-weight')?.value);
@@ -3800,7 +4044,6 @@
       const tot = currentCalculatedTotals;
       const payStatus = tot.autoPayStatus || 'Belum Bayar';
 
-      // Penanda Khusus Express / Super Express
       const expressText = getExpressHighlightText(items);
       const expBanner1 = document.getElementById('receipt-express-banner');
       const expBanner2 = document.getElementById('receipt2-express-banner');
@@ -3818,14 +4061,15 @@
         expBanner2?.classList.add('hidden');
       }
 
-      // STRUK 1
-      document.getElementById('receipt-nota-id').textContent = `#${notaId}`;
+      // STRUK 1 (Tanpa tanda # pada nomor nota)
+      document.getElementById('receipt-nota-id').textContent = notaId;
       document.getElementById('receipt-date-in').textContent = dateInFormatted;
       document.getElementById('receipt-eta').textContent = etaFormatted;
       document.getElementById('receipt-cashier-name').textContent = cashierName;
       document.getElementById('receipt-cust-name').textContent = custName;
+      document.getElementById('receipt-cust-address').textContent = custAddress;
       document.getElementById('receipt-cust-type').textContent = custType === 'Member' && selectedMemberOnKasir
-        ? `Member #${selectedMemberOnKasir.id}`
+        ? `Member ${selectedMemberOnKasir.id}`
         : 'Umum';
       document.getElementById('receipt-delivery-type').textContent = deliveryType;
 
@@ -3836,7 +4080,7 @@
         } else {
           itemsContainer.innerHTML = items.map(it => `
             <div class="flex justify-between">
-              <span>${it.name} (${it.qty} ${it.unit})</span>
+              <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
               <span>${formatRupiah(it.subtotal)}</span>
             </div>
           `).join('');
@@ -3868,8 +4112,8 @@
       }
       document.getElementById('receipt-sign-cashier').textContent = `( ${cashierName} )`;
 
-      // STRUK 2
-      document.getElementById('receipt2-nota-id').textContent = `#${notaId}`;
+      // STRUK 2 (Tanpa tanda # pada nomor nota)
+      document.getElementById('receipt2-nota-id').textContent = notaId;
       document.getElementById('receipt2-date-in').textContent = dateInFormatted;
       document.getElementById('receipt2-eta').textContent = etaFormatted;
       document.getElementById('receipt2-cashier-name').textContent = cashierName;
@@ -3878,7 +4122,6 @@
       document.getElementById('receipt2-pay-status').textContent = `${payStatus.toUpperCase()} (${payMethod})`;
       document.getElementById('receipt2-sign-customer').textContent = `( ${custName} )`;
 
-      // Render QR Code Padat (64x64) untuk Struk 1 & Struk 2
       ['receipt-qrcode', 'receipt2-qrcode'].forEach(qrId => {
         const qrBox = document.getElementById(qrId);
         if (qrBox && typeof QRCode !== 'undefined') {
@@ -3904,7 +4147,7 @@
 
       const items = getSelectedOrderServicesForKasir();
       if (items.length === 0) {
-        alert("Belum ada paket layanan laundry. Silakan tambahkan paket di menu 8. Pengaturan & Paket terlebih dahulu.");
+        alert("Belum ada paket layanan laundry. Silakan tambahkan paket di menu 9. Pengaturan & Paket terlebih dahulu.");
         return;
       }
 
@@ -3977,7 +4220,8 @@
         changeAmount: tot.changeAmount,
         activeStages,
         currentStage: initialStage,
-        stageHistory: {}
+        stageHistory: {},
+        isDeleted: false
       };
 
       appData.orders.unshift(newOrder);
@@ -3986,11 +4230,12 @@
         appData.cashflows.unshift({
           id: 'CF-' + Date.now(),
           timestamp: createdAt,
-          description: `Pembayaran ${payStatus} Nota #${notaId} (${custName})`,
+          description: `Pembayaran ${payStatus} Nota ${notaId} (${custName})`,
           category: `Transaksi Laundry (${payMethod})`,
           type: 'IN',
           amount: effectivePaid,
-          orderId: notaId
+          orderId: notaId,
+          isDeleted: false
         });
       }
 
@@ -4010,10 +4255,8 @@
       saveData();
       resetKasirForm(false);
 
-      // Langsung tampilkan Pop-up Nota yang akan dicetak setelah tombol Simpan Nota diklik
       openPostSavePrintModal(notaId);
 
-      // Jika opsi Auto-Print di Pengaturan Printer diaktifkan, langsung panggil dialog cetak
       if (appData.settings.printerAutoPrint) {
         setTimeout(() => {
           printModalReceiptSelection('BOTH');
@@ -4025,7 +4268,6 @@
       document.getElementById('kasir-cust-name').value = '';
       document.getElementById('kasir-cust-phone').value = '';
       document.getElementById('kasir-cust-address').value = '';
-      // Berat cucian & jumlah pakaian default kosong sesuai instruksi
       document.getElementById('kasir-weight').value = '';
       document.getElementById('kasir-pcs').value = '';
       document.getElementById('kasir-rack-location').value = '';
@@ -4079,7 +4321,7 @@
 
       const itemsHtml = (order.items || []).map(it => `
         <div class="flex justify-between">
-          <span>${it.name} (${it.qty} ${it.unit})</span>
+          <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
           <span>${formatRupiah(it.subtotal)}</span>
         </div>
       `).join('');
@@ -4100,8 +4342,8 @@
 
           <div class="space-y-0.5 text-[9.5px]">
             <div class="flex justify-between">
-              <span>NOTA: <strong class="text-[11px] font-extrabold">#${order.id}</strong></span>
-              <span class="font-bold">${order.custCategory}${order.memberId ? ' #' + order.memberId : ''}</span>
+              <span>NO. NOTA: <strong class="text-[11px] font-extrabold">${order.id}</strong></span>
+              <span class="font-bold">${order.custCategory}${order.memberId ? ' ' + order.memberId : ''}</span>
             </div>
             <div class="flex justify-between">
               <span>Masuk: ${dateInStr}</span>
@@ -4114,6 +4356,10 @@
             <div class="flex justify-between">
               <span>Pelanggan:</span>
               <strong class="truncate max-w-[150px]">${order.custName}</strong>
+            </div>
+            <div class="flex justify-between">
+              <span>Alamat:</span>
+              <span class="truncate max-w-[160px] text-right">${order.custAddress || '-'}</span>
             </div>
             <div class="flex justify-between">
               <span>Kurir/Rak:</span>
@@ -4200,7 +4446,7 @@
           <div class="space-y-0.5 text-[9.5px]">
             <div class="flex justify-between">
               <span>NO. NOTA:</span>
-              <strong class="text-[11px] font-extrabold">#${order.id}</strong>
+              <strong class="text-[11px] font-extrabold">${order.id}</strong>
             </div>
             <div class="flex justify-between">
               <span>Tgl Masuk:</span>
@@ -4270,7 +4516,7 @@
           <div class="thermal-divider"></div>
 
           <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between"><span>NO. NOTA:</span><strong class="text-[11px] font-extrabold">#${order.id}</strong></div>
+            <div class="flex justify-between"><span>NO. NOTA:</span><strong class="text-[11px] font-extrabold">${order.id}</strong></div>
             <div class="flex justify-between"><span>Masuk: ${dateInStr}</span><span>Selesai: <strong>${etaStr}</strong></span></div>
             <div class="flex justify-between"><span>Petugas Rinci:</span><strong>${rinciWorker}</strong></div>
             <div class="flex justify-between"><span>Pelanggan:</span><strong>${order.custName}</strong></div>
@@ -4347,7 +4593,7 @@
       const bodyEl = document.getElementById('modal-receipt-preview-body');
       const btnThree = document.getElementById('btn-modal-print-three');
 
-      if (titleEl) titleEl.textContent = `Pratinjau Cetak Nota #${order.id} (${order.custName})`;
+      if (titleEl) titleEl.textContent = `Pratinjau Cetak Nota ${order.id} (${order.custName})`;
 
       const canPrintThree = !isOrderMerinciRequired(order) || isOrderMerinciFinished(order);
       if (btnThree) {
@@ -4414,7 +4660,7 @@
       const text = `*${appData.settings.storeName.toUpperCase()}*\n` +
         `_${appData.settings.storeSlogan}_\n` +
         (expressText ? `*${expressText}*\n` : '') +
-        `No. Nota: *#${order.id}*\n` +
+        `No. Nota: *${order.id}*\n` +
         `Pelanggan: *${order.custName}*\n` +
         `Estimasi Selesai: ${eta}\n` +
         `Total Tagihan: *${formatRupiah(order.total)}*\n` +
@@ -4423,6 +4669,7 @@
       window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
     }
 
+    // Tabel Riwayat Semua Nomor Nota (Menampilkan Semua Nomor Nota, Cetak Ulang, dan Hapus Admin untuk Semua Status termasuk Lunas)
     function renderReprintHistoryTable() {
       const tbody = document.getElementById('reprint-history-tbody');
       if (!tbody) return;
@@ -4438,25 +4685,54 @@
         return;
       }
 
-      tbody.innerHTML = orders.slice(0, 30).map(o => {
-        const srvNames = (o.items || []).map(i => `${i.name} (${i.qty}${i.unit})`).join(', ');
+      tbody.innerHTML = orders.slice(0, 50).map(o => {
+        const srvNames = (o.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
         const isExpress = getExpressHighlightText(o.items || []) !== null;
+
+        if (o.isDeleted) {
+          return `
+            <tr class="bg-rose-50/60 text-slate-500">
+              <td class="p-2.5 font-mono font-extrabold text-rose-700 line-through">${o.id}</td>
+              <td class="p-2.5 font-mono text-[11px]">${new Date(o.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}</td>
+              <td class="p-2.5">
+                <span class="font-bold line-through">${o.custName}</span>
+                <span class="block text-[10px] text-slate-400">${o.custAddress || '-'}</span>
+              </td>
+              <td class="p-2.5 truncate max-w-[180px] line-through">${srvNames}</td>
+              <td class="p-2.5 text-right font-mono">
+                <span class="line-through">${formatRupiah(o.total)}</span>
+                <span class="block text-[10px] font-extrabold text-rose-700">DIHAPUS ADMIN</span>
+              </td>
+              <td class="p-2.5 text-center text-[10px] font-bold text-rose-700">
+                Dihapus oleh: ${o.deletedBy || 'Admin'}<br/>
+                <span class="text-slate-500">${o.deleteReason ? `"${o.deleteReason}"` : ''}</span>
+              </td>
+            </tr>
+          `;
+        }
+
         return `
           <tr>
             <td class="p-2.5 font-mono font-extrabold text-slate-900">
-              #${o.id}
+              ${o.id}
               ${isExpress ? '<span class="ml-1 px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px]">EXPRESS</span>' : ''}
             </td>
             <td class="p-2.5 text-slate-500 font-mono text-[11px]">${new Date(o.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}</td>
-            <td class="p-2.5 font-bold text-slate-800">${o.custName}</td>
+            <td class="p-2.5">
+              <span class="font-bold text-slate-800">${o.custName}</span>
+              <span class="block text-[10px] text-slate-500">${o.custAddress || '-'}</span>
+            </td>
             <td class="p-2.5 text-slate-600 truncate max-w-[200px]">${srvNames}</td>
             <td class="p-2.5 text-right font-mono">
               <span class="font-extrabold text-slate-900">${formatRupiah(o.total)}</span>
               <span class="block text-[10px] font-bold ${o.payStatus === 'Lunas' ? 'text-emerald-600' : 'text-rose-600'}">${o.payStatus.toUpperCase()}</span>
             </td>
-            <td class="p-2.5 text-center">
-              <button type="button" onclick="openPostSavePrintModal('${o.id}')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-extrabold inline-flex items-center gap-1.5 shadow-2xs transition">
-                <i class="fa-solid fa-print"></i> Pratinjau &amp; Cetak Ulang
+            <td class="p-2.5 text-center space-x-1">
+              <button type="button" onclick="openPostSavePrintModal('${o.id}')" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-extrabold inline-flex items-center gap-1 shadow-2xs transition">
+                <i class="fa-solid fa-print"></i> Cetak Ulang
+              </button>
+              <button type="button" onclick="deleteOrderAdmin('${o.id}')" title="Hapus Nota (Admin)" class="px-2.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold inline-flex items-center gap-1 transition">
+                <i class="fa-solid fa-trash-can"></i> Hapus
               </button>
             </td>
           </tr>
@@ -4497,7 +4773,7 @@
     }
 
     // =========================================================================
-    // 9. TAB 2: ALUR PROGRES CUCIAN, WAJIB MERINCI & CETAK STRUK KE-3
+    // 9. TAB 2: ALUR PROGRES CUCIAN, WAJIB MERINCI & HAPUS NOTA AUDIT ADMIN
     // =========================================================================
     function isOrderMerinciRequired(order) {
       if (!order) return false;
@@ -4519,6 +4795,7 @@
 
       const query = (document.getElementById('progres-search-input')?.value || '').trim().toLowerCase();
       const activeOrders = (appData.orders || []).filter(o => {
+        if (o.isDeleted) return false;
         if (o.currentStage >= 7) return false;
         if (!query) return true;
         return o.id.toLowerCase().includes(query) || o.custName.toLowerCase().includes(query);
@@ -4577,7 +4854,7 @@
             <input type="radio" name="progres_order_radio" value="${order.id}" ${isChecked ? 'checked' : ''} onchange="selectOrderForWorkflow('${order.id}')" class="peer sr-only" />
             <div class="p-3 rounded-2xl border-2 ${colorClass} peer-checked:ring-4 peer-checked:ring-sky-500/40 transition space-y-1.5">
               <div class="flex items-center justify-between gap-1">
-                <span class="font-mono text-sm font-extrabold">#${order.id} ${isExpress ? '⚡' : ''}</span>
+                <span class="font-mono text-sm font-extrabold">${order.id} ${isExpress ? '⚡' : ''}</span>
                 ${badgeHtml}
               </div>
               <p class="text-xs font-extrabold truncate">${order.custName}</p>
@@ -4630,7 +4907,7 @@
     function renderSelectedWorkflowPanel() {
       const emptyEl = document.getElementById('workflow-empty-state');
       const contentEl = document.getElementById('workflow-detail-content');
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && o.currentStage < 7);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted && o.currentStage < 7);
 
       if (!order) {
         emptyEl.classList.remove('hidden');
@@ -4642,9 +4919,10 @@
       contentEl.classList.remove('hidden');
 
       const hoursLeft = Math.round(((order.deadlineMs || Date.now()) - Date.now()) / (1000 * 3600));
-      document.getElementById('wf-nota-id').textContent = `#${order.id}`;
+      document.getElementById('wf-nota-id').textContent = order.id;
       document.getElementById('wf-cust-name').textContent = order.custName;
       document.getElementById('wf-cust-phone').textContent = order.custPhone;
+      document.getElementById('wf-cust-address').textContent = order.custAddress || '-';
 
       const expressText = getExpressHighlightText(order.items || []);
       const wfExpBadge = document.getElementById('wf-express-badge');
@@ -4676,7 +4954,7 @@
         : `Lewat Deadline ${Math.abs(hoursLeft)} Jam`;
 
       const unitLabel = order.weightUnit || 'Kg';
-      const srvNames = (order.items || []).map(i => `${i.name} (${i.qty}${i.unit})`).join(', ');
+      const srvNames = (order.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
       document.getElementById('wf-service-summary').textContent =
         `Layanan: ${srvNames} | Total: ${formatRupiah(order.total)} | Jumlah: ${order.weightKg} ${unitLabel} | Pakaian: ${order.pcsCount} Pcs | Rak: ${order.rackLocation || '-'}`;
 
@@ -4822,11 +5100,11 @@
     }
 
     function completeWorkflowStage(orderId, stageId) {
-      const order = (appData.orders || []).find(o => o.id === orderId);
+      const order = (appData.orders || []).find(o => o.id === orderId && !o.isDeleted);
       if (!order) return;
 
       if ((appData.employees || []).length === 0) {
-        alert("Belum ada Data Karyawan. Tambahkan karyawan di menu 4. Data Karyawan terlebih dahulu.");
+        alert("Belum ada Data Karyawan. Tambahkan karyawan di menu 5. Data Karyawan terlebih dahulu.");
         return;
       }
 
@@ -4875,7 +5153,7 @@
     }
 
     function saveWorkflowClothDetails() {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order) return;
 
       const detailsVal = document.getElementById('wf-cloth-details-input').value.trim();
@@ -4905,11 +5183,11 @@
       }
 
       saveData();
-      alert(`Rincian pakaian Nota #${order.id} berhasil disimpan! Struk Nota ke-3 kini siap dicetak dan alur berikutnya telah terbuka.`);
+      alert(`Rincian pakaian Nota ${order.id} berhasil disimpan! Struk Nota ke-3 kini siap dicetak dan alur berikutnya telah terbuka.`);
     }
 
     function printThirdReceiptFromWorkflow() {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order) return;
 
       const requiresMerinci = isOrderMerinciRequired(order);
@@ -4926,7 +5204,7 @@
     }
 
     function advanceToNextStageQuick() {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order) return;
       completeWorkflowStage(order.id, order.currentStage);
     }
@@ -5068,7 +5346,7 @@
     async function handleClothPhotoUpload(event) {
       const file = event.target.files?.[0];
       if (!file) return;
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order) return;
 
       const btnText = document.getElementById('cloth-photo-btn-text');
@@ -5109,7 +5387,7 @@
     }
 
     function addFoundItemToOrder() {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order) return;
 
       const nameEl = document.getElementById('wf-found-item-name');
@@ -5137,7 +5415,7 @@
     }
 
     function toggleFoundItemReturnStatus(itemId) {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order || !Array.isArray(order.foundItems)) return;
       const item = order.foundItems.find(i => i.id === itemId);
       if (item) {
@@ -5147,7 +5425,7 @@
     }
 
     function removeFoundItemFromOrder(itemId) {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order || !Array.isArray(order.foundItems)) return;
       order.foundItems = order.foundItems.filter(i => i.id !== itemId);
       saveData();
@@ -5189,7 +5467,7 @@
     }
 
     function sendWorkflowWaUpdate() {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId && !o.isDeleted);
       if (!order) return;
       const cleanPhone = String(order.custPhone || '').replace(/\D/g, '').replace(/^0/, '62');
       const stageObj = WORKFLOW_STAGES.find(s => s.id === order.currentStage) || WORKFLOW_STAGES[1];
@@ -5199,7 +5477,7 @@
 
       const msg = `Halo *${order.custName}*,\n` +
         `Update progres cucian Anda di *${appData.settings.storeName}* (${appData.settings.storeSlogan}):\n` +
-        `No. Nota: *#${order.id}*\n` +
+        `No. Nota: *${order.id}*\n` +
         `Tahap Saat Ini: *${stageObj.name}*\n` +
         `Lokasi Rak: *${order.rackLocation || '-'}*\n` +
         `Status Tagihan: *${order.payStatus}* (${formatRupiah(order.total)})` +
@@ -5207,17 +5485,48 @@
       window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    function deleteOrderAdmin() {
-      const order = (appData.orders || []).find(o => o.id === selectedWorkflowOrderId);
+    // FITUR HAPUS NOTA ADMIN (SOFT DELETE DENGAN JEJAK AUDIT PENUH + BISA HAPUS NOTA LUNAS)
+    function deleteOrderAdmin(targetOrderId = null) {
+      const orderId = targetOrderId || selectedWorkflowOrderId;
+      const order = (appData.orders || []).find(o => o.id === orderId);
       if (!order) return;
-      const pass = prompt("Masukkan Password Admin untuk menghapus Nota #" + order.id + ":");
-      if (pass !== appData.settings.adminPassword) {
-        alert("Password Admin salah!");
+      if (order.isDeleted) {
+        alert(`Nota ${order.id} sudah berstatus DIHAPUS ADMIN oleh ${order.deletedBy}.`);
         return;
       }
-      appData.orders = appData.orders.filter(o => o.id !== order.id);
-      selectedWorkflowOrderId = null;
+
+      const pass = prompt(`Masukkan Password Supervisor / Manajer / Direktur untuk menghapus Nota ${order.id} (${order.custName} - Status: ${order.payStatus}):`);
+      if (pass === null) return;
+
+      const authAdmin = verifyAdminCredentials(pass);
+      if (!authAdmin) {
+        alert("Password Admin tidak valid! Penghapusan dibatalkan.");
+        return;
+      }
+
+      const reason = prompt(`Dikonfirmasi oleh ${authAdmin.label}.\nMasukkan alasan penghapusan Nota ${order.id} (Wajib untuk Laporan Harian):`, "Salah input / Dibatalkan");
+      if (reason === null) return;
+
+      // Soft-Delete: Jangan hapus objek dari array agar nomor nota tetap ada jejaknya dan tidak pernah dipakai ulang
+      order.isDeleted = true;
+      order.deletedAt = Date.now();
+      order.deletedBy = authAdmin.label;
+      order.deleteReason = reason.trim() || "Dihapus oleh Admin";
+
+      // Tandai arus kas terkait nota ini sebagai isDeleted agar tidak menambah saldo kas aktif
+      (appData.cashflows || []).forEach(cf => {
+        if (cf.orderId === order.id) {
+          cf.isDeleted = true;
+          cf.deletedBy = authAdmin.label;
+          cf.description = `[DIHAPUS ADMIN: ${authAdmin.label}] ${cf.description}`;
+        }
+      });
+
+      if (selectedWorkflowOrderId === order.id) selectedWorkflowOrderId = null;
+      if (selectedSettlementOrderId === order.id) selectedSettlementOrderId = null;
+
       saveData();
+      alert(`Nota ${order.id} telah ditandai DIHAPUS ADMIN oleh ${authAdmin.label}.\nNomor nota ${order.id} tetap tercatat di Laporan Harian dan tidak akan dipakai ulang.`);
     }
 
     // =========================================================================
@@ -5231,6 +5540,7 @@
       const filterStatus = document.querySelector('input[name="pelunasan_filter"]:checked')?.value || 'ALL';
 
       const unpaidOrders = (appData.orders || []).filter(o => {
+        if (o.isDeleted) return false;
         if (o.payStatus === 'Lunas') return false;
         if (filterStatus !== 'ALL' && o.payStatus !== filterStatus) return false;
         if (!query) return true;
@@ -5259,7 +5569,7 @@
           }">
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="font-mono text-base font-extrabold text-slate-900">#${o.id}</span>
+                <span class="font-mono text-base font-extrabold text-slate-900">${o.id}</span>
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${o.payStatus === 'DP' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-700'}">
                   ${o.payStatus.toUpperCase()}
                 </span>
@@ -5313,7 +5623,7 @@
     }
 
     function populateSettlementForm(orderId) {
-      const order = (appData.orders || []).find(o => o.id === orderId && o.payStatus !== 'Lunas');
+      const order = (appData.orders || []).find(o => o.id === orderId && !o.isDeleted && o.payStatus !== 'Lunas');
       const emptyBox = document.getElementById('pelunasan-form-empty');
       const formBox = document.getElementById('pelunasan-form-box');
       if (!order || !emptyBox || !formBox) return;
@@ -5322,14 +5632,14 @@
       formBox.classList.remove('hidden');
 
       const sisa = Math.max(0, (order.total || 0) - (order.paidAmount || 0));
-      document.getElementById('settle-nota-id').textContent = `#${order.id}`;
+      document.getElementById('settle-nota-id').textContent = order.id;
       document.getElementById('settle-current-badge').textContent = order.payStatus.toUpperCase();
       document.getElementById('settle-current-badge').className = `px-3 py-1 rounded-full text-xs font-extrabold ${
         order.payStatus === 'DP' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-700'
       }`;
 
       document.getElementById('settle-cust-name').textContent = `${order.custName} (${order.custPhone})`;
-      document.getElementById('settle-service-info').textContent = (order.items || []).map(i => `${i.name} (${i.qty}${i.unit})`).join(', ');
+      document.getElementById('settle-service-info').textContent = (order.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
       document.getElementById('settle-grand-total').textContent = formatRupiah(order.total);
       document.getElementById('settle-already-paid').textContent = formatRupiah(order.paidAmount || 0);
       document.getElementById('settle-remaining-bill').textContent = formatRupiah(sisa);
@@ -5369,7 +5679,7 @@
     }
 
     function setExactSettleAmount() {
-      const order = (appData.orders || []).find(o => o.id === selectedSettlementOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedSettlementOrderId && !o.isDeleted);
       if (!order) return;
       const sisa = Math.max(0, (order.total || 0) - (order.paidAmount || 0));
       const autoThousand = document.getElementById('settle-auto-thousand');
@@ -5387,7 +5697,7 @@
     }
 
     function calculateSettlePreview() {
-      const order = (appData.orders || []).find(o => o.id === selectedSettlementOrderId);
+      const order = (appData.orders || []).find(o => o.id === selectedSettlementOrderId && !o.isDeleted);
       if (!order) return null;
 
       const sisaTagihan = Math.max(0, (order.total || 0) - (order.paidAmount || 0));
@@ -5447,11 +5757,12 @@
         appData.cashflows.unshift({
           id: 'CF-' + Date.now(),
           timestamp: Date.now(),
-          description: `Pembayaran ${calc.newStatus} Nota #${order.id} (${order.custName})`,
+          description: `Pembayaran ${calc.newStatus} Nota ${order.id} (${order.custName})`,
           category: `Pelunasan / Cicilan (${method})`,
           type: 'IN',
           amount: effectiveCashIn,
-          orderId: order.id
+          orderId: order.id,
+          isDeleted: false
         });
       }
 
@@ -5465,7 +5776,7 @@
       if (shouldPrint) {
         openPostSavePrintModal(settledOrderId);
       } else {
-        alert(`Pembayaran Nota #${order.id} (${order.custName}) berhasil diproses! Status sekarang: ${calc.newStatus.toUpperCase()}. Kembalian: ${formatRupiah(calc.changeAmount)}.`);
+        alert(`Pembayaran Nota ${order.id} (${order.custName}) berhasil diproses! Status sekarang: ${calc.newStatus.toUpperCase()}. Kembalian: ${formatRupiah(calc.changeAmount)}.`);
       }
     }
 
@@ -5473,8 +5784,147 @@
       submitSettlementForm(null, true);
     }
 
+// =========================================================================
+    // 10B. TAB 4: LAPORAN HARIAN KASIR / KARYAWAN & AUDIT URUTAN NOMOR NOTA
     // =========================================================================
-    // 11. TAB 4: DATA KARYAWAN
+    function renderDailyEmployeeReport() {
+      const dateInput = document.getElementById('daily-report-date-picker');
+      if (dateInput && !dateInput.value) {
+        dateInput.value = new Date().toISOString().slice(0, 10);
+      }
+      const selectedDateStr = dateInput?.value || new Date().toISOString().slice(0, 10);
+      const refDate = new Date(selectedDateStr + 'T00:00:00');
+
+      const isSameDay = (ts) => {
+        const d = new Date(ts);
+        return d.getFullYear() === refDate.getFullYear() &&
+               d.getMonth() === refDate.getMonth() &&
+               d.getDate() === refDate.getDate();
+      };
+
+      // Ambil semua nota yang dibuat pada tanggal terpilih (Termasuk yang dihapus Admin agar jejak nomor nota utuh)
+      const dailyOrders = (appData.orders || []).filter(o => isSameDay(o.createdAt));
+      // Urutkan nomor nota dari kecil ke besar agar urutan nomor terlihat jelas
+      dailyOrders.sort((a, b) => a.id.localeCompare(b.id));
+
+      // Ambil mutasi arus kas pada tanggal terpilih
+      const dailyFlows = (appData.cashflows || []).filter(cf => isSameDay(cf.timestamp));
+
+      let totalIn = 0;
+      let totalOut = 0;
+      dailyFlows.forEach(cf => {
+        if (cf.isDeleted) return; // Jangan hitung uang dari nota yang sudah dihapus Admin
+        if (cf.type === 'IN') totalIn += Number(cf.amount) || 0;
+        else totalOut += Number(cf.amount) || 0;
+      });
+
+      document.getElementById('daily-total-income').textContent = formatRupiah(totalIn);
+      document.getElementById('daily-total-expense').textContent = formatRupiah(totalOut);
+      document.getElementById('daily-net-cash').textContent = formatRupiah(totalIn - totalOut);
+
+      // Render Tabel Audit Urutan Nomor Nota Harian
+      const ordersTbody = document.getElementById('daily-orders-audit-tbody');
+      if (ordersTbody) {
+        if (dailyOrders.length === 0) {
+          ordersTbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 font-bold">Belum ada Data</td></tr>`;
+        } else {
+          ordersTbody.innerHTML = dailyOrders.map(o => {
+            const timeStr = new Date(o.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const srvNames = (o.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
+
+            if (o.isDeleted) {
+              return `
+                <tr class="bg-rose-50/80 text-rose-900">
+                  <td class="p-3 font-mono font-extrabold text-rose-700">${o.id}</td>
+                  <td class="p-3 font-mono text-[11px]">${timeStr} &bull; ${o.cashierName || '-'}</td>
+                  <td class="p-3 font-bold line-through">${o.custName}</td>
+                  <td class="p-3 text-[11px] line-through">${srvNames}</td>
+                  <td class="p-3 text-right font-mono line-through">${formatRupiah(o.total)}</td>
+                  <td class="p-3 text-right font-mono line-through">${formatRupiah(o.paidAmount || 0)}</td>
+                  <td class="p-3 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white">
+                      DIHAPUS ADMIN: ${o.deletedBy || 'Admin'}
+                    </span>
+                    <span class="block text-[10px] text-rose-700 mt-0.5 italic">Alasan: "${o.deleteReason || '-'}" (No. Nota Tidak Dipakai Lagi)</span>
+                  </td>
+                  <td class="p-3 text-center text-[10px] font-bold text-slate-400">Nonaktif</td>
+                </tr>
+              `;
+            }
+
+            const statusBadge = o.payStatus === 'Lunas'
+              ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">LUNAS (${o.payMethod})</span>`
+              : (o.payStatus === 'DP'
+                ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800">DP</span>`
+                : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-700">BELUM BAYAR</span>`);
+
+            return `
+              <tr>
+                <td class="p-3 font-mono font-extrabold text-slate-900">${o.id}</td>
+                <td class="p-3 font-mono text-[11px] text-slate-600">${timeStr} &bull; <strong>${o.cashierName || '-'}</strong></td>
+                <td class="p-3">
+                  <span class="font-bold text-slate-900">${o.custName}</span>
+                  <span class="block text-[10px] text-slate-500">${o.custAddress || '-'}</span>
+                </td>
+                <td class="p-3 text-[11px] text-slate-700">${srvNames}</td>
+                <td class="p-3 text-right font-mono font-bold text-slate-900">${formatRupiah(o.total)}</td>
+                <td class="p-3 text-right font-mono font-extrabold text-emerald-700">${formatRupiah(o.paidAmount || 0)}</td>
+                <td class="p-3 text-center">${statusBadge}</td>
+                <td class="p-3 text-center space-x-1">
+                  <button type="button" onclick="openPostSavePrintModal('${o.id}')" title="Cetak Ulang Struk" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-[10px] font-bold">
+                    <i class="fa-solid fa-print"></i>
+                  </button>
+                  <button type="button" onclick="deleteOrderAdmin('${o.id}')" title="Hapus Nota (Admin)" class="px-2 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-[10px] font-bold">
+                    <i class="fa-solid fa-trash-can"></i> Hapus
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // Render Tabel Mutasi Arus Kas Harian
+      const cfTbody = document.getElementById('daily-cashflow-tbody');
+      if (cfTbody) {
+        if (dailyFlows.length === 0) {
+          cfTbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-bold">Belum ada Data</td></tr>`;
+        } else {
+          cfTbody.innerHTML = dailyFlows.map(cf => {
+            const timeStr = new Date(cf.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            if (cf.isDeleted) {
+              return `
+                <tr class="bg-rose-50/60 text-rose-800">
+                  <td class="p-3 font-mono text-[11px]">${timeStr}</td>
+                  <td class="p-3 font-bold">${cf.description}</td>
+                  <td class="p-3 text-xs">${cf.category}</td>
+                  <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white">DIBATALKAN ADMIN</span></td>
+                  <td class="p-3 text-right font-mono line-through">${formatRupiah(cf.amount)}</td>
+                </tr>
+              `;
+            }
+            return `
+              <tr>
+                <td class="p-3 font-mono text-slate-500">${timeStr}</td>
+                <td class="p-3 font-bold text-slate-900">${cf.description}</td>
+                <td class="p-3 text-slate-600">${cf.category}</td>
+                <td class="p-3 text-center">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${cf.type === 'IN' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                    ${cf.type === 'IN' ? 'MASUK' : 'KELUAR'}
+                  </span>
+                </td>
+                <td class="p-3 text-right font-mono font-extrabold ${cf.type === 'IN' ? 'text-emerald-700' : 'text-rose-600'}">
+                  ${cf.type === 'IN' ? '+' : '-'} ${formatRupiah(cf.amount)}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    // =========================================================================
+    // 11. TAB 5: DATA KARYAWAN
     // =========================================================================
     function renderEmployeeTable() {
       const tbody = document.getElementById('employee-table-tbody');
@@ -5490,7 +5940,7 @@
         return;
       }
 
-      const orders = appData.orders || [];
+      const orders = (appData.orders || []).filter(o => !o.isDeleted);
       tbody.innerHTML = employees.map(emp => {
         let completedStagesCount = 0;
         orders.forEach(o => {
@@ -5575,7 +6025,7 @@
     }
 
     // =========================================================================
-    // 12. TAB 5: MEMBER, KARTU QR & PORTAL PELANGGAN
+    // 12. TAB 6: MEMBER, KARTU QR & PORTAL PELANGGAN
     // =========================================================================
     function renderMemberSection() {
       const nextId = getNextMemberId();
@@ -5611,7 +6061,7 @@
           : (tData.tier === 'Gold' ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-800');
         return `
           <tr>
-            <td class="p-3 font-mono font-extrabold text-amber-700">#${m.id}</td>
+            <td class="p-3 font-mono font-extrabold text-amber-700">${m.id}</td>
             <td class="p-3">
               <p class="font-extrabold text-slate-900">${m.name}</p>
               <p class="text-[11px] font-mono text-slate-500">${m.phone}</p>
@@ -5723,7 +6173,7 @@
     }
 
     function deleteMember(memberId) {
-      if (!confirm(`Hapus Member #${memberId}?`)) return;
+      if (!confirm(`Hapus Member ${memberId}?`)) return;
       appData.members = appData.members.filter(m => m.id !== memberId);
       saveData();
     }
@@ -5749,7 +6199,7 @@
       document.getElementById('portal-tier-progress').innerHTML = `
         <div class="flex items-center justify-between">
           <div>
-            <span class="text-sm font-extrabold text-white">${member.name} (#${member.id})</span>
+            <span class="text-sm font-extrabold text-white">${member.name} (ID: ${member.id})</span>
             <span class="block text-[11px] text-sky-300">${tData.infoText}</span>
           </div>
           <span class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950">${tData.tier} • Diskon ${tData.discountPct}%</span>
@@ -5760,7 +6210,7 @@
       `;
 
       const custOrders = (appData.orders || []).filter(o =>
-        o.memberId === member.id || o.custName.toLowerCase() === member.name.toLowerCase()
+        !o.isDeleted && (o.memberId === member.id || o.custName.toLowerCase() === member.name.toLowerCase())
       );
 
       const ordersEl = document.getElementById('portal-orders-list');
@@ -5772,7 +6222,7 @@
           return `
             <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs">
               <div>
-                <span class="font-mono font-extrabold text-sky-400">#${o.id}</span>
+                <span class="font-mono font-extrabold text-sky-400">${o.id}</span>
                 <span class="ml-2 font-bold text-white">${(o.items || []).map(i => i.name).join(', ')}</span>
                 <span class="block text-[11px] text-slate-400">Lokasi Rak: ${o.rackLocation || '-'} &bull; Tagihan: ${formatRupiah(o.total)} (${o.payStatus})</span>
               </div>
@@ -5786,7 +6236,7 @@
     }
 
     // =========================================================================
-    // 13. TAB 6: STOK BARANG & CATAT PENGELUARAN OPERASIONAL
+    // 13. TAB 7: STOK BARANG & CATAT PENGELUARAN OPERASIONAL
     // =========================================================================
     function renderStokAndExpenses() {
       const stokTbody = document.getElementById('stok-table-tbody');
@@ -5908,7 +6358,8 @@
         category,
         type: 'OUT',
         amount,
-        expenseId: expId
+        expenseId: expId,
+        isDeleted: false
       });
 
       document.getElementById('expense-desc').value = '';
@@ -5923,42 +6374,42 @@
     }
 
     // =========================================================================
-    // 14. TAB 7: LAPORAN KEUANGAN & SISTEM GAJI PROPORSIONAL 7 ALUR
+    // 14. TAB 8: LAPORAN KEUANGAN (BULANAN/TAHUNAN) & SISTEM GAJI PROPORSIONAL
     // =========================================================================
     function unlockFinanceTab() {
       const pass = document.getElementById('finance-pass-input').value;
-      if (pass === appData.settings.adminPassword) {
+      const authAdmin = verifyAdminCredentials(pass);
+      if (authAdmin) {
         financeUnlocked = true;
+        currentLoggedInAdminLabel = authAdmin.label;
+        const badge = document.getElementById('finance-active-admin-badge');
+        if (badge) badge.innerHTML = `<i class="fa-solid fa-user-tie"></i> Diakses oleh: ${authAdmin.label}`;
         document.getElementById('finance-lock-screen').classList.add('hidden');
         document.getElementById('finance-unlocked-content').classList.remove('hidden');
         renderPayrollMonthRadios();
         renderFinanceReport();
         calculatePayrollTable();
       } else {
-        alert("Password Admin tidak sesuai!");
+        alert("Password Admin (Supervisor / Manajer / Direktur) tidak sesuai!");
       }
     }
 
     function renderFinanceReport() {
       const period = document.querySelector('input[name="finance_period"]:checked')?.value || 'Bulanan';
-      const dateInput = document.getElementById('finance-date-picker');
-      if (dateInput && !dateInput.value) {
-        dateInput.value = new Date().toISOString().slice(0, 10);
+      const monthInput = document.getElementById('finance-month-picker');
+      if (monthInput && !monthInput.value) {
+        monthInput.value = new Date().toISOString().slice(0, 7);
       }
-      const refDate = dateInput?.value ? new Date(dateInput.value) : new Date();
+      const selectedYm = monthInput?.value || new Date().toISOString().slice(0, 7);
+      const [selYear, selMonth] = selectedYm.split('-').map(Number);
 
       const filteredFlows = (appData.cashflows || []).filter(cf => {
+        if (cf.isDeleted) return false;
         const d = new Date(cf.timestamp);
-        if (period === 'Harian') {
-          return d.getFullYear() === refDate.getFullYear() &&
-                 d.getMonth() === refDate.getMonth() &&
-                 d.getDate() === refDate.getDate();
-        }
         if (period === 'Bulanan') {
-          return d.getFullYear() === refDate.getFullYear() &&
-                 d.getMonth() === refDate.getMonth();
+          return d.getFullYear() === selYear && (d.getMonth() + 1) === selMonth;
         }
-        return d.getFullYear() === refDate.getFullYear();
+        return d.getFullYear() === selYear;
       });
 
       let totalIn = 0;
@@ -6041,6 +6492,7 @@
       const commPercent = parseFormattedNumber(document.getElementById('payroll-bonus-pool-pct')?.value || '35');
 
       const ordersInMonth = (appData.orders || []).filter(o => {
+        if (o.isDeleted) return false;
         const ym = new Date(o.createdAt).toISOString().slice(0, 7);
         return ym === selectedPayrollMonth;
       });
@@ -6172,7 +6624,8 @@
         description: desc,
         category: 'Gaji & Bonus Karyawan',
         type: 'OUT',
-        amount: totalCair
+        amount: totalCair,
+        isDeleted: false
       });
       saveData();
       renderFinanceReport();
@@ -6205,7 +6658,8 @@
         description: desc,
         category: 'Gaji & Bonus Karyawan',
         type: 'OUT',
-        amount: totalPayrollOut
+        amount: totalPayrollOut,
+        isDeleted: false
       });
 
       saveData();
@@ -6214,17 +6668,21 @@
     }
 
     // =========================================================================
-    // 15. TAB 8: PENGATURAN TOKO, PRINTER THERMAL, PAKET (EDIT/DEFAULT) & PARFUM (EDIT/DEFAULT)
+    // 15. TAB 9: PENGATURAN TOKO, USER ADMIN, PRINTER, PAKET BUNDLE & PARFUM
     // =========================================================================
     function unlockSettingTab() {
       const pass = document.getElementById('setting-pass-input').value;
-      if (pass === appData.settings.adminPassword) {
+      const authAdmin = verifyAdminCredentials(pass);
+      if (authAdmin) {
         settingUnlocked = true;
+        currentLoggedInAdminLabel = authAdmin.label;
+        const badge = document.getElementById('setting-active-admin-badge');
+        if (badge) badge.innerHTML = `<i class="fa-solid fa-user-tie"></i> Diakses oleh: ${authAdmin.label}`;
         document.getElementById('setting-lock-screen').classList.add('hidden');
         document.getElementById('setting-unlocked-content').classList.remove('hidden');
         renderSettingsTab();
       } else {
-        alert("Password Admin salah!");
+        alert("Password Admin (Supervisor / Manajer / Direktur) salah!");
       }
     }
 
@@ -6281,6 +6739,72 @@
       alert(`Pengaturan Printer Thermal (${paperWidth}, Font ${fontSize}) berhasil diterapkan!`);
     }
 
+    // Manajemen Multi-User Admin (Supervisor, Manajer, Direktur)
+    function saveAdminUser(e) {
+      e.preventDefault();
+      const editId = document.getElementById('admin-user-edit-id').value;
+      const name = document.getElementById('admin-user-name').value.trim();
+      const role = document.querySelector('input[name="admin_user_role"]:checked')?.value || 'Supervisor';
+      const password = document.getElementById('admin-user-password').value.trim();
+      if (!name || !password) return;
+
+      if (!Array.isArray(appData.adminUsers)) appData.adminUsers = [];
+
+      if (editId) {
+        const idx = appData.adminUsers.findIndex(u => u.id === editId);
+        if (idx !== -1) {
+          appData.adminUsers[idx] = { ...appData.adminUsers[idx], name, role, password };
+        }
+      } else {
+        appData.adminUsers.push({
+          id: 'ADM-' + Date.now(),
+          name,
+          role,
+          password
+        });
+      }
+
+      resetAdminUserForm();
+      saveData();
+    }
+
+    function editAdminUser(id) {
+      const user = (appData.adminUsers || []).find(u => u.id === id);
+      if (!user) return;
+      document.getElementById('admin-user-edit-id').value = user.id;
+      document.getElementById('admin-user-name').value = user.name;
+      document.getElementById('admin-user-password').value = user.password;
+      const roleRadio = document.querySelector(`input[name="admin_user_role"][value="${user.role}"]`);
+      if (roleRadio) roleRadio.checked = true;
+      document.getElementById('btn-submit-admin-user').textContent = 'Update Admin';
+      document.getElementById('btn-cancel-admin-user').classList.remove('hidden');
+    }
+
+    function deleteAdminUser(id) {
+      if (!confirm("Hapus user Admin ini?")) return;
+      appData.adminUsers = (appData.adminUsers || []).filter(u => u.id !== id);
+      saveData();
+    }
+
+    function resetAdminUserForm() {
+      document.getElementById('admin-user-edit-id').value = '';
+      document.getElementById('admin-user-name').value = '';
+      document.getElementById('admin-user-password').value = '';
+      document.getElementById('btn-submit-admin-user').textContent = '+ Simpan Admin';
+      document.getElementById('btn-cancel-admin-user').classList.add('hidden');
+    }
+
+    function toggleBundleKgInput() {
+      const selectedUnit = document.querySelector('input[name="srv_unit"]:checked')?.value || 'Kg';
+      const box = document.getElementById('srv-bundle-config-box');
+      if (!box) return;
+      if (selectedUnit === 'Bundle') {
+        box.classList.remove('hidden');
+      } else {
+        box.classList.add('hidden');
+      }
+    }
+
     function renderSettingsTab() {
       const s = appData.settings;
       document.getElementById('set-store-name').value = s.storeName || '';
@@ -6292,7 +6816,6 @@
       document.getElementById('set-store-lng').value = s.lng || LAUNDRY_LNG;
       document.getElementById('set-logo-preview').src = s.logoUrl;
 
-      // Isi form pengaturan printer thermal
       const pwRadio = document.querySelector(`input[name="printer_paper_width"][value="${s.printerPaperWidth || '58mm'}"]`);
       if (pwRadio) pwRadio.checked = true;
       const fsRadio = document.querySelector(`input[name="printer_font_size"][value="${s.printerFontSize || '10px'}"]`);
@@ -6303,7 +6826,39 @@
       if (document.getElementById('printer-page-break')) document.getElementById('printer-page-break').checked = Boolean(s.printerPageBreak);
       if (document.getElementById('printer-auto-print')) document.getElementById('printer-auto-print').checked = Boolean(s.printerAutoPrint);
 
-      // Daftar Paket Layanan Tersimpan (Dilengkapi Edit & Toggle Default)
+      // Render Daftar User Admin (Supervisor, Manajer, Direktur)
+      const adminListEl = document.getElementById('setting-admin-users-list');
+      const adminUsers = appData.adminUsers || [];
+      if (adminListEl) {
+        if (adminUsers.length === 0) {
+          adminListEl.innerHTML = `<div class="col-span-full p-4 rounded-xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs text-slate-400 font-bold">Belum ada Data User Admin (Saat ini menggunakan Password Master Fallback)</div>`;
+        } else {
+          adminListEl.innerHTML = adminUsers.map(u => {
+            const roleColor = u.role === 'Direktur'
+              ? 'bg-amber-100 text-amber-800 border-amber-300'
+              : (u.role === 'Manajer' ? 'bg-indigo-100 text-indigo-800 border-indigo-300' : 'bg-sky-100 text-sky-800 border-sky-300');
+            return `
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-2">
+                <div>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold border ${roleColor}">${u.role.toUpperCase()}</span>
+                  <p class="font-extrabold text-sm text-slate-900 mt-1">${u.name}</p>
+                  <p class="font-mono text-[11px] text-slate-500">Pass: ${u.password}</p>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button type="button" onclick="editAdminUser('${u.id}')" class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-sky-600 hover:bg-sky-50 text-xs">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button type="button" onclick="deleteAdminUser('${u.id}')" class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-rose-500 hover:bg-rose-50 text-xs">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // Daftar Paket Layanan Tersimpan
       const srvList = document.getElementById('setting-service-list');
       const services = appData.services || [];
       if (srvList) {
@@ -6317,6 +6872,7 @@
               .filter(Boolean)
               .join(' → ');
             const isExpress = getExpressHighlightText([{ name: srv.name }]) !== null;
+            const unitDisplay = srv.unit === 'Bundle' ? `Bundle per ${srv.bundleKg || 7} Kg` : (srv.unit || 'Kg');
 
             return `
               <div class="p-4 rounded-2xl border-2 ${srv.isDefault ? 'border-amber-400 bg-amber-50/40' : 'border-slate-200 bg-slate-50'} flex flex-col justify-between space-y-3">
@@ -6327,6 +6883,7 @@
                       <div class="flex flex-wrap gap-1 mt-1">
                         ${srv.isDefault ? '<span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[9px] font-extrabold"><i class="fa-solid fa-star mr-0.5"></i>DEFAULT</span>' : ''}
                         ${isExpress ? '<span class="px-2 py-0.5 rounded bg-rose-600 text-white text-[9px] font-extrabold">⚡ EXPRESS</span>' : ''}
+                        ${srv.unit === 'Bundle' ? `<span class="px-2 py-0.5 rounded bg-indigo-600 text-white text-[9px] font-extrabold">KELIPATAN ${srv.bundleKg || 7} KG</span>` : ''}
                       </div>
                     </div>
                     <div class="flex items-center gap-1 shrink-0">
@@ -6341,7 +6898,7 @@
                       </button>
                     </div>
                   </div>
-                  <p class="font-mono text-sm font-extrabold text-sky-700 mt-2">${formatRupiah(srv.price)} / ${srv.unit || 'Kg'}</p>
+                  <p class="font-mono text-sm font-extrabold text-sky-700 mt-2">${formatRupiah(srv.price)} / ${unitDisplay}</p>
                   <p class="text-[11px] text-slate-500">Estimasi: ${srv.estValue} ${unitLabel}</p>
                   <p class="text-[10px] text-indigo-700 font-semibold mt-1">Alur: ${stageLabels || 'Tanpa Rinci'}</p>
                 </div>
@@ -6351,7 +6908,7 @@
         }
       }
 
-      // Daftar Parfum Tersimpan (Dilengkapi Edit & Toggle Default)
+      // Daftar Parfum Tersimpan
       const perfList = document.getElementById('setting-perfume-list');
       const perfumes = appData.perfumes || [];
       if (perfList) {
@@ -6451,6 +7008,7 @@
       const name = document.getElementById('srv-name').value.trim();
       const price = parseFormattedNumber(document.getElementById('srv-price').value);
       const unit = document.querySelector('input[name="srv_unit"]:checked')?.value || 'Kg';
+      const bundleKg = unit === 'Bundle' ? Math.max(1, parseFormattedNumber(document.getElementById('srv-bundle-kg')?.value || '7')) : 0;
       const estValue = Math.max(1, parseFormattedNumber(document.getElementById('srv-duration').value));
       const rawDurUnit = document.querySelector('input[name="srv_duration_unit"]:checked')?.value || 'Hari';
       const estUnit = rawDurUnit === 'Jam' ? 'hours' : 'days';
@@ -6473,6 +7031,7 @@
             name,
             price,
             unit,
+            bundleKg,
             estValue,
             estUnit,
             isDefault,
@@ -6485,6 +7044,7 @@
           name,
           price,
           unit,
+          bundleKg,
           estValue,
           estUnit,
           isDefault,
@@ -6508,6 +7068,10 @@
 
       const unitRadio = document.querySelector(`input[name="srv_unit"][value="${srv.unit || 'Kg'}"]`);
       if (unitRadio) unitRadio.checked = true;
+      toggleBundleKgInput();
+      if (srv.unit === 'Bundle' && document.getElementById('srv-bundle-kg')) {
+        document.getElementById('srv-bundle-kg').value = formatNumberID(srv.bundleKg || 7);
+      }
 
       const durUnitVal = srv.estUnit === 'hours' ? 'Jam' : 'Hari';
       const durRadio = document.querySelector(`input[name="srv_duration_unit"][value="${durUnitVal}"]`);
@@ -6530,6 +7094,9 @@
       document.getElementById('srv-price').value = '';
       document.getElementById('srv-duration').value = '2';
       document.getElementById('srv-is-default').checked = false;
+      const kgRadio = document.querySelector('input[name="srv_unit"][value="Kg"]');
+      if (kgRadio) kgRadio.checked = true;
+      toggleBundleKgInput();
       document.querySelectorAll('input[name="srv_workflows"]').forEach(cb => { cb.checked = true; });
       document.getElementById('btn-submit-srv').innerHTML = `<i class="fa-solid fa-plus mr-1"></i> Simpan Paket Layanan`;
       document.getElementById('btn-cancel-srv').classList.add('hidden');
@@ -6712,6 +7279,11 @@
 
       const foundOrder = (appData.orders || []).find(o => o.id === code);
       if (foundOrder) {
+        if (foundOrder.isDeleted) {
+          alert(`Nota ${foundOrder.id} telah DIHAPUS ADMIN oleh ${foundOrder.deletedBy}.`);
+          switchTab('laporanharian');
+          return;
+        }
         selectedWorkflowOrderId = foundOrder.id;
         switchTab('progres');
       } else {
@@ -6720,7 +7292,7 @@
     }
 
     // =========================================================================
-    // 17. CETAK & DOWNLOAD PDF (KEUANGAN, MEMBER, KARYAWAN & SLIP GAJI)
+    // 17. CETAK & DOWNLOAD PDF (LAPORAN HARIAN, KEUANGAN, MEMBER, KARYAWAN & SLIP)
     // =========================================================================
     function buildReportHtml(type) {
       const s = appData.settings;
@@ -6736,6 +7308,62 @@
           </div>
         </div>
       `;
+
+      if (type === 'laporanharian') {
+        const selectedDateStr = document.getElementById('daily-report-date-picker')?.value || new Date().toISOString().slice(0, 10);
+        const refDate = new Date(selectedDateStr + 'T00:00:00');
+        const isSameDay = (ts) => {
+          const d = new Date(ts);
+          return d.getFullYear() === refDate.getFullYear() &&
+                 d.getMonth() === refDate.getMonth() &&
+                 d.getDate() === refDate.getDate();
+        };
+
+        const dailyOrders = (appData.orders || []).filter(o => isSameDay(o.createdAt)).sort((a, b) => a.id.localeCompare(b.id));
+        const orderRows = dailyOrders.length === 0
+          ? `<tr><td colspan="7" style="border:1px solid #cbd5e1; padding:10px; text-align:center;">Belum ada Data</td></tr>`
+          : dailyOrders.map(o => {
+              const srvNames = (o.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
+              const statusNote = o.isDeleted
+                ? `DIHAPUS ADMIN (${o.deletedBy || 'Admin'}): "${o.deleteReason || '-'}"`
+                : `${o.payStatus.toUpperCase()} (${o.payMethod})`;
+              return `
+                <tr style="${o.isDeleted ? 'background:#fff1f2; color:#9f1239;' : ''}">
+                  <td style="border:1px solid #cbd5e1; padding:6px; font-family:monospace; font-weight:700;">${o.id}</td>
+                  <td style="border:1px solid #cbd5e1; padding:6px;">${o.cashierName || '-'}</td>
+                  <td style="border:1px solid #cbd5e1; padding:6px;">${o.custName}</td>
+                  <td style="border:1px solid #cbd5e1; padding:6px;">${srvNames}</td>
+                  <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">${formatRupiah(o.total)}</td>
+                  <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">${o.isDeleted ? 'Rp 0' : formatRupiah(o.paidAmount || 0)}</td>
+                  <td style="border:1px solid #cbd5e1; padding:6px; font-weight:700;">${statusNote}</td>
+                </tr>
+              `;
+            }).join('');
+
+        return `
+          ${headerHtml}
+          <h2 style="font-size:15px; font-weight:800; margin-bottom:6px;">LAPORAN HARIAN KASIR &amp; AUDIT NOMOR NOTA (${selectedDateStr})</h2>
+          <p style="font-size:12px; margin-bottom:12px;">
+            Uang Masuk: <strong>${document.getElementById('daily-total-income')?.textContent}</strong> |
+            Pengeluaran: <strong>${document.getElementById('daily-total-expense')?.textContent}</strong> |
+            Setoran Bersih: <strong>${document.getElementById('daily-net-cash')?.textContent}</strong>
+          </p>
+          <table style="width:100%; border-collapse:collapse; font-size:11px;">
+            <thead>
+              <tr style="background:#f1f5f9;">
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">No. Nota</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Kasir</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Pelanggan</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Paket</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Total</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Dibayar</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Status / Jejak Hapus Admin</th>
+              </tr>
+            </thead>
+            <tbody>${orderRows}</tbody>
+          </table>
+        `;
+      }
 
       if (type === 'karyawan') {
         const list = appData.employees || [];
@@ -6776,7 +7404,7 @@
               const tData = getMemberTierData(m);
               return `
                 <tr>
-                  <td style="border:1px solid #cbd5e1; padding:8px; font-family:monospace; font-weight:700;">#${m.id}</td>
+                  <td style="border:1px solid #cbd5e1; padding:8px; font-family:monospace; font-weight:700;">${m.id}</td>
                   <td style="border:1px solid #cbd5e1; padding:8px; font-weight:700;">${m.name}</td>
                   <td style="border:1px solid #cbd5e1; padding:8px;">${m.phone}</td>
                   <td style="border:1px solid #cbd5e1; padding:8px; text-align:center;">${tData.tier} (${tData.discountPct}%)</td>
@@ -6803,7 +7431,7 @@
       }
 
       if (type === 'keuangan') {
-        const list = appData.cashflows || [];
+        const list = (appData.cashflows || []).filter(cf => !cf.isDeleted);
         const rows = list.length === 0
           ? `<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:12px; text-align:center;">Belum ada Data</td></tr>`
           : list.map(cf => `
@@ -7019,6 +7647,7 @@
       renderKasirOptions();
       renderProgresOrderRadios();
       renderPelunasanList();
+      renderDailyEmployeeReport();
       renderEmployeeTable();
       renderMemberSection();
       renderStokAndExpenses();
