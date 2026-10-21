@@ -4125,6 +4125,7 @@
         saveAllData();
 
         lastCreatedOrder = pickupRequestObj;
+        safeSetStorage('laundry_qu_my_last_order', pickupRequestObj.orderNumber);
         openOrderSuccessModal(pickupRequestObj);
         showToast(`Pesanan Jemput ${orderNumber} berhasil dikirim ke POS Laundry QU!`, 'success');
       } catch (err) {
@@ -4439,6 +4440,7 @@
     // 14. REFRESH UI & SINKRONISASI REAL-TIME FIREBASE (`laundry_qu_pos`)
     // -------------------------------------------------------------------------
     function refreshCustomerUI() {
+      checkMyOrderRealtimeNotification();
       renderStoreIdentity();
       renderServiceCatalog();
       renderPerfumesAndVouchers();
@@ -4452,6 +4454,55 @@
 
       if (loggedInMemberId) {
         renderMemberView();
+      }
+    }
+
+    let lastNotifiedOrderState = {};
+
+    function playNotificationSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.45);
+      } catch (e) {}
+    }
+
+    function checkMyOrderRealtimeNotification() {
+      const myOrderNum = safeGetStorage('laundry_qu_my_last_order');
+      if (!myOrderNum) return;
+
+      const pickupObj = (appData.pickupOrders || []).find(p => p.orderNumber === myOrderNum);
+      if (!pickupObj) return;
+
+      const prevState = lastNotifiedOrderState[myOrderNum] || 'MENUNGGU_JEMPUT';
+
+      // 1. Notifikasi saat Kasir mengklik "Terima Pesanan"
+      if (pickupObj.status === 'DITERIMA_KURIR_OTW' && prevState === 'MENUNGGU_JEMPUT') {
+        lastNotifiedOrderState[myOrderNum] = 'DITERIMA_KURIR_OTW';
+        playNotificationSound();
+        showToast(`✅ Pesanan ${myOrderNum} telah DITERIMA oleh ${pickupObj.acceptedBy || 'Kasir'}! Kurir kami segera menuju lokasi penjemputan Anda.`, 'success');
+      }
+
+      // 2. Notifikasi saat Kasir selesai menimbang & menerbitkan Nomor Nota Resmi (000001)
+      if (pickupObj.convertedNotaId && prevState !== 'DIPROSES_NOTA') {
+        lastNotifiedOrderState[myOrderNum] = 'DIPROSES_NOTA';
+        playNotificationSound();
+        showToast(`🧾 Pesanan ${myOrderNum} telah resmi menjadi Nota ${pickupObj.convertedNotaId}! Membuka progres cucian Anda...`, 'success');
+        trackedNotaId = pickupObj.convertedNotaId;
+        document.getElementById('track-nota-input').value = pickupObj.convertedNotaId;
+        if (currentTab === 'track' || currentTab === 'order') {
+          switchTab('track');
+          searchOrderByNota(pickupObj.convertedNotaId);
+        }
       }
     }
 
