@@ -531,7 +531,7 @@
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   No. HP / WhatsApp <span class="text-rose-500">*</span>
                 </label>
-                <input type="tel" id="kasir-cust-phone" required oninput="updateReceiptPreview()" placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                <input type="tel" id="kasir-cust-phone" required oninput="calculateKasirTotal()" placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
               </div>
 
               <!-- KOLOM ALAMAT PELANGGAN (SELALU TAMPIL) -->
@@ -706,6 +706,54 @@
               </div>
             </div>
 
+            <!-- 5B. PANEL OTOMATIS PROMO CUCI 10X GRATIS 1X & GRATIS PAKAIAN SHOLAT -->
+            <div id="kasir-promos-wrapper" class="space-y-3 pt-2 border-t border-slate-100">
+              <!-- Box Kupon Stamp 10x Gratis 1x (Muncul Otomatis Saat No. HP Diisi) -->
+              <div id="kasir-stamp-promo-box" class="hidden p-3.5 rounded-2xl bg-sky-50 border border-sky-200 space-y-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-sky-600 text-white">Program Loyalitas 10x Gratis 1x</span>
+                    <p id="kasir-stamp-status-text" class="text-xs font-extrabold text-slate-900 mt-1">Akumulasi Stamp Pelanggan: 0 / 10</p>
+                  </div>
+                  <span id="kasir-stamp-earned-now" class="font-mono text-xs font-extrabold text-sky-800 bg-white px-2.5 py-1 rounded-lg border border-sky-200">
+                    Nota ini: +0 Stamp
+                  </span>
+                </div>
+                <label id="kasir-stamp-redeem-label" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs cursor-pointer shadow">
+                  <input type="checkbox" id="kasir-redeem-free-wash" onchange="calculateKasirTotal()" class="w-4 h-4 rounded text-slate-900" />
+                  <span>🎁 Klaim Gratis 1x Cuci Sekarang! (Potong <span id="kasir-stamp-free-val-label">Rp 18.000</span> dari Tagihan)</span>
+                </label>
+              </div>
+
+              <!-- Box Gratis Cuci Pakaian Sholat (Sajadah, Mukena, Lobe, Sarung Sholat) -->
+              <div id="kasir-prayer-promo-box" class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-emerald-950 uppercase">
+                    <i class="fa-solid fa-mosque text-emerald-600 mr-1"></i> Promo Gratis Cuci Pakaian Sholat (Rp 0)
+                  </span>
+                  <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 text-[10px] font-extrabold">GRATIS</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Sajadah</span>
+                    <input type="number" id="pray-sajadah" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Mukena</span>
+                    <input type="number" id="pray-mukena" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Lobe / Peci</span>
+                    <input type="number" id="pray-lobe" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Sarung</span>
+                    <input type="number" id="pray-sarung" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- 6. Pilihan Aroma Parfum (Radio Button) & Kode Voucher -->
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-2 border-t border-slate-100">
               <div class="sm:col-span-7">
@@ -791,6 +839,20 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Opsi Simpan Kembalian di Nota (Jika tidak ada uang kembalian saat kurir menjemput / buat nota) -->
+              <div id="kasir-save-change-wrapper" class="hidden pt-2 border-t border-slate-200">
+                <label class="flex items-center justify-between gap-2 p-3 rounded-xl bg-amber-50 border-2 border-amber-400 cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <input type="checkbox" id="kasir-save-change-on-nota" onchange="updateReceiptPreview()" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                    <div>
+                      <span class="text-xs font-extrabold text-amber-950 block">Simpan Kembalian di Nota (Diserahkan Saat Pengambilan Barang)</span>
+                      <span class="text-[11px] text-amber-800">Centang jika kurir/kasir belum ada uang kecil. Di nota cetak akan tertulis besar <strong>"Kembalian ##.###"</strong>.</span>
+                    </div>
+                  </div>
+                  <span id="kasir-save-change-badge" class="font-mono text-sm font-black text-amber-900 bg-amber-200 px-2.5 py-1 rounded-lg shrink-0">Rp 0</span>
+                </label>
+              </div>
             </div>
 
             <!-- Tombol Submit Simpan Transaksi -->
@@ -840,10 +902,15 @@
 
                 <div class="thermal-divider"></div>
 
+                <!-- Nomor Nota & Nama Pelanggan Diperbesar -->
                 <div class="space-y-0.5 text-[9.5px]">
-                  <div class="flex justify-between">
-                    <span>NO. NOTA: <strong id="receipt-nota-id" class="text-[11px] font-extrabold">000001</strong></span>
+                  <div class="flex justify-between items-baseline">
+                    <span>NO. NOTA: <strong id="receipt-nota-id" class="text-[15px] font-black tracking-wider">000001</strong></span>
                     <span id="receipt-cust-type" class="font-bold">Umum</span>
+                  </div>
+                  <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+                    <span>Pelanggan:</span>
+                    <strong id="receipt-cust-name" class="text-[13px] font-black uppercase truncate max-w-[175px]">-</strong>
                   </div>
                   <div class="flex justify-between">
                     <span>Masuk: <span id="receipt-date-in">-</span></span>
@@ -852,10 +919,6 @@
                   <div class="flex justify-between">
                     <span>Estimasi:</span>
                     <strong id="receipt-eta">-</strong>
-                  </div>
-                  <div class="flex justify-between">
-                    <span>Pelanggan:</span>
-                    <strong id="receipt-cust-name" class="truncate max-w-[150px]">-</strong>
                   </div>
                   <div class="flex justify-between">
                     <span>Alamat:</span>
@@ -869,11 +932,12 @@
 
                 <div class="thermal-divider"></div>
 
+                <!-- Jumlah Pakaian Diperbesar -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div id="receipt-items-list" class="space-y-0.5 font-semibold"></div>
-                  <div class="flex justify-between pt-0.5 border-t border-dotted border-slate-300">
-                    <span id="receipt-qty-label">Total Berat / Pcs:</span>
-                    <strong id="receipt-weight-pcs">0 Kg / 0 Pcs</strong>
+                  <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
+                    <span id="receipt-qty-label" class="font-bold">Total Berat / Pakaian:</span>
+                    <strong id="receipt-weight-pcs" class="text-[13px] font-black">0 Kg / 0 Pcs</strong>
                   </div>
                   <div class="flex justify-between">
                     <span>Parfum: <span id="receipt-perfume">-</span></span>
@@ -885,6 +949,7 @@
 
                 <div class="thermal-divider"></div>
 
+                <!-- Total Biaya Diperbesar & Kotak Besar Kembalian ##.### -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between">
                     <span>Subtotal / Ongkir:</span>
@@ -894,8 +959,8 @@
                     <span>Total Diskon:</span>
                     <span id="receipt-discount">- Rp 0</span>
                   </div>
-                  <div class="flex justify-between text-[11px] font-extrabold pt-0.5 border-t border-dotted border-slate-400">
-                    <span>TOTAL BAYAR:</span>
+                  <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+                    <span>TOTAL BIAYA:</span>
                     <span id="receipt-total">Rp 0</span>
                   </div>
                   <div class="flex justify-between">
@@ -905,6 +970,16 @@
                   <div class="flex justify-between">
                     <span id="receipt-balance-label">Sisa Tagihan:</span>
                     <strong id="receipt-balance">Rp 0</strong>
+                  </div>
+
+                  <!-- KOTAK BESAR TULISAN "Kembalian ##.###" -->
+                  <div id="receipt-large-change-box" class="hidden my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
+                    <div id="receipt-large-change-text" class="text-[15px] font-black uppercase tracking-wide leading-tight">
+                      Kembalian 0
+                    </div>
+                    <div id="receipt-large-change-sub" class="text-[8.5px] font-bold uppercase mt-0.5">
+                      Disimpan di Nota (Diserahkan Saat Pengambilan)
+                    </div>
                   </div>
                 </div>
 
@@ -959,10 +1034,15 @@
 
                 <div class="thermal-divider"></div>
 
+                <!-- Nomor Nota, Nama Pelanggan, Jumlah Pakaian & Total Biaya Diperbesar di Struk 2 -->
                 <div class="space-y-0.5 text-[9.5px]">
-                  <div class="flex justify-between">
+                  <div class="flex justify-between items-baseline">
                     <span>NO. NOTA:</span>
-                    <strong id="receipt2-nota-id" class="text-[11px] font-extrabold">000001</strong>
+                    <strong id="receipt2-nota-id" class="text-[15px] font-black tracking-wider">000001</strong>
+                  </div>
+                  <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+                    <span>Nama Pelanggan:</span>
+                    <strong id="receipt2-cust-name" class="text-[13px] font-black uppercase truncate max-w-[170px]">-</strong>
                   </div>
                   <div class="flex justify-between">
                     <span>Tgl Masuk:</span>
@@ -976,17 +1056,27 @@
                     <span>Kasir:</span>
                     <span id="receipt2-cashier-name">-</span>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Nama Pelanggan:</span>
-                    <strong id="receipt2-cust-name">-</strong>
+                  <div class="flex justify-between items-baseline">
+                    <span>Berat / Pakaian:</span>
+                    <strong id="receipt2-weight-pcs" class="text-[12.5px] font-black">0 Kg / 0 Pcs</strong>
                   </div>
-                  <div class="flex justify-between text-[11px] font-extrabold pt-0.5 border-t border-dotted border-slate-400">
-                    <span>TOTAL BAYAR:</span>
+                  <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+                    <span>TOTAL BIAYA:</span>
                     <span id="receipt2-total">Rp 0</span>
                   </div>
                   <div class="flex justify-between">
                     <span>Status Pembayaran:</span>
                     <strong id="receipt2-pay-status">BELUM BAYAR</strong>
+                  </div>
+
+                  <!-- KOTAK BESAR TULISAN "Kembalian ##.###" DI STRUK 2 -->
+                  <div id="receipt2-large-change-box" class="hidden my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
+                    <div id="receipt2-large-change-text" class="text-[15px] font-black uppercase tracking-wide leading-tight">
+                      Kembalian 0
+                    </div>
+                    <div id="receipt2-large-change-sub" class="text-[8.5px] font-bold uppercase mt-0.5">
+                      Disimpan di Nota (Diserahkan Saat Pengambilan)
+                    </div>
                   </div>
                 </div>
 
@@ -1104,7 +1194,7 @@
               <span id="summary-voucher-discount" class="font-mono font-bold">- Rp 0</span>
             </div>
             <div class="border-t border-slate-800 pt-2 flex justify-between items-baseline text-sm font-extrabold text-white">
-              <span>TOTAL TAGIHAN:</span>
+              <span>TOTAL TAGIHAN (Bulat 500):</span>
               <span id="summary-grand-total" class="font-mono text-xl text-sky-400">Rp 0</span>
             </div>
             <div class="flex justify-between text-slate-300 pt-1">
@@ -1798,6 +1888,7 @@
           </div>
         </div>
 
+        <!-- Kanan: Tabel Member & Panel Portal Login Pelanggan (7 Kolom) -->
         <div class="xl:col-span-7 space-y-5">
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
@@ -2547,6 +2638,64 @@
           <div id="setting-service-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
         </div>
 
+        <!-- PENGATURAN PROMO CUCI 10X GRATIS 1X & GRATIS PAKAIAN SHOLAT -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                <i class="fa-solid fa-mosque"></i> Program Promo &amp; Berkah Laundry QU
+              </span>
+              <h2 class="text-lg font-extrabold text-slate-900 mt-1">Pengaturan Promo Cuci 10x Gratis 1x &amp; Gratis Pakaian Sholat</h2>
+              <p class="text-xs text-slate-500">Aktifkan atau nonaktifkan promo kapan saja. Perubahan langsung tampil di Kasir POS dan Website Pelanggan.</p>
+            </div>
+          </div>
+
+          <form onsubmit="savePromoSettings(event)" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Toggle 1: Cuci 10x Gratis 1x -->
+            <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-200 space-y-3">
+              <label class="flex items-center justify-between cursor-pointer">
+                <div>
+                  <span class="text-sm font-extrabold text-slate-900 block">1. Promo Cuci 10x Gratis 1x (Berlaku Kelipatan)</span>
+                  <span class="text-[11px] text-slate-600">Dihitung otomatis dari Nomor WA Pelanggan (Umum &amp; Member)</span>
+                </div>
+                <input type="checkbox" id="set-promo-stamp-enabled" checked class="w-5 h-5 rounded text-sky-600" />
+              </label>
+              <div class="grid grid-cols-3 gap-2 pt-2 border-t border-sky-200/80 text-xs">
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Syarat Min. Berat (Kg)</label>
+                  <input type="text" id="set-promo-min-kg" value="3" oninput="formatThousandInput(this)" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white font-mono font-extrabold text-center" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Atau Min. Biaya (Rp)</label>
+                  <input type="text" id="set-promo-min-rp" value="18.000" oninput="formatThousandInput(this)" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white font-mono font-extrabold text-center" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Nilai Gratis 1x (Rp)</label>
+                  <input type="text" id="set-promo-free-val" value="18.000" oninput="formatThousandInput(this)" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white font-mono font-extrabold text-center text-emerald-700" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Toggle 2: Gratis Cuci Pakaian Sholat -->
+            <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex flex-col justify-between space-y-3">
+              <label class="flex items-center justify-between cursor-pointer">
+                <div>
+                  <span class="text-sm font-extrabold text-emerald-950 block">2. Promo Gratis Cuci Pakaian Sholat (Rp 0)</span>
+                  <span class="text-[11px] text-emerald-800">Gratis cuci Sajadah, Mukena, Lobe, dan Sarung Sholat</span>
+                </div>
+                <input type="checkbox" id="set-promo-prayer-enabled" checked class="w-5 h-5 rounded text-emerald-600" />
+              </label>
+              <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-emerald-900 font-semibold">
+                <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>
+                Jika aktif, form Buat Nota Kasir dan form Pesan Jemput Pelanggan akan menampilkan pilihan input jumlah <strong>Sajadah, Mukena, Lobe, dan Sarung Sholat</strong> dengan biaya <strong>Rp 0 (Gratis)</strong>.
+              </div>
+              <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs shadow transition">
+                <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Pengaturan Promo
+              </button>
+            </div>
+          </form>
+        </div>
+
         <!-- 4. Form Pilihan Aroma Parfum & Kode Voucher Promo -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
@@ -2697,7 +2846,7 @@
        CONTAINER KHUSUS CETAK LAPORAN, STRUK & EXPORT PDF (#universal-print-container)
   ========================================================================== -->
   <div id="universal-print-container" class="hidden bg-white text-slate-900"></div>
-
+  
   <script>
     // =========================================================================
     // 1. KONFIGURASI FIREBASE UNIVERSAL, CLOUDINARY & KOORDINAT LAUNDRY QU
@@ -2719,13 +2868,13 @@
     let radiusCircle3Km = null;
     let activeSpeechRecognizer = null;
     let isVoiceListening = false;
+    let activeProcessingPickupOrderNumber = null;
 
     let dbRef = null;
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
-      // Menggunakan referensi universal permanen sesuai permintaan
       dbRef = firebase.database().ref('laundry_qu_pos');
     } catch (err) {
       console.warn("Firebase berjalan dalam mode fallback LocalStorage:", err);
@@ -2769,7 +2918,6 @@
       selesai: 7
     };
 
-    // 7 Ketentuan Resmi Nota Laundry QU
     const LAUNDRY_TERMS_HTML = `
       <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
       <ol class="list-decimal pl-3 space-y-0">
@@ -2808,7 +2956,12 @@
         printerPadding: "6px",
         printerShowLogo: true,
         printerPageBreak: false,
-        printerAutoPrint: false
+        printerAutoPrint: false,
+        promoStampEnabled: true,
+        promoStampMinKg: 3,
+        promoStampMinRp: 18000,
+        promoStampMaxFreeValue: 18000,
+        promoPrayerEnabled: true
       },
       adminUsers: [],
       employees: [],
@@ -2861,7 +3014,6 @@
     let html5QrScanner = null;
     let currentQrScanMode = 'global';
 
-    // Helper Verifikasi Password Multi-Admin (Supervisor, Manajer, Direktur, atau Master Fallback)
     function verifyAdminCredentials(inputPassword) {
       const pass = String(inputPassword || '').trim();
       if (!pass) return null;
@@ -2887,8 +3039,19 @@
     }
 
     // =========================================================================
-    // 4. FORMAT ANGKA RIBUAN OTOMATIS & NOMOR BERURUT (TIDAK PERNAH PAKAI ULANG NOTA DIHAPUS)
+    // 4. PENGGENAPAN PER 500, FORMAT ANGKA RIBUAN & NOMOR NOTA BERURUT
     // =========================================================================
+    // Aturan Penggenapan Per 500:
+    // Jika sisa pembagian 500 < 300 -> digenapkan ke bawah (contoh: 21.299 -> 21.000)
+    // Jika sisa pembagian 500 >= 300 -> digenapkan ke 500 (contoh: 21.300 -> 21.500)
+    function roundToNearest500(amount) {
+      const num = Math.round(Number(amount) || 0);
+      if (num <= 0) return 0;
+      const remainder = num % 500;
+      const base = num - remainder;
+      return remainder >= 300 ? base + 500 : base;
+    }
+
     function formatThousandInput(inputEl) {
       if (!inputEl) return;
       let raw = String(inputEl.value || '');
@@ -2925,7 +3088,6 @@
       return n.toLocaleString('id-ID');
     }
 
-    // Nomor nota dihitung dari seluruh riwayat nota (termasuk yang sudah dihapus admin) agar tidak pernah dipakai ulang
     function getNextOrderId() {
       const orders = appData.orders || [];
       if (orders.length === 0) return "000001";
@@ -2966,7 +3128,6 @@
     function loadLocalData() {
       try {
         let raw = localStorage.getItem(STORAGE_KEY);
-        // Migrasi otomatis jika sebelumnya tersimpan di kunci v5 atau v6
         if (!raw) {
           const prevV6 = localStorage.getItem('laundry_qu_pos_v6_clean_local');
           const prevV5 = localStorage.getItem('laundry_qu_pos_v5_clean_local');
@@ -2989,16 +3150,16 @@
       const merged = JSON.parse(JSON.stringify(defaultState));
       if (!data || typeof data !== 'object') return merged;
       if (data.settings) merged.settings = { ...merged.settings, ...data.settings };
-      if (Array.isArray(data.adminUsers)) merged.adminUsers = data.adminUsers;
-      if (Array.isArray(data.employees)) merged.employees = data.employees;
-      if (Array.isArray(data.services)) merged.services = data.services;
-      if (Array.isArray(data.perfumes)) merged.perfumes = data.perfumes;
-      if (Array.isArray(data.vouchers)) merged.vouchers = data.vouchers;
-      if (Array.isArray(data.members)) merged.members = data.members;
-      if (Array.isArray(data.inventory)) merged.inventory = data.inventory;
-      if (Array.isArray(data.expenses)) merged.expenses = data.expenses;
-      if (Array.isArray(data.cashflows)) merged.cashflows = data.cashflows;
-      if (Array.isArray(data.orders)) merged.orders = data.orders;
+      if (data.adminUsers) merged.adminUsers = Object.values(data.adminUsers).filter(Boolean);
+      if (data.employees) merged.employees = Object.values(data.employees).filter(Boolean);
+      if (data.services) merged.services = Object.values(data.services).filter(Boolean);
+      if (data.perfumes) merged.perfumes = Object.values(data.perfumes).filter(Boolean);
+      if (data.vouchers) merged.vouchers = Object.values(data.vouchers).filter(Boolean);
+      if (data.members) merged.members = Object.values(data.members).filter(Boolean);
+      if (data.inventory) merged.inventory = Object.values(data.inventory).filter(Boolean);
+      if (data.expenses) merged.expenses = Object.values(data.expenses).filter(Boolean);
+      if (data.cashflows) merged.cashflows = Object.values(data.cashflows).filter(Boolean);
+      if (data.orders) merged.orders = Object.values(data.orders).filter(Boolean);
       if (data.pickupOrders) merged.pickupOrders = Object.values(data.pickupOrders).filter(Boolean);
       return merged;
     }
@@ -3122,7 +3283,6 @@
     }
 
     function updateTopStatistics() {
-      // Hanya hitung nota yang tidak dihapus admin
       const activeValidOrders = (appData.orders || []).filter(o => !o.isDeleted);
       const processingCount = activeValidOrders.filter(o => o.currentStage < 6).length;
       const readyCount = activeValidOrders.filter(o => o.currentStage === 6).length;
@@ -3331,8 +3491,193 @@
     }
 
     // =========================================================================
-    // 8. TAB 1: KASIR, CARI & SCROLL PAKET, LOGIKA BUNDLE 7KG/14KG & 2 STRUK
+    // 8. TAB 1: ANTREAN PESANAN ONLINE, PROMO 10X GRATIS 1X & KASIR
     // =========================================================================
+    function renderOnlinePickupQueue() {
+      const box = document.getElementById('online-pickup-queue-box');
+      const listEl = document.getElementById('online-pickup-list');
+      const countEl = document.getElementById('online-pickup-count');
+      if (!box || !listEl) return;
+
+      const pendingList = (appData.pickupOrders || []).filter(p => p && !p.convertedNotaId && p.status !== 'DITOLAK');
+      if (pendingList.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.classList.remove('hidden');
+      if (countEl) countEl.textContent = pendingList.length;
+
+      listEl.innerHTML = pendingList.map(p => {
+        const lat = p.coords?.lat ? Number(p.coords.lat).toFixed(5) : '-';
+        const lng = p.coords?.lng ? Number(p.coords.lng).toFixed(5) : '-';
+        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${LAUNDRY_LAT},${LAUNDRY_LNG}&destination=${p.coords?.lat || LAUNDRY_LAT},${p.coords?.lng || LAUNDRY_LNG}&travelmode=two-wheeler`;
+        const pkgNames = (p.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
+        const isAccepted = p.status === 'DITERIMA_KURIR_OTW';
+
+        return `
+          <div class="p-3.5 rounded-xl bg-white border-2 ${isAccepted ? 'border-emerald-500' : 'border-amber-300'} shadow-xs flex flex-col justify-between space-y-2.5 text-xs">
+            <div class="space-y-1">
+              <div class="flex items-center justify-between gap-1">
+                <span class="px-2 py-0.5 rounded bg-slate-900 text-amber-300 font-mono font-extrabold">${p.orderNumber}</span>
+                <span class="px-2 py-0.5 rounded ${isAccepted ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'} font-extrabold text-[10px]">
+                  ${isAccepted ? '✓ DITERIMA (KURIR OTW)' : '⏳ PESANAN BARU'}
+                </span>
+              </div>
+              <p class="font-extrabold text-sm text-slate-900 pt-1">${p.custName} <span class="text-[11px] font-mono text-slate-500">(${p.custPhone})</span></p>
+              <p class="text-[11px] text-slate-700 font-semibold"><i class="fa-solid fa-location-dot text-rose-600 mr-1"></i>${p.custAddress}</p>
+              <p class="text-[10px] font-mono text-slate-500">Koordinat: ${lat}, ${lng} (${p.distanceKm || 0} Km)</p>
+              <p class="text-[11px] text-indigo-700 font-bold">Paket: ${pkgNames}</p>
+            </div>
+            <div class="pt-2 border-t border-slate-100 flex flex-col gap-1.5">
+              <a href="${gmapsUrl}" target="_blank" rel="noopener" class="w-full py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] text-center flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Buka Rute Google Maps Penjemputan
+              </a>
+              ${!isAccepted ? `
+                <button type="button" onclick="acceptOnlinePickupOrder('${p.orderNumber}')" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow">
+                  <i class="fa-solid fa-bell"></i> Terima Pesanan (Kirim Notif ke Pelanggan)
+                </button>
+              ` : ''}
+              <button type="button" onclick="loadOnlinePickupToKasirForm('${p.orderNumber}')" class="w-full py-2 px-3 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow">
+                <i class="fa-solid fa-file-import"></i> Proses ke Form Buat Nota
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function acceptOnlinePickupOrder(orderNumber) {
+      const pIdx = (appData.pickupOrders || []).findIndex(item => item.orderNumber === orderNumber);
+      if (pIdx === -1) return;
+
+      const cashier = selectedCashierOnKasir || (appData.employees[0]?.name || 'Admin Kasir');
+      appData.pickupOrders[pIdx].status = 'DITERIMA_KURIR_OTW';
+      appData.pickupOrders[pIdx].acceptedAt = Date.now();
+      appData.pickupOrders[pIdx].acceptedBy = cashier;
+
+      saveData();
+      alert(`Pesanan ${orderNumber} telah diterima! Pelanggan kini menerima notifikasi real-time di websitenya bahwa kurir sedang menuju lokasi.`);
+    }
+
+    function loadOnlinePickupToKasirForm(orderNumber) {
+      const p = (appData.pickupOrders || []).find(item => item.orderNumber === orderNumber);
+      if (!p) return;
+
+      if (!selectedCashierOnKasir) {
+        if ((appData.employees || []).length === 0) {
+          alert("Tambahkan minimal 1 karyawan di menu Data Karyawan terlebih dahulu.");
+          return;
+        }
+        selectCashierToOpenForm(appData.employees[0].name);
+      }
+
+      activeProcessingPickupOrderNumber = p.orderNumber;
+
+      if (p.status === 'MENUNGGU_JEMPUT') {
+        p.status = 'DITERIMA_KURIR_OTW';
+        p.acceptedAt = Date.now();
+        p.acceptedBy = selectedCashierOnKasir;
+      }
+
+      const catRadio = document.querySelector(`input[name="cust_category"][value="${p.custCategory || 'Umum'}"]`);
+      if (catRadio) catRadio.checked = true;
+      handleCustomerCategoryChange(p.custCategory || 'Umum');
+      if (p.custCategory === 'Member' && p.memberId) {
+        selectMemberForKasir(p.memberId);
+      }
+
+      document.getElementById('kasir-cust-name').value = p.custName || '';
+      document.getElementById('kasir-cust-phone').value = p.custPhone || '';
+      document.getElementById('kasir-cust-address').value = p.custAddress || '';
+      document.getElementById('kasir-weight').value = formatNumberID(p.weightKg || 1);
+      document.getElementById('kasir-pcs').value = formatNumberID(p.pcsCount || 1);
+      document.getElementById('kasir-cloth-details').value = p.clothDetails || '';
+
+      const delivRadio = document.querySelector(`input[name="delivery_type"][value="${p.deliveryType || 'Jemput & Antar'}"]`);
+      if (delivRadio) delivRadio.checked = true;
+      if (p.coords && p.coords.lat && p.coords.lng) {
+        selectedCustomerCoords = { lat: Number(p.coords.lat), lng: Number(p.coords.lng) };
+      }
+      handleDeliveryTypeChange(p.deliveryType || 'Jemput & Antar');
+      if (document.getElementById('delivery-distance-km')) {
+        document.getElementById('delivery-distance-km').value = String(p.distanceKm || 0).replace('.', ',');
+      }
+
+      multiServiceCart = Array.isArray(p.items) ? JSON.parse(JSON.stringify(p.items)) : [];
+      renderMultiServiceCart();
+      calculateKasirTotal();
+
+      document.getElementById('kasir-workspace-container')?.scrollIntoView({ behavior: 'smooth' });
+      alert(`Data Pesanan ${p.orderNumber} (${p.custName}) beserta titik koordinat GPS penjemputan telah dimasukkan ke Form Buat Nota!`);
+    }
+
+    // Perhitungan Promo Stamp 10x Gratis 1x (Min 3 Kg atau Rp 18.000, Berlaku Kelipatan)
+    function computeOrderStampsEarned(weightKg, subtotalRp) {
+      if (appData.settings.promoStampEnabled === false) return 0;
+      const minKg = Math.max(1, Number(appData.settings.promoStampMinKg) || 3);
+      const minRp = Math.max(1000, Number(appData.settings.promoStampMinRp) || 18000);
+      const byWeight = Math.floor((Number(weightKg) || 0) / minKg);
+      const byPrice = Math.floor((Number(subtotalRp) || 0) / minRp);
+      return Math.max(byWeight, byPrice);
+    }
+
+    function getCustomerStampBalanceByPhone(phoneRaw) {
+      const cleanPhone = String(phoneRaw || '').replace(/\D/g, '').replace(/^62/, '0');
+      if (cleanPhone.length < 8) return { totalEarned: 0, totalRedeemed: 0, availableStamps: 0, freeWashAvailable: 0 };
+
+      let totalEarned = 0;
+      let totalRedeemed = 0;
+
+      (appData.orders || []).forEach(o => {
+        if (o.isDeleted) return;
+        const p = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        if (p === cleanPhone || (p.length >= 8 && p.endsWith(cleanPhone.slice(-8)))) {
+          const earned = typeof o.stampsEarned === 'number'
+            ? o.stampsEarned
+            : computeOrderStampsEarned(o.weightKg, o.subtotal);
+          totalEarned += earned;
+          totalRedeemed += (Number(o.stampsRedeemed) || 0);
+        }
+      });
+
+      const availableStamps = Math.max(0, totalEarned - totalRedeemed);
+      const freeWashAvailable = Math.floor(availableStamps / 10);
+      return { totalEarned, totalRedeemed, availableStamps, freeWashAvailable };
+    }
+
+    function getKasirPrayerItemsSummary() {
+      if (appData.settings.promoPrayerEnabled === false) return { items: {}, totalPcs: 0, text: '' };
+      const sajadah = Math.max(0, parseInt(document.getElementById('pray-sajadah')?.value || '0', 10));
+      const mukena = Math.max(0, parseInt(document.getElementById('pray-mukena')?.value || '0', 10));
+      const lobe = Math.max(0, parseInt(document.getElementById('pray-lobe')?.value || '0', 10));
+      const sarung = Math.max(0, parseInt(document.getElementById('pray-sarung')?.value || '0', 10));
+
+      const parts = [];
+      if (sajadah > 0) parts.push(`Sajadah ${sajadah}`);
+      if (mukena > 0) parts.push(`Mukena ${mukena}`);
+      if (lobe > 0) parts.push(`Lobe ${lobe}`);
+      if (sarung > 0) parts.push(`Sarung Sholat ${sarung}`);
+
+      return {
+        items: { sajadah, mukena, lobe, sarung },
+        totalPcs: sajadah + mukena + lobe + sarung,
+        text: parts.length > 0 ? `[GRATIS CUCI PAKAIAN SHOLAT: ${parts.join(', ')}]` : ''
+      };
+    }
+
+    function savePromoSettings(e) {
+      e.preventDefault();
+      appData.settings.promoStampEnabled = document.getElementById('set-promo-stamp-enabled')?.checked ?? true;
+      appData.settings.promoStampMinKg = Math.max(1, parseFormattedNumber(document.getElementById('set-promo-min-kg')?.value || '3'));
+      appData.settings.promoStampMinRp = Math.max(1000, parseFormattedNumber(document.getElementById('set-promo-min-rp')?.value || '18.000'));
+      appData.settings.promoStampMaxFreeValue = Math.max(1000, parseFormattedNumber(document.getElementById('set-promo-free-val')?.value || '18.000'));
+      appData.settings.promoPrayerEnabled = document.getElementById('set-promo-prayer-enabled')?.checked ?? true;
+
+      saveData();
+      alert("Pengaturan Promo Cuci 10x Gratis 1x & Gratis Pakaian Sholat berhasil disimpan!");
+    }
+
     function selectCashierToOpenForm(empName) {
       selectedCashierOnKasir = empName;
       updateCashierHeaderDisplay();
@@ -3407,7 +3752,6 @@
       calculateKasirTotal();
     }
 
-    // Mengubah Label Kolom Berat menjadi Set, Stelan, atau Bundle Kg secara Dinamis
     function updateWeightFieldLabelByService() {
       const selectedSrvId = document.querySelector('input[name="kasir_service"]:checked')?.value;
       const srv = (appData.services || []).find(s => s.id === selectedSrvId);
@@ -3442,7 +3786,6 @@
       }
     }
 
-    // Render Radio Paket Layanan dengan Fitur Pencarian & Scroll
     function renderKasirServiceRadios() {
       const srvContainer = document.getElementById('radio-service-list');
       if (!srvContainer) return;
@@ -3478,7 +3821,6 @@
       srvContainer.innerHTML = filtered.map((srv) => {
         const checked = srv.id === activeSrvId;
         const unitLabel = srv.estUnit === 'hours' ? 'Jam' : 'Hari';
-        const hasMerinci = Array.isArray(srv.activeStages) && srv.activeStages.includes(1);
         const isExpress = getExpressHighlightText([{ name: srv.name }]) !== null;
         const priceUnitLabel = srv.unit === 'Bundle' ? `${srv.bundleKg || 7} Kg` : (srv.unit || 'Kg');
 
@@ -3494,7 +3836,7 @@
                   ${srv.unit === 'Bundle' ? `<span class="px-1.5 py-0.5 rounded bg-indigo-600 text-white text-[9px] font-extrabold">BUNDLE ${srv.bundleKg || 7}KG</span>` : ''}
                 </div>
                 <p class="text-[11px] text-slate-500 font-medium mt-0.5">
-                  Estimasi: ${srv.estValue} ${unitLabel} &bull; ${hasMerinci ? '<span class="text-amber-700 font-bold">Wajib Rinci</span>' : '<span class="text-emerald-700 font-bold">Tanpa Rinci</span>'}
+                  Estimasi: ${srv.estValue} ${unitLabel}
                 </p>
               </div>
               <span class="font-mono text-xs font-extrabold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200 shrink-0">
@@ -3687,7 +4029,6 @@
       calculateKasirTotal();
     }
 
-    // Perhitungan Item Layanan (Mendukung Kg, Pcs, Set, Stelan, dan Bundle Kelipatan 7Kg / 14Kg)
     function computeServiceItemCharge(srv, weightOrSetVal, pcsCount) {
       if (!srv) return null;
       const unit = srv.unit || 'Kg';
@@ -3697,7 +4038,7 @@
         const actualKg = Math.max(0, Number(weightOrSetVal) || 0);
         const bundleMultiples = actualKg > 0 ? Math.ceil(actualKg / bundleCap) : 0;
         const countedKg = bundleMultiples * bundleCap;
-        const subtotal = Math.round(bundleMultiples * Number(srv.price));
+        const subtotal = roundToNearest500(Math.round(bundleMultiples * Number(srv.price)));
 
         return {
           serviceId: srv.id,
@@ -3718,7 +4059,7 @@
       }
 
       const qty = (unit === 'Pcs') ? pcsCount : weightOrSetVal;
-      const subtotal = Math.round(Number(srv.price) * qty);
+      const subtotal = roundToNearest500(Math.round(Number(srv.price) * qty));
       return {
         serviceId: srv.id,
         name: srv.name,
@@ -3863,23 +4204,23 @@
       const unitLabel = getActiveWeightUnitLabel();
       const bundleInfoEl = document.getElementById('kasir-bundle-info');
 
-      let subtotal = 0;
+      let rawSubtotal = 0;
       if (multiServiceCart.length > 0) {
-        subtotal = multiServiceCart.reduce((acc, item) => acc + item.subtotal, 0);
+        rawSubtotal = multiServiceCart.reduce((acc, item) => acc + roundToNearest500(item.subtotal), 0);
         bundleInfoEl?.classList.add('hidden');
       } else {
         const selectedSrvId = document.querySelector('input[name="kasir_service"]:checked')?.value;
         const srv = (appData.services || []).find(s => s.id === selectedSrvId);
         if (srv) {
           const calcItem = computeServiceItemCharge(srv, weightOrSetVal, pcsCount);
-          subtotal = calcItem ? calcItem.subtotal : 0;
+          rawSubtotal = calcItem ? calcItem.subtotal : 0;
 
           if (srv.unit === 'Bundle' && bundleInfoEl) {
             bundleInfoEl.classList.remove('hidden');
             if (weightOrSetVal > 0) {
-              bundleInfoEl.innerHTML = `<i class="fa-solid fa-box-open mr-1"></i> Berat timbangan <strong>${weightOrSetVal} Kg</strong> &rarr; Terhitung <strong>${calcItem.countedWeightKg} Kg</strong> (${calcItem.bundleMultiples}x Bundle @${calcItem.bundleCap} Kg = ${formatRupiah(subtotal)})`;
+              bundleInfoEl.innerHTML = `<i class="fa-solid fa-box-open mr-1"></i> Berat timbangan <strong>${weightOrSetVal} Kg</strong> &rarr; Terhitung <strong>${calcItem.countedWeightKg} Kg</strong> (${calcItem.bundleMultiples}x Bundle @${calcItem.bundleCap} Kg = ${formatRupiah(rawSubtotal)})`;
             } else {
-              bundleInfoEl.innerHTML = `<i class="fa-solid fa-circle-info mr-1"></i> Paket Bundle per ${srv.bundleKg || 7} Kg: Cucian &le; ${srv.bundleKg || 7} Kg dihitung ${srv.bundleKg || 7} Kg, di atasnya berlaku kelipatan ${ (srv.bundleKg || 7) * 2 } Kg, dst.`;
+              bundleInfoEl.innerHTML = `<i class="fa-solid fa-circle-info mr-1"></i> Paket Bundle per ${srv.bundleKg || 7} Kg: Cucian &le; ${srv.bundleKg || 7} Kg dihitung ${srv.bundleKg || 7} Kg, di atasnya berlaku kelipatan ${(srv.bundleKg || 7) * 2} Kg, dst.`;
             }
           } else {
             bundleInfoEl?.classList.add('hidden');
@@ -3887,7 +4228,8 @@
         }
       }
 
-      const deliveryFee = calculateConditionalDeliveryFee(distKm, weightOrSetVal, pcsCount, deliveryType);
+      const subtotal = roundToNearest500(rawSubtotal);
+      const deliveryFee = roundToNearest500(calculateConditionalDeliveryFee(distKm, weightOrSetVal, pcsCount, deliveryType));
       const feeDisplay = document.getElementById('delivery-fee-display');
       if (feeDisplay) {
         feeDisplay.textContent = deliveryFee === 0 && deliveryType !== 'Datang Sendiri' && distKm > 0
@@ -3919,7 +4261,47 @@
         }
       }
 
-      const grandTotal = Math.max(0, subtotal + deliveryFee - memberDiscount - voucherDiscount);
+      const stampBox = document.getElementById('kasir-stamp-promo-box');
+      const prayerBox = document.getElementById('kasir-prayer-promo-box');
+      if (prayerBox) {
+        prayerBox.classList.toggle('hidden', appData.settings.promoPrayerEnabled === false);
+      }
+
+      let stampFreeDiscount = 0;
+      const custPhoneVal = document.getElementById('kasir-cust-phone')?.value || '';
+      const stampsNow = computeOrderStampsEarned(weightOrSetVal, subtotal);
+
+      if (stampBox && appData.settings.promoStampEnabled !== false) {
+        stampBox.classList.remove('hidden');
+        const bal = getCustomerStampBalanceByPhone(custPhoneVal);
+        document.getElementById('kasir-stamp-status-text').textContent =
+          `Stamp Pelanggan Saat Ini: ${bal.availableStamps} / 10 Stamp (${bal.freeWashAvailable}x Hak Gratis Cuci)`;
+        document.getElementById('kasir-stamp-earned-now').textContent = `Nota ini: +${stampsNow} Stamp`;
+
+        const redeemLabel = document.getElementById('kasir-stamp-redeem-label');
+        const redeemCheck = document.getElementById('kasir-redeem-free-wash');
+        const freeVal = Number(appData.settings.promoStampMaxFreeValue) || 18000;
+        document.getElementById('kasir-stamp-free-val-label').textContent = formatRupiah(freeVal);
+
+        if (bal.freeWashAvailable > 0) {
+          redeemLabel.classList.remove('hidden');
+          redeemLabel.classList.add('flex');
+          if (redeemCheck && redeemCheck.checked) {
+            stampFreeDiscount = Math.min(subtotal, freeVal);
+          }
+        } else {
+          redeemLabel.classList.add('hidden');
+          redeemLabel.classList.remove('flex');
+          if (redeemCheck) redeemCheck.checked = false;
+        }
+      } else if (stampBox) {
+        stampBox.classList.add('hidden');
+      }
+      voucherDiscount += stampFreeDiscount;
+
+      // Genapkan Total Tagihan Akhir ke kelipatan 500 (< 300 ke bawah, >= 300 ke 500)
+      const rawGrandTotal = Math.max(0, subtotal + deliveryFee - memberDiscount - voucherDiscount);
+      const grandTotal = roundToNearest500(rawGrandTotal);
 
       const rawInputStr = (document.getElementById('kasir-paid-amount')?.value || '').trim();
       let rawPaid = parseFormattedNumber(rawInputStr);
@@ -3941,6 +4323,20 @@
 
       const remainingAmount = Math.max(0, grandTotal - rawPaid);
       const changeAmount = Math.max(0, rawPaid - grandTotal);
+
+      // Tampilkan opsi Simpan Kembalian di Nota jika terdapat kembalian > 0
+      const saveChangeWrap = document.getElementById('kasir-save-change-wrapper');
+      const saveChangeBadge = document.getElementById('kasir-save-change-badge');
+      const saveChangeCheck = document.getElementById('kasir-save-change-on-nota');
+      if (saveChangeWrap) {
+        if (changeAmount > 0) {
+          saveChangeWrap.classList.remove('hidden');
+          if (saveChangeBadge) saveChangeBadge.textContent = formatRupiah(changeAmount);
+        } else {
+          saveChangeWrap.classList.add('hidden');
+          if (saveChangeCheck) saveChangeCheck.checked = false;
+        }
+      }
 
       currentCalculatedTotals = {
         subtotal,
@@ -4059,25 +4455,20 @@
 
       const tot = currentCalculatedTotals;
       const payStatus = tot.autoPayStatus || 'Belum Bayar';
+      const isChangeSavedOnNota = Boolean(document.getElementById('kasir-save-change-on-nota')?.checked);
 
       const expressText = getExpressHighlightText(items);
       const expBanner1 = document.getElementById('receipt-express-banner');
       const expBanner2 = document.getElementById('receipt2-express-banner');
       if (expressText) {
-        if (expBanner1) {
-          expBanner1.textContent = expressText;
-          expBanner1.classList.remove('hidden');
-        }
-        if (expBanner2) {
-          expBanner2.textContent = expressText;
-          expBanner2.classList.remove('hidden');
-        }
+        if (expBanner1) { expBanner1.textContent = expressText; expBanner1.classList.remove('hidden'); }
+        if (expBanner2) { expBanner2.textContent = expressText; expBanner2.classList.remove('hidden'); }
       } else {
         expBanner1?.classList.add('hidden');
         expBanner2?.classList.add('hidden');
       }
 
-      // STRUK 1 (Tanpa tanda # pada nomor nota)
+      // STRUK 1
       document.getElementById('receipt-nota-id').textContent = notaId;
       document.getElementById('receipt-date-in').textContent = dateInFormatted;
       document.getElementById('receipt-eta').textContent = etaFormatted;
@@ -4097,20 +4488,18 @@
           itemsContainer.innerHTML = items.map(it => `
             <div class="flex justify-between">
               <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
-              <span>${formatRupiah(it.subtotal)}</span>
+              <span>${formatRupiah(roundToNearest500(it.subtotal))}</span>
             </div>
           `).join('');
         }
       }
 
       const qtyLabelEl = document.getElementById('receipt-qty-label');
-      if (qtyLabelEl) {
-        qtyLabelEl.textContent = `Total ${unitLabel} / Pcs:`;
-      }
+      if (qtyLabelEl) qtyLabelEl.textContent = `Total ${unitLabel} / Pakaian:`;
       document.getElementById('receipt-weight-pcs').textContent = `${weightOrSetVal} ${unitLabel} / ${pcsCount} Pcs`;
       document.getElementById('receipt-perfume').textContent = perfume;
       document.getElementById('receipt-rack').textContent = rack;
-      document.getElementById('receipt-cloth-details').textContent = clothDetails;
+      document.getElementById('receipt-cloth-details').textContent = [clothDetails, getKasirPrayerItemsSummary().text].filter(Boolean).join(' ') || '-';
 
       document.getElementById('receipt-subtotal').textContent = formatRupiah(tot.subtotal);
       document.getElementById('receipt-ongkir').textContent = formatRupiah(tot.deliveryFee);
@@ -4128,15 +4517,45 @@
       }
       document.getElementById('receipt-sign-cashier').textContent = `( ${cashierName} )`;
 
-      // STRUK 2 (Tanpa tanda # pada nomor nota)
+      // STRUK 2
       document.getElementById('receipt2-nota-id').textContent = notaId;
       document.getElementById('receipt2-date-in').textContent = dateInFormatted;
       document.getElementById('receipt2-eta').textContent = etaFormatted;
       document.getElementById('receipt2-cashier-name').textContent = cashierName;
       document.getElementById('receipt2-cust-name').textContent = custName;
+      const r2WeightPcs = document.getElementById('receipt2-weight-pcs');
+      if (r2WeightPcs) r2WeightPcs.textContent = `${weightOrSetVal} ${unitLabel} / ${pcsCount} Pcs`;
       document.getElementById('receipt2-total').textContent = formatRupiah(tot.grandTotal);
       document.getElementById('receipt2-pay-status').textContent = `${payStatus.toUpperCase()} (${payMethod})`;
       document.getElementById('receipt2-sign-customer').textContent = `( ${custName} )`;
+
+      // KOTAK BESAR TULISAN "Kembalian ##.###"
+      const changeBox1 = document.getElementById('receipt-large-change-box');
+      const changeText1 = document.getElementById('receipt-large-change-text') || document.getElementById('receipt-large-change-val');
+      const changeSub1 = document.getElementById('receipt-large-change-sub') || document.getElementById('receipt-large-change-note');
+      const changeBox2 = document.getElementById('receipt2-large-change-box');
+      const changeText2 = document.getElementById('receipt2-large-change-text') || document.getElementById('receipt2-large-change-val');
+      const changeSub2 = document.getElementById('receipt2-large-change-sub') || document.getElementById('receipt2-large-change-note');
+
+      if (tot.changeAmount > 0) {
+        const formattedChangeNum = formatNumberID(tot.changeAmount);
+        const subText = isChangeSavedOnNota
+          ? 'DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN BARANG)'
+          : 'KEMBALIAN TUNAI PELANGGAN';
+        if (changeBox1) {
+          changeBox1.classList.remove('hidden');
+          if (changeText1) changeText1.textContent = `Kembalian ${formattedChangeNum}`;
+          if (changeSub1) changeSub1.textContent = subText;
+        }
+        if (changeBox2) {
+          changeBox2.classList.remove('hidden');
+          if (changeText2) changeText2.textContent = `Kembalian ${formattedChangeNum}`;
+          if (changeSub2) changeSub2.textContent = subText;
+        }
+      } else {
+        changeBox1?.classList.add('hidden');
+        changeBox2?.classList.add('hidden');
+      }
 
       ['receipt-qrcode', 'receipt2-qrcode'].forEach(qrId => {
         const qrBox = document.getElementById(qrId);
@@ -4187,7 +4606,7 @@
       const distKm = parseFormattedNumber(document.getElementById('delivery-distance-km')?.value);
       const perfume = document.querySelector('input[name="kasir_perfume"]:checked')?.value || '-';
       const rackLocation = document.getElementById('kasir-rack-location').value.trim();
-      const clothDetails = document.getElementById('kasir-cloth-details').value.trim();
+      const rawClothDetails = document.getElementById('kasir-cloth-details').value.trim();
       const payMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'Tunai';
 
       const createdAt = Date.now();
@@ -4198,9 +4617,13 @@
       const tot = currentCalculatedTotals;
       const payStatus = tot.autoPayStatus;
       const effectivePaid = payStatus === 'Lunas' ? tot.grandTotal : Math.min(tot.grandTotal, tot.paidAmount);
+      const isChangeSavedOnNota = Boolean(document.getElementById('kasir-save-change-on-nota')?.checked) && tot.changeAmount > 0;
+
+      const prayerSummary = getKasirPrayerItemsSummary();
+      const combinedClothDetails = [rawClothDetails, prayerSummary.text].filter(Boolean).join(' ');
 
       const hasMerinciStage = activeStages.includes(1);
-      const isRinciDone = !hasMerinciStage || Boolean(clothDetails.length > 0);
+      const isRinciDone = !hasMerinciStage || Boolean(rawClothDetails.length > 0);
 
       const newOrder = {
         id: notaId,
@@ -4221,7 +4644,7 @@
         items,
         perfume,
         rackLocation,
-        clothDetails,
+        clothDetails: combinedClothDetails,
         isRinciCompleted: isRinciDone,
         foundItems: [],
         clothPhotos: [],
@@ -4234,10 +4657,15 @@
         payMethod,
         paidAmount: effectivePaid,
         changeAmount: tot.changeAmount,
+        changeSavedOnNota: isChangeSavedOnNota,
+        changeReturnedAtPickup: false,
         activeStages,
         currentStage: initialStage,
         stageHistory: {},
-        isDeleted: false
+        isDeleted: false,
+        stampsEarned: computeOrderStampsEarned(weightVal, tot.subtotal),
+        stampsRedeemed: (document.getElementById('kasir-redeem-free-wash')?.checked) ? 10 : 0,
+        prayerItems: prayerSummary.items
       };
 
       if (activeProcessingPickupOrderNumber) {
@@ -4301,6 +4729,17 @@
       document.getElementById('kasir-voucher-code').value = '';
       document.getElementById('kasir-paid-amount').value = '';
 
+      ['pray-sajadah', 'pray-mukena', 'pray-lobe', 'pray-sarung'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '0';
+      });
+      if (document.getElementById('kasir-redeem-free-wash')) {
+        document.getElementById('kasir-redeem-free-wash').checked = false;
+      }
+      if (document.getElementById('kasir-save-change-on-nota')) {
+        document.getElementById('kasir-save-change-on-nota').checked = false;
+      }
+
       const autoThousand = document.getElementById('kasir-auto-thousand');
       if (autoThousand) {
         autoThousand.checked = true;
@@ -4338,7 +4777,7 @@
       const dateInStr = new Date(order.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
       const etaStr = new Date(order.deadlineMs).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
       const sisa = Math.max(0, (order.total || 0) - (order.paidAmount || 0));
-      const kembalian = order.changeAmount || 0;
+      const kembalian = Number(order.changeAmount) || 0;
       const unitLabel = order.weightUnit || 'Kg';
       const expressText = getExpressHighlightText(order.items || []);
       const expressBannerHtml = expressText
@@ -4348,9 +4787,22 @@
       const itemsHtml = (order.items || []).map(it => `
         <div class="flex justify-between">
           <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
-          <span>${formatRupiah(it.subtotal)}</span>
+          <span>${formatRupiah(roundToNearest500(it.subtotal))}</span>
         </div>
       `).join('');
+
+      const largeChangeBoxHtml = kembalian > 0 ? `
+        <div class="my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
+          <div class="text-[15px] font-black uppercase tracking-wide leading-tight">
+            Kembalian ${formatNumberID(kembalian)}
+          </div>
+          <div class="text-[8.5px] font-bold uppercase mt-0.5">
+            ${order.changeSavedOnNota && !order.changeReturnedAtPickup
+              ? 'DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN BARANG)'
+              : (order.changeReturnedAtPickup ? 'KEMBALIAN SUDAH DISERAHKAN SAAT PENGAMBILAN' : 'KEMBALIAN TUNAI PELANGGAN')}
+          </div>
+        </div>
+      ` : '';
 
       const struk1Html = `
         <div class="thermal-paper rounded-lg border border-slate-300 ${mode === 'BOTH' ? pageBreakClass : ''}">
@@ -4367,9 +4819,13 @@
           <div class="thermal-divider"></div>
 
           <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between">
-              <span>NO. NOTA: <strong class="text-[11px] font-extrabold">${order.id}</strong></span>
+            <div class="flex justify-between items-baseline">
+              <span>NO. NOTA: <strong class="text-[15px] font-black tracking-wider">${order.id}</strong></span>
               <span class="font-bold">${order.custCategory}${order.memberId ? ' ' + order.memberId : ''}</span>
+            </div>
+            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+              <span>Pelanggan:</span>
+              <strong class="text-[13px] font-black uppercase truncate max-w-[175px]">${order.custName}</strong>
             </div>
             <div class="flex justify-between">
               <span>Masuk: ${dateInStr}</span>
@@ -4378,10 +4834,6 @@
             <div class="flex justify-between">
               <span>Estimasi:</span>
               <strong>${etaStr}</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Pelanggan:</span>
-              <strong class="truncate max-w-[150px]">${order.custName}</strong>
             </div>
             <div class="flex justify-between">
               <span>Alamat:</span>
@@ -4397,9 +4849,9 @@
 
           <div class="space-y-0.5 text-[9.5px]">
             <div class="space-y-0.5 font-semibold">${itemsHtml}</div>
-            <div class="flex justify-between pt-0.5 border-t border-dotted border-slate-300">
-              <span>Total ${unitLabel} / Pcs:</span>
-              <strong>${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
+            <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
+              <span class="font-bold">Total ${unitLabel} / Pakaian:</span>
+              <strong class="text-[13px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
             </div>
             <div class="flex justify-between">
               <span>Parfum: ${order.perfume || '-'}</span>
@@ -4420,8 +4872,8 @@
               <span>Total Diskon:</span>
               <span>- ${formatRupiah((order.memberDiscount || 0) + (order.voucherDiscount || 0))}</span>
             </div>
-            <div class="flex justify-between text-[11px] font-extrabold pt-0.5 border-t border-dotted border-slate-400">
-              <span>TOTAL BAYAR:</span>
+            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+              <span>TOTAL BIAYA:</span>
               <span>${formatRupiah(order.total)}</span>
             </div>
             <div class="flex justify-between">
@@ -4432,6 +4884,7 @@
               <span>${order.payStatus === 'Lunas' ? 'Kembalian:' : 'Sisa Tagihan:'}</span>
               <strong>${formatRupiah(order.payStatus === 'Lunas' ? kembalian : sisa)}</strong>
             </div>
+            ${largeChangeBoxHtml}
           </div>
 
           <div class="thermal-divider"></div>
@@ -4470,9 +4923,13 @@
           <div class="thermal-divider"></div>
 
           <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between">
+            <div class="flex justify-between items-baseline">
               <span>NO. NOTA:</span>
-              <strong class="text-[11px] font-extrabold">${order.id}</strong>
+              <strong class="text-[15px] font-black tracking-wider">${order.id}</strong>
+            </div>
+            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+              <span>Nama Pelanggan:</span>
+              <strong class="text-[13px] font-black uppercase truncate max-w-[170px]">${order.custName}</strong>
             </div>
             <div class="flex justify-between">
               <span>Tgl Masuk:</span>
@@ -4486,18 +4943,19 @@
               <span>Kasir:</span>
               <span>${order.cashierName || '-'}</span>
             </div>
-            <div class="flex justify-between">
-              <span>Nama Pelanggan:</span>
-              <strong>${order.custName}</strong>
+            <div class="flex justify-between items-baseline">
+              <span>Berat / Pakaian:</span>
+              <strong class="text-[12.5px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
             </div>
-            <div class="flex justify-between text-[11px] font-extrabold pt-0.5 border-t border-dotted border-slate-400">
-              <span>TOTAL BAYAR:</span>
+            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+              <span>TOTAL BIAYA:</span>
               <span>${formatRupiah(order.total)}</span>
             </div>
             <div class="flex justify-between">
               <span>Status Pembayaran:</span>
               <strong>${order.payStatus.toUpperCase()} (${order.payMethod})</strong>
             </div>
+            ${largeChangeBoxHtml}
           </div>
 
           <div class="thermal-divider"></div>
@@ -4542,10 +5000,10 @@
           <div class="thermal-divider"></div>
 
           <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between"><span>NO. NOTA:</span><strong class="text-[11px] font-extrabold">${order.id}</strong></div>
+            <div class="flex justify-between items-baseline"><span>NO. NOTA:</span><strong class="text-[15px] font-black tracking-wider">${order.id}</strong></div>
+            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300"><span>Pelanggan:</span><strong class="text-[13px] font-black uppercase">${order.custName}</strong></div>
             <div class="flex justify-between"><span>Masuk: ${dateInStr}</span><span>Selesai: <strong>${etaStr}</strong></span></div>
             <div class="flex justify-between"><span>Petugas Rinci:</span><strong>${rinciWorker}</strong></div>
-            <div class="flex justify-between"><span>Pelanggan:</span><strong>${order.custName}</strong></div>
             <div class="flex justify-between"><span>Lokasi Rak:</span><strong>${order.rackLocation || '-'}</strong></div>
           </div>
 
@@ -4554,10 +5012,15 @@
           <div class="space-y-0.5 text-[9.5px]">
             <div class="font-extrabold uppercase">Paket Layanan:</div>
             ${itemsHtml}
-            <div class="flex justify-between pt-0.5 border-t border-dotted border-slate-300">
-              <span>Total ${unitLabel} / Pcs:</span>
-              <strong>${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
+            <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
+              <span class="font-bold">Total ${unitLabel} / Pakaian:</span>
+              <strong class="text-[13px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
             </div>
+            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+              <span>TOTAL BIAYA:</span>
+              <span>${formatRupiah(order.total)}</span>
+            </div>
+            ${largeChangeBoxHtml}
           </div>
 
           <div class="thermal-divider"></div>
@@ -4683,6 +5146,9 @@
       const cleanPhone = String(order.custPhone || '').replace(/\D/g, '').replace(/^0/, '62');
       const eta = new Date(order.deadlineMs).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
       const expressText = getExpressHighlightText(order.items || '');
+      const changeNote = (order.changeAmount > 0 && order.changeSavedOnNota)
+        ? `\n💵 *Kembalian Tersimpan di Nota:* ${formatRupiah(order.changeAmount)} (Diserahkan saat pengambilan)`
+        : '';
       const text = `*${appData.settings.storeName.toUpperCase()}*\n` +
         `_${appData.settings.storeSlogan}_\n` +
         (expressText ? `*${expressText}*\n` : '') +
@@ -4690,12 +5156,12 @@
         `Pelanggan: *${order.custName}*\n` +
         `Estimasi Selesai: ${eta}\n` +
         `Total Tagihan: *${formatRupiah(order.total)}*\n` +
-        `Status Bayar: *${order.payStatus.toUpperCase()} (${order.payMethod})*\n\n` +
+        `Status Bayar: *${order.payStatus.toUpperCase()} (${order.payMethod})*` +
+        changeNote + `\n\n` +
         `Terima kasih telah mencuci di ${appData.settings.storeName}!`;
       window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    // Tabel Riwayat Semua Nomor Nota (Menampilkan Semua Nomor Nota, Cetak Ulang, dan Hapus Admin untuk Semua Status termasuk Lunas)
     function renderReprintHistoryTable() {
       const tbody = document.getElementById('reprint-history-tbody');
       if (!tbody) return;
@@ -4799,7 +5265,7 @@
     }
 
     // =========================================================================
-    // 9. TAB 2: ALUR PROGRES CUCIAN, WAJIB MERINCI & HAPUS NOTA AUDIT ADMIN
+    // 9. TAB 2: ALUR PROGRES CUCIAN, WAJIB MERINCI & KEMBALIAN SAAT PENGAMBILAN
     // =========================================================================
     function isOrderMerinciRequired(order) {
       if (!order) return false;
@@ -4964,7 +5430,10 @@
       const payBadge = document.getElementById('wf-payment-badge');
       const btnPay = document.getElementById('btn-wf-pay');
       if (order.payStatus === 'Lunas') {
-        payBadge.textContent = `LUNAS (${order.payMethod})`;
+        const savedChangeInfo = (order.changeSavedOnNota && !order.changeReturnedAtPickup && order.changeAmount > 0)
+          ? ` • KEMBALIAN DISIMPAN: ${formatRupiah(order.changeAmount)}`
+          : '';
+        payBadge.textContent = `LUNAS (${order.payMethod})${savedChangeInfo}`;
         payBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-700";
         btnPay.classList.add('hidden');
       } else {
@@ -5153,6 +5622,12 @@
         alert("Proses Tertahan: Paket laundry pada nota ini memiliki alur Merinci Pakaian. Anda wajib mengisi Rincian Pakaian dan menyelesaikan tahap '2. Merinci Pakaian' terlebih dahulu sebelum lanjut ke tahap berikutnya!");
         document.getElementById('wf-cloth-details-input')?.focus();
         return;
+      }
+
+      // Peringatan Otomatis jika ada Kembalian yang Disimpan di Nota saat pengambilan barang (Tahap 8)
+      if (stageId === 7 && order.changeSavedOnNota && !order.changeReturnedAtPickup && order.changeAmount > 0) {
+        alert(`⚠️ PERHATIAN PENGAMBILAN BARANG:\nNota ${order.id} (${order.custName}) memiliki UANG KEMBALIAN TERSIMPAN sebesar ${formatRupiah(order.changeAmount)}.\n\nPastikan uang kembalian diserahkan kepada pelanggan sekarang!`);
+        order.changeReturnedAtPickup = true;
       }
 
       const workerRadio = document.querySelector(`input[name="wf_worker_${orderId}_${stageId}"]:checked`);
@@ -5511,7 +5986,6 @@
       window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // FITUR HAPUS NOTA ADMIN (SOFT DELETE DENGAN JEJAK AUDIT PENUH + BISA HAPUS NOTA LUNAS)
     function deleteOrderAdmin(targetOrderId = null) {
       const orderId = targetOrderId || selectedWorkflowOrderId;
       const order = (appData.orders || []).find(o => o.id === orderId);
@@ -5533,13 +6007,11 @@
       const reason = prompt(`Dikonfirmasi oleh ${authAdmin.label}.\nMasukkan alasan penghapusan Nota ${order.id} (Wajib untuk Laporan Harian):`, "Salah input / Dibatalkan");
       if (reason === null) return;
 
-      // Soft-Delete: Jangan hapus objek dari array agar nomor nota tetap ada jejaknya dan tidak pernah dipakai ulang
       order.isDeleted = true;
       order.deletedAt = Date.now();
       order.deletedBy = authAdmin.label;
       order.deleteReason = reason.trim() || "Dihapus oleh Admin";
 
-      // Tandai arus kas terkait nota ini sebagai isDeleted agar tidak menambah saldo kas aktif
       (appData.cashflows || []).forEach(cf => {
         if (cf.orderId === order.id) {
           cf.isDeleted = true;
@@ -5810,7 +6282,7 @@
       submitSettlementForm(null, true);
     }
 
-// =========================================================================
+    // =========================================================================
     // 10B. TAB 4: LAPORAN HARIAN KASIR / KARYAWAN & AUDIT URUTAN NOMOR NOTA
     // =========================================================================
     function renderDailyEmployeeReport() {
@@ -5828,18 +6300,15 @@
                d.getDate() === refDate.getDate();
       };
 
-      // Ambil semua nota yang dibuat pada tanggal terpilih (Termasuk yang dihapus Admin agar jejak nomor nota utuh)
       const dailyOrders = (appData.orders || []).filter(o => isSameDay(o.createdAt));
-      // Urutkan nomor nota dari kecil ke besar agar urutan nomor terlihat jelas
       dailyOrders.sort((a, b) => a.id.localeCompare(b.id));
 
-      // Ambil mutasi arus kas pada tanggal terpilih
       const dailyFlows = (appData.cashflows || []).filter(cf => isSameDay(cf.timestamp));
 
       let totalIn = 0;
       let totalOut = 0;
       dailyFlows.forEach(cf => {
-        if (cf.isDeleted) return; // Jangan hitung uang dari nota yang sudah dihapus Admin
+        if (cf.isDeleted) return;
         if (cf.type === 'IN') totalIn += Number(cf.amount) || 0;
         else totalOut += Number(cf.amount) || 0;
       });
@@ -5848,7 +6317,6 @@
       document.getElementById('daily-total-expense').textContent = formatRupiah(totalOut);
       document.getElementById('daily-net-cash').textContent = formatRupiah(totalIn - totalOut);
 
-      // Render Tabel Audit Urutan Nomor Nota Harian
       const ordersTbody = document.getElementById('daily-orders-audit-tbody');
       if (ordersTbody) {
         if (dailyOrders.length === 0) {
@@ -5878,8 +6346,12 @@
               `;
             }
 
+            const savedChangeTag = (o.changeSavedOnNota && !o.changeReturnedAtPickup && o.changeAmount > 0)
+              ? `<span class="block text-[10px] font-extrabold text-amber-700 mt-0.5">Kembalian di Nota: ${formatRupiah(o.changeAmount)}</span>`
+              : '';
+
             const statusBadge = o.payStatus === 'Lunas'
-              ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">LUNAS (${o.payMethod})</span>`
+              ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">LUNAS (${o.payMethod})</span>${savedChangeTag}`
               : (o.payStatus === 'DP'
                 ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800">DP</span>`
                 : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-700">BELUM BAYAR</span>`);
@@ -5910,7 +6382,6 @@
         }
       }
 
-      // Render Tabel Mutasi Arus Kas Harian
       const cfTbody = document.getElementById('daily-cashflow-tbody');
       if (cfTbody) {
         if (dailyFlows.length === 0) {
@@ -6694,7 +7165,7 @@
     }
 
     // =========================================================================
-    // 15. TAB 9: PENGATURAN TOKO, USER ADMIN, PRINTER, PAKET BUNDLE & PARFUM
+    // 15. TAB 9: PENGATURAN TOKO, USER ADMIN, PRINTER, PAKET BUNDLE & PROMO
     // =========================================================================
     function unlockSettingTab() {
       const pass = document.getElementById('setting-pass-input').value;
@@ -6765,7 +7236,6 @@
       alert(`Pengaturan Printer Thermal (${paperWidth}, Font ${fontSize}) berhasil diterapkan!`);
     }
 
-    // Manajemen Multi-User Admin (Supervisor, Manajer, Direktur)
     function saveAdminUser(e) {
       e.preventDefault();
       const editId = document.getElementById('admin-user-edit-id').value;
@@ -6852,7 +7322,23 @@
       if (document.getElementById('printer-page-break')) document.getElementById('printer-page-break').checked = Boolean(s.printerPageBreak);
       if (document.getElementById('printer-auto-print')) document.getElementById('printer-auto-print').checked = Boolean(s.printerAutoPrint);
 
-      // Render Daftar User Admin (Supervisor, Manajer, Direktur)
+      // Sinkronisasi Pengaturan Promo 10x Gratis 1x & Gratis Pakaian Sholat
+      if (document.getElementById('set-promo-stamp-enabled')) {
+        document.getElementById('set-promo-stamp-enabled').checked = s.promoStampEnabled !== false;
+      }
+      if (document.getElementById('set-promo-min-kg')) {
+        document.getElementById('set-promo-min-kg').value = formatNumberID(s.promoStampMinKg || 3);
+      }
+      if (document.getElementById('set-promo-min-rp')) {
+        document.getElementById('set-promo-min-rp').value = formatNumberID(s.promoStampMinRp || 18000);
+      }
+      if (document.getElementById('set-promo-free-val')) {
+        document.getElementById('set-promo-free-val').value = formatNumberID(s.promoStampMaxFreeValue || 18000);
+      }
+      if (document.getElementById('set-promo-prayer-enabled')) {
+        document.getElementById('set-promo-prayer-enabled').checked = s.promoPrayerEnabled !== false;
+      }
+
       const adminListEl = document.getElementById('setting-admin-users-list');
       const adminUsers = appData.adminUsers || [];
       if (adminListEl) {
@@ -6884,7 +7370,6 @@
         }
       }
 
-      // Daftar Paket Layanan Tersimpan
       const srvList = document.getElementById('setting-service-list');
       const services = appData.services || [];
       if (srvList) {
@@ -6934,7 +7419,6 @@
         }
       }
 
-      // Daftar Parfum Tersimpan
       const perfList = document.getElementById('setting-perfume-list');
       const perfumes = appData.perfumes || [];
       if (perfList) {
@@ -6967,7 +7451,6 @@
         }
       }
 
-      // Daftar Voucher
       const vList = document.getElementById('setting-voucher-list');
       const vouchers = appData.vouchers || [];
       if (vList) {
@@ -7219,8 +7702,8 @@
 
       document.getElementById('voucher-code-input').value = '';
       document.getElementById('voucher-value-input').value = '';
-      if (document.getElementById('voucher-min-order-input')) document.getElementById('voucher-min-order-input').value = '0';
-      if (document.getElementById('voucher-max-disc-input')) document.getElementById('voucher-max-disc-input').value = '0';
+      document.getElementById('voucher-min-order-input').value = '0';
+      document.getElementById('voucher-max-disc-input').value = '0';
       saveData();
     }
 
@@ -7230,39 +7713,29 @@
     }
 
     // =========================================================================
-    // 16. MODAL SCANNER QR KAMERA (NOTA 6 ANGKA & MEMBER 4 ANGKA)
+    // 16. KAMERA SCANNER QR CODE (NOTA 6 ANGKA / MEMBER 4 ANGKA)
     // =========================================================================
-    async function openQrScanner(mode = 'global') {
+    function openQrScanner(mode = 'global') {
       currentQrScanMode = mode;
       const modal = document.getElementById('qr-scanner-modal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
 
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-          stream.getTracks().forEach(track => track.stop());
-        }
-      } catch (permErr) {
-        console.warn("Izin kamera ditolak, gunakan input manual:", permErr);
-        return;
-      }
-
       if (typeof Html5Qrcode !== 'undefined') {
         try {
           if (html5QrScanner) {
-            await html5QrScanner.stop().catch(() => {});
+            html5QrScanner.stop().catch(() => {});
           }
           html5QrScanner = new Html5Qrcode("qr-reader");
-          await html5QrScanner.start(
+          html5QrScanner.start(
             { facingMode: "environment" },
             { fps: 10, qrbox: { width: 220, height: 220 } },
-            (decodedText) => handleQrScannedCode(decodedText),
+            (decodedText) => {
+              handleQrScanSuccess(decodedText);
+            },
             () => {}
-          );
-        } catch (err) {
-          console.warn("Kamera live gagal dijalankan:", err);
-        }
+          ).catch(() => {});
+        } catch (e) {}
       }
     }
 
@@ -7271,311 +7744,150 @@
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       if (html5QrScanner) {
-        html5QrScanner.stop().then(() => html5QrScanner.clear()).catch(() => {});
-        html5QrScanner = null;
+        html5QrScanner.stop().then(() => {
+          html5QrScanner.clear();
+        }).catch(() => {});
       }
     }
 
     function submitManualQrCode() {
-      const val = document.getElementById('qr-manual-fallback').value.trim();
+      const val = document.getElementById('qr-manual-fallback')?.value.trim();
       if (!val) return;
-      handleQrScannedCode(val);
+      handleQrScanSuccess(val);
     }
 
-    function handleQrScannedCode(rawCode) {
-      const code = String(rawCode || '').replace('#', '').trim();
+    function handleQrScanSuccess(rawCode) {
       closeQrScanner();
+      const cleaned = String(rawCode || '').replace('#', '').trim().toUpperCase();
+      const digits = cleaned.replace(/\D/g, '');
 
-      if (currentQrScanMode === 'member-kasir' || code.length === 4) {
-        switchTab('kasir');
-        const memRadio = document.querySelector('input[name="cust_category"][value="Member"]');
-        if (memRadio) memRadio.checked = true;
-        handleCustomerCategoryChange('Member');
-        document.getElementById('kasir-member-id-input').value = code;
-        lookupMemberOnKasir(code);
-        return;
-      }
-
-      if (currentQrScanMode === 'pelunasan') {
-        switchTab('pelunasan');
-        document.getElementById('pelunasan-search-input').value = code;
-        selectOrderForSettlement(code);
-        return;
-      }
-
-      const foundOrder = (appData.orders || []).find(o => o.id === code);
-      if (foundOrder) {
-        if (foundOrder.isDeleted) {
-          alert(`Nota ${foundOrder.id} telah DIHAPUS ADMIN oleh ${foundOrder.deletedBy}.`);
-          switchTab('laporanharian');
+      // Jika scan mode member di Kasir atau kode 4 digit member
+      if (currentQrScanMode === 'member-kasir' || (digits.length === 4 && !cleaned.includes('PSN'))) {
+        const memId = digits.padStart(4, '0');
+        const mem = (appData.members || []).find(m => m.id === memId);
+        if (mem) {
+          switchTab('kasir');
+          const memRadio = document.querySelector('input[name="cust_category"][value="Member"]');
+          if (memRadio) memRadio.checked = true;
+          handleCustomerCategoryChange('Member');
+          selectMemberForKasir(memId);
           return;
         }
-        selectedWorkflowOrderId = foundOrder.id;
-        switchTab('progres');
+      }
+
+      // Jika kode Pesanan Online (PSN-xxxx)
+      if (cleaned.startsWith('PSN')) {
+        const pickup = (appData.pickupOrders || []).find(p => p.orderNumber.toUpperCase() === cleaned);
+        if (pickup) {
+          if (pickup.convertedNotaId) {
+            selectedWorkflowOrderId = pickup.convertedNotaId;
+            switchTab('progres');
+            renderProgresOrderRadios();
+            return;
+          }
+          switchTab('kasir');
+          loadOnlinePickupToKasirForm(pickup.orderNumber);
+          return;
+        }
+      }
+
+      // Cari berdasarkan 6 digit Nomor Nota
+      const nota6 = digits.padStart(6, '0');
+      const ord = (appData.orders || []).find(o => !o.isDeleted && o.id === nota6);
+      if (ord) {
+        if (currentQrScanMode === 'pelunasan' || (ord.payStatus !== 'Lunas' && currentQrScanMode === 'global')) {
+          openPelunasanForOrder(ord.id);
+        } else {
+          selectedWorkflowOrderId = ord.id;
+          switchTab('progres');
+          renderProgresOrderRadios();
+        }
       } else {
-        alert(`Kode QR "${code}" tidak ditemukan di database.`);
+        alert(`Kode QR "${cleaned}" tidak ditemukan di daftar Nota maupun Member.`);
       }
     }
 
     // =========================================================================
-    // 17. CETAK & DOWNLOAD PDF (LAPORAN HARIAN, KEUANGAN, MEMBER, KARYAWAN & SLIP)
+    // 17. MESIN CETAK LAPORAN A4 & EXPORT PDF (html2pdf.js)
     // =========================================================================
     function buildReportHtml(type) {
       const s = appData.settings;
-      const headerHtml = `
-        <div style="border-bottom:2px solid #0f172a; padding-bottom:12px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <h1 style="font-size:20px; font-weight:800; margin:0;">${s.storeName}</h1>
-            <p style="font-size:13px; font-weight:700; color:#0284c7; margin:2px 0;">${s.storeSlogan}</p>
-            <p style="font-size:12px; color:#475569; margin:2px 0 0 0;">${s.storeAddress} &bull; HP/WA: ${s.storePhone}</p>
-          </div>
-          <div style="text-align:right; font-size:11px; color:#475569;">
-            Dicetak: ${new Date().toLocaleString('id-ID')}
-          </div>
-        </div>
-      `;
+      const nowStr = new Date().toLocaleString('id-ID');
+      let title = 'LAPORAN OPERASIONAL LAUNDRY QU';
+      let contentHtml = '';
 
       if (type === 'laporanharian') {
-        const selectedDateStr = document.getElementById('daily-report-date-picker')?.value || new Date().toISOString().slice(0, 10);
-        const refDate = new Date(selectedDateStr + 'T00:00:00');
-        const isSameDay = (ts) => {
-          const d = new Date(ts);
-          return d.getFullYear() === refDate.getFullYear() &&
-                 d.getMonth() === refDate.getMonth() &&
-                 d.getDate() === refDate.getDate();
-        };
-
-        const dailyOrders = (appData.orders || []).filter(o => isSameDay(o.createdAt)).sort((a, b) => a.id.localeCompare(b.id));
-        const orderRows = dailyOrders.length === 0
-          ? `<tr><td colspan="7" style="border:1px solid #cbd5e1; padding:10px; text-align:center;">Belum ada Data</td></tr>`
-          : dailyOrders.map(o => {
-              const srvNames = (o.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
-              const statusNote = o.isDeleted
-                ? `DIHAPUS ADMIN (${o.deletedBy || 'Admin'}): "${o.deleteReason || '-'}"`
-                : `${o.payStatus.toUpperCase()} (${o.payMethod})`;
-              return `
-                <tr style="${o.isDeleted ? 'background:#fff1f2; color:#9f1239;' : ''}">
-                  <td style="border:1px solid #cbd5e1; padding:6px; font-family:monospace; font-weight:700;">${o.id}</td>
-                  <td style="border:1px solid #cbd5e1; padding:6px;">${o.cashierName || '-'}</td>
-                  <td style="border:1px solid #cbd5e1; padding:6px;">${o.custName}</td>
-                  <td style="border:1px solid #cbd5e1; padding:6px;">${srvNames}</td>
-                  <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">${formatRupiah(o.total)}</td>
-                  <td style="border:1px solid #cbd5e1; padding:6px; text-align:right;">${o.isDeleted ? 'Rp 0' : formatRupiah(o.paidAmount || 0)}</td>
-                  <td style="border:1px solid #cbd5e1; padding:6px; font-weight:700;">${statusNote}</td>
-                </tr>
-              `;
-            }).join('');
-
-        return `
-          ${headerHtml}
-          <h2 style="font-size:15px; font-weight:800; margin-bottom:6px;">LAPORAN HARIAN KASIR &amp; AUDIT NOMOR NOTA (${selectedDateStr})</h2>
-          <p style="font-size:12px; margin-bottom:12px;">
-            Uang Masuk: <strong>${document.getElementById('daily-total-income')?.textContent}</strong> |
-            Pengeluaran: <strong>${document.getElementById('daily-total-expense')?.textContent}</strong> |
-            Setoran Bersih: <strong>${document.getElementById('daily-net-cash')?.textContent}</strong>
-          </p>
-          <table style="width:100%; border-collapse:collapse; font-size:11px;">
+        const dt = document.getElementById('daily-report-date-picker')?.value || new Date().toISOString().slice(0, 10);
+        title = `LAPORAN HARIAN KASIR & AUDIT NOTA (${dt})`;
+        const inc = document.getElementById('daily-total-income')?.textContent || 'Rp 0';
+        const exp = document.getElementById('daily-total-expense')?.textContent || 'Rp 0';
+        const net = document.getElementById('daily-net-cash')?.textContent || 'Rp 0';
+        const tbodyHtml = document.getElementById('daily-orders-audit-tbody')?.innerHTML || '';
+        contentHtml = `
+          <div style="display:flex;gap:12px;margin-bottom:14px;font-size:12px;">
+            <div style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:8px;"><strong>Uang Masuk:</strong><br/>${inc}</div>
+            <div style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:8px;"><strong>Pengeluaran:</strong><br/>${exp}</div>
+            <div style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:8px;"><strong>Setoran Bersih:</strong><br/>${net}</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;" border="1" cellpadding="6">
             <thead>
               <tr style="background:#f1f5f9;">
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">No. Nota</th>
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Kasir</th>
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Pelanggan</th>
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Paket</th>
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Total</th>
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Dibayar</th>
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Status / Jejak Hapus Admin</th>
+                <th>No. Nota</th><th>Jam & Kasir</th><th>Pelanggan</th><th>Layanan</th><th>Total Nota</th><th>Dibayar</th><th>Status / Audit</th><th>Ket</th>
               </tr>
             </thead>
-            <tbody>${orderRows}</tbody>
+            <tbody>${tbodyHtml}</tbody>
           </table>
         `;
-      }
-
-      if (type === 'karyawan') {
-        const list = appData.employees || [];
-        const rows = list.length === 0
-          ? `<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:12px; text-align:center;">Belum ada Data</td></tr>`
-          : list.map((e, i) => `
-              <tr>
-                <td style="border:1px solid #cbd5e1; padding:8px;">${i + 1}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px; font-weight:700;">${e.name}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px;">${e.phone}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px;">${e.role}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatRupiah(e.baseSalary)}</td>
-              </tr>
-            `).join('');
-        return `
-          ${headerHtml}
-          <h2 style="font-size:16px; font-weight:800; margin-bottom:10px;">REKAP DATA KARYAWAN AKTIF</h2>
-          <table style="width:100%; border-collapse:collapse; font-size:12px;">
-            <thead>
-              <tr style="background:#f1f5f9;">
-                <th style="border:1px solid #cbd5e1; padding:8px;">No</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Nama</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">No. WA</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Posisi</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Gaji Pokok</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
+      } else if (type === 'karyawan') {
+        title = 'REKAP DATA KARYAWAN AKTIF';
+        contentHtml = `<table style="width:100%;border-collapse:collapse;font-size:11px;" border="1" cellpadding="6">
+          <thead><tr style="background:#f1f5f9;"><th>Nama Karyawan</th><th>WhatsApp</th><th>Posisi</th><th>Gaji Pokok</th><th>Total Alur Selesai</th><th>-</th></tr></thead>
+          <tbody>${document.getElementById('employee-table-tbody')?.innerHTML || ''}</tbody>
+        </table>`;
+      } else if (type === 'member') {
+        title = 'REKAP DATA PELANGGAN MEMBER';
+        contentHtml = `<table style="width:100%;border-collapse:collapse;font-size:11px;" border="1" cellpadding="6">
+          <thead><tr style="background:#f1f5f9;"><th>ID Member</th><th>Nama & WA</th><th>Tier & Diskon</th><th>Akumulasi Transaksi</th><th>-</th></tr></thead>
+          <tbody>${document.getElementById('member-table-tbody')?.innerHTML || ''}</tbody>
+        </table>`;
+      } else if (type === 'keuangan') {
+        title = `LAPORAN KEUANGAN (${document.getElementById('finance-month-picker')?.value || ''})`;
+        const inc = document.getElementById('fin-total-income')?.textContent || 'Rp 0';
+        const exp = document.getElementById('fin-total-expense')?.textContent || 'Rp 0';
+        const net = document.getElementById('fin-net-profit')?.textContent || 'Rp 0';
+        contentHtml = `
+          <div style="display:flex;gap:12px;margin-bottom:14px;font-size:12px;">
+            <div style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:8px;"><strong>Total Pemasukan:</strong><br/>${inc}</div>
+            <div style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:8px;"><strong>Total Pengeluaran:</strong><br/>${exp}</div>
+            <div style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:8px;"><strong>Laba Bersih:</strong><br/>${net}</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;" border="1" cellpadding="6">
+            <thead><tr style="background:#f1f5f9;"><th>Waktu</th><th>Keterangan</th><th>Kategori</th><th>Jenis</th><th>Nominal</th></tr></thead>
+            <tbody>${document.getElementById('finance-cashflow-tbody')?.innerHTML || ''}</tbody>
           </table>
         `;
+      } else if (type === 'gaji-total') {
+        title = `REKAP GAJI & BONUS 7 ALUR KARYAWAN (${selectedPayrollMonth})`;
+        contentHtml = `<table style="width:100%;border-collapse:collapse;font-size:11px;" border="1" cellpadding="6">
+          <thead><tr style="background:#f1f5f9;"><th>Nama Karyawan</th><th>Omset Lunas</th><th>Gaji Pokok</th><th>Rincian Alur</th><th>Bonus Lunas</th><th>Total Cair</th><th>Potensi Belum Lunas</th><th>-</th></tr></thead>
+          <tbody>${document.getElementById('payroll-table-tbody')?.innerHTML || ''}</tbody>
+        </table>`;
       }
-
-      if (type === 'member') {
-        const list = appData.members || [];
-        const rows = list.length === 0
-          ? `<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:12px; text-align:center;">Belum ada Data</td></tr>`
-          : list.map(m => {
-              const tData = getMemberTierData(m);
-              return `
-                <tr>
-                  <td style="border:1px solid #cbd5e1; padding:8px; font-family:monospace; font-weight:700;">${m.id}</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; font-weight:700;">${m.name}</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px;">${m.phone}</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; text-align:center;">${tData.tier} (${tData.discountPct}%)</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatRupiah(m.totalSpent || 0)}</td>
-                </tr>
-              `;
-            }).join('');
-        return `
-          ${headerHtml}
-          <h2 style="font-size:16px; font-weight:800; margin-bottom:10px;">REKAP DATA PELANGGAN MEMBER</h2>
-          <table style="width:100%; border-collapse:collapse; font-size:12px;">
-            <thead>
-              <tr style="background:#f1f5f9;">
-                <th style="border:1px solid #cbd5e1; padding:8px;">ID 4 Angka</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Nama Member</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">WhatsApp</th>
-                <th style="border:1px solid #cbd5e1; padding:8px;">Tier</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Total Transaksi</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
-      }
-
-      if (type === 'keuangan') {
-        const list = (appData.cashflows || []).filter(cf => !cf.isDeleted);
-        const rows = list.length === 0
-          ? `<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:12px; text-align:center;">Belum ada Data</td></tr>`
-          : list.map(cf => `
-              <tr>
-                <td style="border:1px solid #cbd5e1; padding:8px;">${new Date(cf.timestamp).toLocaleString('id-ID')}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px;">${cf.description}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px;">${cf.category}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px; text-align:center;">${cf.type}</td>
-                <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatRupiah(cf.amount)}</td>
-              </tr>
-            `).join('');
-        return `
-          ${headerHtml}
-          <h2 style="font-size:16px; font-weight:800; margin-bottom:10px;">LAPORAN ARUS KAS &amp; KEUANGAN LAUNDRY QU</h2>
-          <p style="font-size:12px; margin-bottom:12px;">
-            Pemasukan: <strong>${document.getElementById('fin-total-income')?.textContent}</strong> |
-            Pengeluaran: <strong>${document.getElementById('fin-total-expense')?.textContent}</strong> |
-            Laba Bersih: <strong>${document.getElementById('fin-net-profit')?.textContent}</strong>
-          </p>
-          <table style="width:100%; border-collapse:collapse; font-size:12px;">
-            <thead>
-              <tr style="background:#f1f5f9;">
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Waktu</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Keterangan</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Kategori</th>
-                <th style="border:1px solid #cbd5e1; padding:8px;">Tipe</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Nominal</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
-      }
-
-      if (type === 'gaji-total') {
-        const pData = computePayrollData();
-        const rows = pData.employeesPayroll.length === 0
-          ? `<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:12px; text-align:center;">Belum ada Data</td></tr>`
-          : pData.employeesPayroll.map(ep => {
-              const totalCair = ep.baseSalary + Math.round(ep.paidBonus);
-              return `
-                <tr>
-                  <td style="border:1px solid #cbd5e1; padding:8px; font-weight:700;">${ep.name} (${ep.role})</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatRupiah(ep.baseSalary)}</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatRupiah(ep.paidBonus)}</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; text-align:right; font-weight:800;">${formatRupiah(totalCair)}</td>
-                  <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatRupiah(ep.unpaidPotentialBonus)} (${ep.unpaidOrderIds.size} Nota)</td>
-                </tr>
-              `;
-            }).join('');
-        return `
-          ${headerHtml}
-          <h2 style="font-size:16px; font-weight:800; margin-bottom:10px;">REKAP GAJI TOTAL SELURUH KARYAWAN (${selectedPayrollMonth})</h2>
-          <table style="width:100%; border-collapse:collapse; font-size:12px;">
-            <thead>
-              <tr style="background:#f1f5f9;">
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Karyawan</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Gaji Pokok</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Bonus Alur (Lunas)</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Total Gaji Cair</th>
-                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Potensi Bonus (Belum Lunas)</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
-      }
-      return '';
-    }
-
-    function buildSingleEmployeeSlipHtml(empId) {
-      const pData = computePayrollData();
-      const ep = pData.employeesPayroll.find(e => e.id === empId);
-      if (!ep) return '';
-      const s = appData.settings;
-      const totalCair = ep.baseSalary + Math.round(ep.paidBonus);
-
-      const stageRows = WORKFLOW_STAGES.slice(0, 7).map(st => `
-        <tr>
-          <td style="border:1px solid #cbd5e1; padding:6px;">${st.name}</td>
-          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${st.baseWeight.toFixed(2)}%</td>
-          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center; font-weight:700;">${ep.paidStageCounts[st.id] || 0} Nota</td>
-        </tr>
-      `).join('');
 
       return `
-        <div style="max-width:620px; margin:0 auto; border:2px solid #0f172a; padding:20px; border-radius:12px;">
-          <div style="border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between;">
+        <div style="padding:20px;font-family:sans-serif;color:#0f172a;">
+          <div style="border-bottom:2px solid #0f172a;padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
             <div>
-              <h2 style="margin:0; font-size:18px; font-weight:800;">SLIP GAJI &amp; BONUS ALUR KARYAWAN</h2>
-              <p style="margin:2px 0 0 0; font-size:12px; font-weight:700;">${s.storeName} - ${s.storeSlogan}</p>
-              <p style="margin:2px 0 0 0; font-size:11px;">Periode: ${selectedPayrollMonth}</p>
+              <h2 style="margin:0;font-size:18px;font-weight:900;">${s.storeName.toUpperCase()}</h2>
+              <p style="margin:2px 0 0;font-size:12px;font-weight:bold;">${s.storeSlogan}</p>
+              <p style="margin:2px 0 0;font-size:11px;">${s.storeAddress} • HP: ${s.storePhone}</p>
             </div>
-            <div style="text-align:right; font-size:12px;">
-              <strong>${ep.name}</strong><br/>${ep.role}
-            </div>
-          </div>
-          <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:14px;">
-            <thead>
-              <tr style="background:#f1f5f9;">
-                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Tahapan Alur</th>
-                <th style="border:1px solid #cbd5e1; padding:6px;">Bobot Dasar</th>
-                <th style="border:1px solid #cbd5e1; padding:6px;">Jumlah Selesai (Nota Lunas)</th>
-              </tr>
-            </thead>
-            <tbody>${stageRows}</tbody>
-          </table>
-          <div style="font-size:13px; line-height:1.8;">
-            <div style="display:flex; justify-content:space-between;"><span>Gaji Pokok Bulanan:</span><strong>${formatRupiah(ep.baseSalary)}</strong></div>
-            <div style="display:flex; justify-content:space-between;"><span>Total Bonus 7 Alur (Nota Lunas):</span><strong>+ ${formatRupiah(ep.paidBonus)}</strong></div>
-            <div style="display:flex; justify-content:space-between; font-size:16px; border-top:1px solid #cbd5e1; padding-top:6px; margin-top:6px;">
-              <strong>TOTAL GAJI DITERIMA (CAIR):</strong><strong>${formatRupiah(totalCair)}</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; color:#b45309; font-size:12px; margin-top:6px;">
-              <span>Potensi Bonus Tertunda (${ep.unpaidOrderIds.size} Nota Belum Dilunasi Pelanggan):</span>
-              <strong>${formatRupiah(ep.unpaidPotentialBonus)}</strong>
+            <div style="text-align:right;">
+              <h3 style="margin:0;font-size:14px;font-weight:800;">${title}</h3>
+              <p style="margin:2px 0 0;font-size:10px;">Dicetak pada: ${nowStr}</p>
             </div>
           </div>
+          ${contentHtml}
         </div>
       `;
     }
@@ -7583,216 +7895,140 @@
     function printReportSection(type) {
       const container = document.getElementById('universal-print-container');
       if (!container) return;
-      container.className = "bg-white p-8 text-slate-900 report-a4-print";
       container.innerHTML = buildReportHtml(type);
       document.querySelectorAll('.printable-active').forEach(el => el.classList.remove('printable-active'));
       container.classList.remove('hidden');
-      container.classList.add('printable-active');
-      window.print();
-      setTimeout(() => container.classList.add('hidden'), 500);
+      container.classList.add('printable-active', 'report-a4-print');
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => container.classList.add('hidden'), 500);
+      }, 150);
     }
 
     function downloadPdfReport(type) {
       const container = document.getElementById('universal-print-container');
       if (!container || typeof html2pdf === 'undefined') return;
-      container.className = "bg-white p-8 text-slate-900";
       container.innerHTML = buildReportHtml(type);
       container.classList.remove('hidden');
       html2pdf().set({
         margin: 10,
-        filename: `LaundryQU_Laporan_${type}_${new Date().toISOString().slice(0, 10)}.pdf`,
+        filename: `Laporan_${type}_LaundryQU_${Date.now()}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       }).from(container).save().then(() => {
         container.classList.add('hidden');
       });
+    }
+
+    function buildEmployeeSlipHtml(empId) {
+      const data = computePayrollData();
+      const ep = data.employeesPayroll.find(e => e.id === empId);
+      if (!ep) return '';
+      const s = appData.settings;
+      const totalCair = ep.baseSalary + Math.round(ep.paidBonus);
+      const stageRows = WORKFLOW_STAGES.slice(0, 7).map(st => `
+        <tr>
+          <td style="padding:4px 8px;border:1px solid #cbd5e1;">${st.name}</td>
+          <td style="padding:4px 8px;border:1px solid #cbd5e1;text-align:center;">${ep.paidStageCounts[st.id] || 0}x Selesai</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div style="padding:20px;max-width:480px;margin:0 auto;font-family:sans-serif;border:1px solid #94a3b8;border-radius:12px;">
+          <div style="text-align:center;border-bottom:2px dashed #334155;padding-bottom:10px;margin-bottom:12px;">
+            <h3 style="margin:0;font-size:16px;font-weight:900;">SLIP GAJI & BONUS KARYAWAN</h3>
+            <p style="margin:2px 0;font-size:12px;font-weight:bold;">${s.storeName} - ${s.storeSlogan}</p>
+            <p style="margin:0;font-size:11px;">Periode Bulan: <strong>${selectedPayrollMonth}</strong></p>
+          </div>
+          <div style="font-size:12px;margin-bottom:12px;">
+            <div>Nama Karyawan: <strong>${ep.name}</strong></div>
+            <div>Jabatan Utama: <strong>${ep.role}</strong></div>
+            <div>Omset Alur Lunas Individu: <strong>${formatRupiah(ep.lunasOmsetIndividu)}</strong></div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px;">
+            <thead><tr style="background:#f1f5f9;"><th style="padding:4px 8px;border:1px solid #cbd5e1;text-align:left;">Tahapan Alur</th><th style="padding:4px 8px;border:1px solid #cbd5e1;">Jumlah Nota Lunas</th></tr></thead>
+            <tbody>${stageRows}</tbody>
+          </table>
+          <div style="font-size:12px;border-top:1px solid #cbd5e1;padding-top:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>Gaji Pokok:</span><strong>${formatRupiah(ep.baseSalary)}</strong></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>Bonus Alur Lunas:</span><strong>+ ${formatRupiah(ep.paidBonus)}</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:900;border-top:2px solid #0f172a;padding-top:6px;margin-top:6px;">
+              <span>TOTAL GAJI DITERIMA:</span><span>${formatRupiah(totalCair)}</span>
+            </div>
+            <div style="margin-top:6px;font-size:11px;color:#b45309;">Potensi Bonus Menunggu Pelunasan Nota: ${formatRupiah(ep.unpaidPotentialBonus)} (${ep.unpaidOrderIds.size} Nota)</div>
+          </div>
+        </div>
+      `;
     }
 
     function printEmployeeSlip(empId) {
       const container = document.getElementById('universal-print-container');
       if (!container) return;
-      container.className = "bg-white p-8 text-slate-900 report-a4-print";
-      container.innerHTML = buildSingleEmployeeSlipHtml(empId);
+      container.innerHTML = buildEmployeeSlipHtml(empId);
       document.querySelectorAll('.printable-active').forEach(el => el.classList.remove('printable-active'));
       container.classList.remove('hidden');
-      container.classList.add('printable-active');
-      window.print();
-      setTimeout(() => container.classList.add('hidden'), 500);
+      container.classList.add('printable-active', 'report-a4-print');
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => container.classList.add('hidden'), 500);
+      }, 150);
     }
 
     function downloadEmployeeSlipPdf(empId) {
       const container = document.getElementById('universal-print-container');
       if (!container || typeof html2pdf === 'undefined') return;
-      container.className = "bg-white p-8 text-slate-900";
-      container.innerHTML = buildSingleEmployeeSlipHtml(empId);
+      container.innerHTML = buildEmployeeSlipHtml(empId);
       container.classList.remove('hidden');
       html2pdf().set({
         margin: 10,
         filename: `Slip_Gaji_${empId}_${selectedPayrollMonth}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a5', orientation: 'portrait' }
       }).from(container).save().then(() => {
         container.classList.add('hidden');
       });
     }
 
     // =========================================================================
-    // 18. INISIALISASI BRANDING TOKO LAUNDRY QU & REFRESH SEMUA KOMPONEN UI
+    // 18. SINKRONISASI IDENTITAS TOKO, JAM LIVE & BOOTSTRAP APLIKASI POS
     // =========================================================================
-    function applyStoreBranding() {
-      const s = appData.settings;
-      document.getElementById('mobile-store-name').textContent = s.storeName;
-      document.getElementById('mobile-store-slogan').textContent = s.storeSlogan;
-      document.getElementById('sidebar-store-name').textContent = s.storeName;
-      document.getElementById('sidebar-store-slogan').textContent = s.storeSlogan;
+    function updateStoreBrandingUI() {
+      const s = appData.settings || {};
+      const name = s.storeName || 'Laundry QU';
+      const slogan = s.storeSlogan || 'Unit Usaha Markaz Yatim Duafa Qurani';
+      const addr = s.storeAddress || 'Jln. Protokol Dusun III Desa Sei Kamah II';
+      const phone = s.storePhone || '0823 6089 2828 dan 0822 1188 2667';
+      const logo = s.logoUrl || 'https://cdn-icons-png.flaticon.com/512/2975/2975175.png';
 
-      // Struk 1
-      document.getElementById('receipt-store-name').textContent = s.storeName.toUpperCase();
-      document.getElementById('receipt-store-slogan').textContent = s.storeSlogan;
-      document.getElementById('receipt-store-address').textContent = s.storeAddress;
-      document.getElementById('receipt-store-phone').textContent = `HP: ${s.storePhone}`;
-
-      // Struk 2
-      document.getElementById('receipt2-store-name').textContent = s.storeName.toUpperCase();
-      document.getElementById('receipt2-store-slogan').textContent = s.storeSlogan;
-      document.getElementById('receipt2-store-address').textContent = s.storeAddress;
-      document.getElementById('receipt2-store-phone').textContent = `HP: ${s.storePhone}`;
-
-      document.getElementById('mobile-logo-img').src = s.logoUrl;
-      document.getElementById('sidebar-logo-img').src = s.logoUrl;
-      document.getElementById('receipt-logo-img').src = s.logoUrl;
-
-      applyThermalPrinterCssVariables();
-    }
-
-    let activeProcessingPickupOrderNumber = null;
-
-    function renderOnlinePickupQueue() {
-      const box = document.getElementById('online-pickup-queue-box');
-      const listEl = document.getElementById('online-pickup-list');
-      const countEl = document.getElementById('online-pickup-count');
-      if (!box || !listEl) return;
-
-      const pendingList = (appData.pickupOrders || []).filter(p => p && !p.convertedNotaId && p.status !== 'DITOLAK');
-      if (pendingList.length === 0) {
-        box.classList.add('hidden');
-        return;
-      }
-
-      box.classList.remove('hidden');
-      if (countEl) countEl.textContent = pendingList.length;
-
-      listEl.innerHTML = pendingList.map(p => {
-        const lat = p.coords?.lat ? Number(p.coords.lat).toFixed(5) : '-';
-        const lng = p.coords?.lng ? Number(p.coords.lng).toFixed(5) : '-';
-        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${LAUNDRY_LAT},${LAUNDRY_LNG}&destination=${p.coords?.lat || LAUNDRY_LAT},${p.coords?.lng || LAUNDRY_LNG}&travelmode=two-wheeler`;
-        const pkgNames = (p.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
-        const isAccepted = p.status === 'DITERIMA_KURIR_OTW';
-
-        return `
-          <div class="p-3.5 rounded-xl bg-white border-2 ${isAccepted ? 'border-emerald-500' : 'border-amber-300'} shadow-xs flex flex-col justify-between space-y-2.5 text-xs">
-            <div class="space-y-1">
-              <div class="flex items-center justify-between gap-1">
-                <span class="px-2 py-0.5 rounded bg-slate-900 text-amber-300 font-mono font-extrabold">${p.orderNumber}</span>
-                <span class="px-2 py-0.5 rounded ${isAccepted ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'} font-extrabold text-[10px]">
-                  ${isAccepted ? '✓ DITERIMA (KURIR OTW)' : '⏳ PESANAN BARU'}
-                </span>
-              </div>
-              <p class="font-extrabold text-sm text-slate-900 pt-1">${p.custName} <span class="text-[11px] font-mono text-slate-500">(${p.custPhone})</span></p>
-              <p class="text-[11px] text-slate-700 font-semibold"><i class="fa-solid fa-location-dot text-rose-600 mr-1"></i>${p.custAddress}</p>
-              <p class="text-[10px] font-mono text-slate-500">Koordinat: ${lat}, ${lng} (${p.distanceKm || 0} Km)</p>
-              <p class="text-[11px] text-indigo-700 font-bold">Paket: ${pkgNames}</p>
-            </div>
-            <div class="pt-2 border-t border-slate-100 flex flex-col gap-1.5">
-              <a href="${gmapsUrl}" target="_blank" rel="noopener" class="w-full py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] text-center flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Buka Rute Google Maps Penjemputan
-              </a>
-              ${!isAccepted ? `
-                <button type="button" onclick="acceptOnlinePickupOrder('${p.orderNumber}')" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow">
-                  <i class="fa-solid fa-bell"></i> Terima Pesanan (Kirim Notif ke Pelanggan)
-                </button>
-              ` : ''}
-              <button type="button" onclick="loadOnlinePickupToKasirForm('${p.orderNumber}')" class="w-full py-2 px-3 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow">
-                <i class="fa-solid fa-file-import"></i> Proses ke Form Buat Nota
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Saat Kasir Klik "Terima Pesanan", kirim status DITERIMA ke website pelanggan
-    function acceptOnlinePickupOrder(orderNumber) {
-      const pIdx = (appData.pickupOrders || []).findIndex(item => item.orderNumber === orderNumber);
-      if (pIdx === -1) return;
-
-      const cashier = selectedCashierOnKasir || (appData.employees[0]?.name || 'Admin Kasir');
-      appData.pickupOrders[pIdx].status = 'DITERIMA_KURIR_OTW';
-      appData.pickupOrders[pIdx].acceptedAt = Date.now();
-      appData.pickupOrders[pIdx].acceptedBy = cashier;
-
-      saveData();
-      alert(`Pesanan ${orderNumber} telah diterima! Pelanggan kini menerima notifikasi real-time di websitenya bahwa kurir sedang menuju lokasi.`);
-    }
-
-    function loadOnlinePickupToKasirForm(orderNumber) {
-      const p = (appData.pickupOrders || []).find(item => item.orderNumber === orderNumber);
-      if (!p) return;
-
-      if (!selectedCashierOnKasir) {
-        if ((appData.employees || []).length === 0) {
-          alert("Tambahkan minimal 1 karyawan di menu Data Karyawan terlebih dahulu.");
-          return;
-        }
-        selectCashierToOpenForm(appData.employees[0].name);
-      }
-
-      activeProcessingPickupOrderNumber = p.orderNumber;
-
-      // Tandai diterima jika belum
-      if (p.status === 'MENUNGGU_JEMPUT') {
-        p.status = 'DITERIMA_KURIR_OTW';
-        p.acceptedAt = Date.now();
-        p.acceptedBy = selectedCashierOnKasir;
-      }
-
-      const catRadio = document.querySelector(`input[name="cust_category"][value="${p.custCategory || 'Umum'}"]`);
-      if (catRadio) catRadio.checked = true;
-      handleCustomerCategoryChange(p.custCategory || 'Umum');
-      if (p.custCategory === 'Member' && p.memberId) {
-        selectMemberForKasir(p.memberId);
-      }
-
-      document.getElementById('kasir-cust-name').value = p.custName || '';
-      document.getElementById('kasir-cust-phone').value = p.custPhone || '';
-      document.getElementById('kasir-cust-address').value = p.custAddress || '';
-      document.getElementById('kasir-weight').value = formatNumberID(p.weightKg || 1);
-      document.getElementById('kasir-pcs').value = formatNumberID(p.pcsCount || 1);
-      document.getElementById('kasir-cloth-details').value = p.clothDetails || '';
-
-      const delivRadio = document.querySelector(`input[name="delivery_type"][value="${p.deliveryType || 'Jemput & Antar'}"]`);
-      if (delivRadio) delivRadio.checked = true;
-      if (p.coords && p.coords.lat && p.coords.lng) {
-        selectedCustomerCoords = { lat: Number(p.coords.lat), lng: Number(p.coords.lng) };
-      }
-      handleDeliveryTypeChange(p.deliveryType || 'Jemput & Antar');
-      if (document.getElementById('delivery-distance-km')) {
-        document.getElementById('delivery-distance-km').value = String(p.distanceKm || 0).replace('.', ',');
-      }
-
-      multiServiceCart = Array.isArray(p.items) ? JSON.parse(JSON.stringify(p.items)) : [];
-      renderMultiServiceCart();
-      calculateKasirTotal();
-
-      document.getElementById('kasir-workspace-container')?.scrollIntoView({ behavior: 'smooth' });
+      ['mobile-store-name', 'sidebar-store-name', 'receipt-store-name', 'receipt2-store-name'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = id.startsWith('receipt') ? name.toUpperCase() : name;
+      });
+      ['mobile-store-slogan', 'sidebar-store-slogan', 'receipt-store-slogan', 'receipt2-store-slogan'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = slogan;
+      });
+      ['receipt-store-address', 'receipt2-store-address'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = addr;
+      });
+      ['receipt-store-phone', 'receipt2-store-phone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `HP: ${phone}`;
+      });
+      ['mobile-logo-img', 'sidebar-logo-img', 'receipt-logo-img'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.src = logo;
+      });
     }
 
     function refreshAllViews() {
-      renderOnlinePickupQueue();
-      applyStoreBranding();
+      updateStoreBrandingUI();
+      applyThermalPrinterCssVariables();
       updateTopStatistics();
+      renderOnlinePickupQueue();
       renderKasirOptions();
       renderProgresOrderRadios();
       renderPelunasanList();
@@ -7809,20 +8045,17 @@
       }
     }
 
-    // Jam Real-Time di Sidebar
     setInterval(() => {
       const clockEl = document.getElementById('live-clock-sidebar');
       if (clockEl) {
-        clockEl.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        clockEl.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
       }
     }, 1000);
 
-    // Jalankan Aplikasi Saat DOM Siap
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       refreshAllViews();
       initFirebaseSync();
     });
-
   </script>
 </body>
 </html>
