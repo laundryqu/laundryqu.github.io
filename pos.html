@@ -519,7 +519,7 @@
               </div>
             </div>
 
-            <!-- 2. Input Pelanggan, ALAMAT PELANGGAN (Selalu Tampil), Berat/Set/Stelan & Jumlah Pakaian (Pcs) -->
+            <!-- 2. Input Pelanggan, ALAMAT PELANGGAN + SIMBOL STAMP, & Blok Kuning Transparan Berat/Pcs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
               <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
@@ -534,68 +534,98 @@
                 <input type="tel" id="kasir-cust-phone" required oninput="calculateKasirTotal()" placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
               </div>
 
-              <!-- KOLOM ALAMAT PELANGGAN (SELALU TAMPIL) -->
+              <!-- KOLOM ALAMAT PELANGGAN + SIMBOL STAMP DI SEBELAHNYA -->
               <div class="sm:col-span-2">
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  <i class="fa-solid fa-location-dot text-sky-600 mr-1"></i> Alamat Pelanggan
+                  <i class="fa-solid fa-location-dot text-sky-600 mr-1"></i> Alamat Pelanggan &amp; Stamp Loyalitas
                 </label>
-                <input type="text" id="kasir-cust-address" oninput="updateReceiptPreview()" placeholder="Ketik alamat rumah / patokan lokasi pelanggan..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                <div class="flex items-stretch gap-2">
+                  <input type="text" id="kasir-cust-address" oninput="updateReceiptPreview()" placeholder="Ketik alamat rumah / patokan lokasi pelanggan..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                  
+                  <!-- Badge Simbol Stamp di Sebelah Alamat -->
+                  <div id="kasir-stamp-promo-box" title="Akumulasi Stamp Loyalitas 10x Gratis 1x" class="px-3 py-1.5 rounded-xl bg-sky-500/15 border-2 border-sky-400/60 text-sky-900 flex items-center gap-2 shrink-0">
+                    <i class="fa-solid fa-stamp text-lg text-sky-600"></i>
+                    <div class="leading-tight text-left">
+                      <span id="kasir-stamp-status-text" class="block font-mono text-xs font-extrabold text-sky-950">0/10</span>
+                      <span id="kasir-stamp-earned-now" class="block font-mono text-[10px] font-bold text-sky-700">+0</span>
+                    </div>
+                    <!-- Muncul ikon kado klaim jika stamp mencapai >= 10 -->
+                    <label id="kasir-stamp-redeem-label" title="Klaim Gratis 1x Cuci" class="hidden items-center gap-1 ml-1 px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[10px] cursor-pointer shadow">
+                      <input type="checkbox" id="kasir-redeem-free-wash" onchange="calculateKasirTotal()" class="w-3.5 h-3.5 rounded text-slate-900" />
+                      <i class="fa-solid fa-gift"></i>
+                      <span id="kasir-stamp-free-val-label" class="hidden">Rp 18.000</span>
+                    </label>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  <span id="kasir-weight-label">Berat Cucian (Kg)</span> <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <input type="text" id="kasir-weight" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan angka..." class="w-full px-3.5 py-2.5 pr-20 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                  <span id="kasir-weight-unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">Kg</span>
+              <!-- BLOK BERAT & JUMLAH PAKAIAN (KUNING TRANSPARAN) -->
+              <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-yellow-400/20 border-2 border-yellow-400/60 backdrop-blur-xs">
+                <div>
+                  <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-950 mb-1.5">
+                    <i class="fa-solid fa-weight-scale text-yellow-700 mr-1"></i> <span id="kasir-weight-label">Berat Cucian (Kg)</span> <span class="text-rose-600">*</span>
+                  </label>
+                  <div class="relative">
+                    <input type="text" id="kasir-weight" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan angka..." class="w-full px-3.5 py-2.5 pr-20 rounded-xl border border-yellow-500/70 bg-white/90 text-sm font-extrabold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+                    <span id="kasir-weight-unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-yellow-900 bg-yellow-200/80 px-2 py-0.5 rounded border border-yellow-400">Kg</span>
+                  </div>
+                  <p id="kasir-bundle-info" class="hidden text-[11px] font-bold text-indigo-800 mt-1"></p>
                 </div>
-                <p id="kasir-bundle-info" class="hidden text-[11px] font-bold text-indigo-700 mt-1"></p>
-              </div>
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  Jumlah Pakaian (Pcs) <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <input type="text" id="kasir-pcs" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan jumlah pcs..." class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">Pcs</span>
+                <div>
+                  <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-950 mb-1.5">
+                    <i class="fa-solid fa-shirt text-yellow-700 mr-1"></i> Jumlah Pakaian (Pcs) <span class="text-rose-600">*</span>
+                  </label>
+                  <div class="relative">
+                    <input type="text" id="kasir-pcs" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan jumlah pcs..." class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-yellow-500/70 bg-white/90 text-sm font-extrabold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-yellow-900">Pcs</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- 3. PILIH PAKET LAYANAN (TEPAT DI BAWAH BERAT CUCIAN / JUMLAH PAKAIAN + CARI + SCROLL) -->
-            <div class="space-y-3 pt-2 border-t border-slate-100">
+            <!-- 3. PILIH PAKET LAYANAN (UNGU TRANSPARAN + FILTER JENIS PAKET DI SEBELAH CARI) -->
+            <div class="space-y-3 p-4 rounded-2xl bg-purple-500/15 border-2 border-purple-400/50 backdrop-blur-xs">
               <div class="flex flex-wrap items-center justify-between gap-2">
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                  <i class="fa-solid fa-layer-group text-sky-600 mr-1"></i> Pilih Paket Layanan <span class="text-rose-500">*</span>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-purple-950">
+                  <i class="fa-solid fa-layer-group text-purple-700 mr-1"></i> Pilih Paket Layanan <span class="text-rose-600">*</span>
                 </label>
-                <button type="button" onclick="addServiceToMultiCart()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition">
+                <button type="button" onclick="addServiceToMultiCart()" class="px-3 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition">
                   <i class="fa-solid fa-plus"></i> Tambah Layanan Lain (Multi-Paket)
                 </button>
               </div>
 
-              <!-- Kolom Pencarian Paket Layanan -->
-              <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input type="text" id="kasir-service-search" oninput="renderKasirServiceRadios()" placeholder="Cari nama paket layanan (misal: Express, Setrika, Bundle 7Kg)..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              <!-- Baris Pencarian Paket & Filter Jenis Paket (Kg, Pcs, Set, Stelan, Bundle) di Sebelahnya -->
+              <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2">
+                <div class="relative flex-1">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-500 text-xs"></i>
+                  <input type="text" id="kasir-service-search" oninput="renderKasirServiceRadios()" placeholder="Cari nama paket layanan..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-purple-300 bg-white/90 focus:bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                </div>
+                <div id="kasir-service-unit-filters" class="flex flex-wrap items-center gap-1 bg-white/80 p-1 rounded-xl border border-purple-300 shrink-0">
+                  <button type="button" onclick="setKasirServiceUnitFilter('ALL')" data-unit="ALL" class="srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-purple-700 text-white transition">Semua</button>
+                  <button type="button" onclick="setKasirServiceUnitFilter('Kg')" data-unit="Kg" class="srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-900 hover:bg-purple-100 transition">Kg</button>
+                  <button type="button" onclick="setKasirServiceUnitFilter('Pcs')" data-unit="Pcs" class="srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-900 hover:bg-purple-100 transition">Pcs</button>
+                  <button type="button" onclick="setKasirServiceUnitFilter('Set')" data-unit="Set" class="srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-900 hover:bg-purple-100 transition">Set</button>
+                  <button type="button" onclick="setKasirServiceUnitFilter('Stelan')" data-unit="Stelan" class="srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-900 hover:bg-purple-100 transition">Stelan</button>
+                  <button type="button" onclick="setKasirServiceUnitFilter('Bundle')" data-unit="Bundle" class="srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-900 hover:bg-purple-100 transition">Bundle</button>
+                </div>
               </div>
 
-              <!-- Radio Button Paket Layanan (Scrollable max-h-60 agar tidak panjang ke bawah) -->
-              <div id="radio-service-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto p-1 border border-slate-200 rounded-2xl bg-slate-50/60">
+              <!-- Radio Button Paket Layanan -->
+              <div id="radio-service-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto p-1.5 border border-purple-300/80 rounded-2xl bg-white/60">
                 <!-- Diisi dinamis oleh JS -->
               </div>
 
               <!-- Container Tabel Keranjang Multi-Layanan -->
-              <div id="multi-service-cart-box" class="hidden p-3.5 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-2">
+              <div id="multi-service-cart-box" class="hidden p-3.5 rounded-2xl bg-white/90 border border-purple-300 space-y-2">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-extrabold text-indigo-900 uppercase">
+                  <span class="text-xs font-extrabold text-purple-950 uppercase">
                     <i class="fa-solid fa-cart-flatbed mr-1"></i> Daftar Multi-Paket Layanan di Nota Ini
                   </span>
                   <button type="button" onclick="clearMultiServiceCart()" class="text-[11px] text-rose-600 hover:underline font-bold">Kosongkan Keranjang</button>
                 </div>
                 <div class="overflow-x-auto">
                   <table class="w-full text-left text-xs bg-white rounded-xl overflow-hidden">
-                    <thead class="bg-indigo-100 text-indigo-900 font-bold">
+                    <thead class="bg-purple-100 text-purple-950 font-bold">
                       <tr>
                         <th class="p-2">Paket Layanan</th>
                         <th class="p-2 text-center">Qty / Hitungan</th>
@@ -706,25 +736,8 @@
               </div>
             </div>
 
-            <!-- 5B. PANEL OTOMATIS PROMO CUCI 10X GRATIS 1X & GRATIS PAKAIAN SHOLAT -->
+            <!-- 5B. PANEL GRATIS PAKAIAN SHOLAT (Stamp sudah dipindah ke sebelah Alamat) -->
             <div id="kasir-promos-wrapper" class="space-y-3 pt-2 border-t border-slate-100">
-              <!-- Box Kupon Stamp 10x Gratis 1x (Muncul Otomatis Saat No. HP Diisi) -->
-              <div id="kasir-stamp-promo-box" class="hidden p-3.5 rounded-2xl bg-sky-50 border border-sky-200 space-y-2">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-sky-600 text-white">Program Loyalitas 10x Gratis 1x</span>
-                    <p id="kasir-stamp-status-text" class="text-xs font-extrabold text-slate-900 mt-1">Akumulasi Stamp Pelanggan: 0 / 10</p>
-                  </div>
-                  <span id="kasir-stamp-earned-now" class="font-mono text-xs font-extrabold text-sky-800 bg-white px-2.5 py-1 rounded-lg border border-sky-200">
-                    Nota ini: +0 Stamp
-                  </span>
-                </div>
-                <label id="kasir-stamp-redeem-label" class="hidden items-center gap-2 p-2.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs cursor-pointer shadow">
-                  <input type="checkbox" id="kasir-redeem-free-wash" onchange="calculateKasirTotal()" class="w-4 h-4 rounded text-slate-900" />
-                  <span>🎁 Klaim Gratis 1x Cuci Sekarang! (Potong <span id="kasir-stamp-free-val-label">Rp 18.000</span> dari Tagihan)</span>
-                </label>
-              </div>
-
               <!-- Box Gratis Cuci Pakaian Sholat (Sajadah, Mukena, Lobe, Sarung Sholat) -->
               <div id="kasir-prayer-promo-box" class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-2.5">
                 <div class="flex items-center justify-between">
@@ -754,7 +767,7 @@
               </div>
             </div>
 
-            <!-- 6. Pilihan Aroma Parfum (Radio Button) & Kode Voucher -->
+            <!-- 6. Pilihan Aroma Parfum (Radio Button) & Kode Voucher (EMAS TRANSPARAN) -->
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-2 border-t border-slate-100">
               <div class="sm:col-span-7">
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
@@ -762,14 +775,16 @@
                 </label>
                 <div id="radio-perfume-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
               </div>
-              <div class="sm:col-span-5">
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  <i class="fa-solid fa-ticket text-sky-600 mr-1"></i> Kode Voucher Promo
+
+              <!-- BLOK KODE VOUCHER WARNA EMAS TRANSPARAN -->
+              <div class="sm:col-span-5 p-3.5 rounded-2xl bg-amber-500/20 border-2 border-amber-400/70 backdrop-blur-xs">
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-amber-950 mb-2">
+                  <i class="fa-solid fa-ticket text-amber-600 mr-1"></i> Kode Voucher Promo
                 </label>
                 <div class="flex gap-2">
-                  <input type="text" id="kasir-voucher-code" oninput="applyVoucherOnKasir(this.value)" placeholder="Ketik kode promo..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold uppercase font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                  <input type="text" id="kasir-voucher-code" oninput="applyVoucherOnKasir(this.value)" placeholder="Ketik kode promo..." class="w-full px-3 py-2 rounded-xl border border-amber-400 bg-white/90 text-xs font-extrabold uppercase font-mono text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-500" />
                 </div>
-                <p id="kasir-voucher-status" class="text-[11px] text-slate-500 mt-1">Kosongkan jika tidak memakai voucher.</p>
+                <p id="kasir-voucher-status" class="text-[11px] text-amber-900 font-medium mt-1">Kosongkan jika tidak memakai voucher.</p>
               </div>
             </div>
 
@@ -885,15 +900,21 @@
             <!-- Area Cetak Gabungan Struk 1 & Struk 2 (#printArea) -->
             <div id="printArea" class="space-y-4">
 
-              <!-- STRUK 1: COMPACT LENGKAP + 7 KETENTUAN + TTD KASIR -->
+              <!-- STRUK 1: COMPACT HEMAT KERTAS + LOGO DI SAMPING + 7 KETENTUAN + TTD KASIR -->
               <div id="receipt-one-box" class="thermal-paper rounded-lg border border-slate-300 page-break-receipt">
                 <div class="text-center">
-                  <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 1 - NOTA PELANGGAN</div>
-                  <img id="receipt-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 mx-auto object-contain mb-0.5" />
-                  <div id="receipt-store-name" class="font-extrabold text-xs uppercase leading-none">LAUNDRY QU</div>
-                  <div id="receipt-store-slogan" class="text-[9px] font-bold leading-tight">Unit Usaha Markaz Yatim Duafa Qurani</div>
-                  <div id="receipt-store-address" class="text-[8.5px] leading-tight">Jln. Protokol Dusun III Desa Sei Kamah II</div>
-                  <div id="receipt-store-phone" class="text-[8.5px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
+                  <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-1">STRUK 1 - NOTA PELANGGAN</div>
+                </div>
+
+                <!-- Header Hemat Kertas: Logo di Samping Nama & Alamat -->
+                <div class="flex items-center gap-2 text-left">
+                  <img id="receipt-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-9 h-9 object-contain shrink-0" />
+                  <div class="leading-tight min-w-0 flex-1">
+                    <div id="receipt-store-name" class="font-black text-xs uppercase leading-none">LAUNDRY QU</div>
+                    <div id="receipt-store-slogan" class="text-[8.5px] font-bold leading-tight">Unit Usaha Markaz Yatim Duafa Qurani</div>
+                    <div id="receipt-store-address" class="text-[8px] leading-tight">Jln. Protokol Dusun III Desa Sei Kamah II</div>
+                    <div id="receipt-store-phone" class="text-[8px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
+                  </div>
                 </div>
 
                 <div id="receipt-express-banner" class="hidden thermal-express-banner">
@@ -902,7 +923,7 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Nomor Nota & Nama Pelanggan Diperbesar -->
+                <!-- Nomor Nota, Nama Pelanggan Diperbesar & Tanggal Estimasi Ditebalkan -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between items-baseline">
                     <span>NO. NOTA: <strong id="receipt-nota-id" class="text-[15px] font-black tracking-wider">000001</strong></span>
@@ -916,9 +937,9 @@
                     <span>Masuk: <span id="receipt-date-in">-</span></span>
                     <span>Kasir: <strong id="receipt-cashier-name">-</strong></span>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Estimasi:</span>
-                    <strong id="receipt-eta">-</strong>
+                  <div class="flex justify-between items-baseline py-0.5 border-b border-dotted border-slate-300 text-[10.5px]">
+                    <strong class="font-black uppercase">Estimasi Selesai:</strong>
+                    <strong id="receipt-eta" class="font-black underline">-</strong>
                   </div>
                   <div class="flex justify-between">
                     <span>Alamat:</span>
@@ -932,7 +953,7 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Jumlah Pakaian Diperbesar -->
+                <!-- Harga Paket Layanan & Jumlah Pakaian Diperbesar -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div id="receipt-items-list" class="space-y-0.5 font-semibold"></div>
                   <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
@@ -942,37 +963,41 @@
                   <div class="flex justify-between">
                     <span>Parfum: <span id="receipt-perfume">-</span></span>
                   </div>
-                  <div class="text-[8.5px] leading-tight">
+                  <div id="receipt-row-ket" class="text-[8.5px] leading-tight">
                     <span>Ket: </span><span id="receipt-cloth-details">-</span>
                   </div>
                 </div>
 
                 <div class="thermal-divider"></div>
 
-                <!-- Total Biaya Diperbesar & Kotak Besar Kembalian ##.### -->
+                <!-- Rincian Biaya Hemat Kertas (Sembunyikan Ongkir/Diskon jika Rp 0) -->
                 <div class="space-y-0.5 text-[9.5px]">
-                  <div class="flex justify-between">
-                    <span>Subtotal / Ongkir:</span>
-                    <span><span id="receipt-subtotal">Rp 0</span> / <span id="receipt-ongkir">Rp 0</span></span>
+                  <div id="receipt-row-subtotal" class="hidden flex justify-between">
+                    <span>Subtotal Layanan:</span>
+                    <span id="receipt-subtotal">Rp 0</span>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Total Diskon:</span>
+                  <div id="receipt-row-ongkir" class="hidden flex justify-between">
+                    <span>Ongkos Kirim:</span>
+                    <span id="receipt-ongkir">Rp 0</span>
+                  </div>
+                  <div id="receipt-row-discount" class="hidden flex justify-between">
+                    <span>Total Diskon / Promo:</span>
                     <span id="receipt-discount">- Rp 0</span>
                   </div>
                   <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
-                    <span>TOTAL BIAYA:</span>
+                    <span id="receipt-total-label">TOTAL BIAYA:</span>
                     <span id="receipt-total">Rp 0</span>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Status: <strong id="receipt-pay-status">BELUM BAYAR</strong></span>
-                    <span>Bayar: <span id="receipt-paid">Rp 0</span></span>
+                  <div class="flex justify-between items-baseline">
+                    <span>Status: <strong id="receipt-pay-status" class="text-[11px] font-black">BELUM BAYAR</strong></span>
+                    <span id="receipt-paid-wrap" class="hidden">Bayar: <strong id="receipt-paid">Rp 0</strong></span>
                   </div>
-                  <div class="flex justify-between">
+                  <div id="receipt-row-balance" class="hidden flex justify-between">
                     <span id="receipt-balance-label">Sisa Tagihan:</span>
-                    <strong id="receipt-balance">Rp 0</strong>
+                    <strong id="receipt-balance" class="font-black">Rp 0</strong>
                   </div>
 
-                  <!-- KOTAK BESAR TULISAN "Kembalian ##.###" -->
+                  <!-- KOTAK BESAR TULISAN "Kembalian ##.###" (Hanya Muncul Jika Kembalian > 0) -->
                   <div id="receipt-large-change-box" class="hidden my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
                     <div id="receipt-large-change-text" class="text-[15px] font-black uppercase tracking-wide leading-tight">
                       Kembalian 0
@@ -1018,14 +1043,20 @@
                 --- &#9986; POTONG DI SINI (STRUK 2 ARSIP / TTD PELANGGAN) &#9986; ---
               </div>
 
-              <!-- STRUK 2: COMPACT RINGKAS + QR + 7 KETENTUAN + TTD PELANGGAN -->
+              <!-- STRUK 2: COMPACT RINGKAS + LOGO DI SAMPING + QR + 7 KETENTUAN + TTD PELANGGAN -->
               <div id="receipt-two-box" class="thermal-paper rounded-lg border border-slate-300">
                 <div class="text-center">
-                  <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 2 - ARSIP KASIR</div>
-                  <div id="receipt2-store-name" class="font-extrabold text-xs uppercase leading-none">LAUNDRY QU</div>
-                  <div id="receipt2-store-slogan" class="text-[9px] font-bold leading-tight">Unit Usaha Markaz Yatim Duafa Qurani</div>
-                  <div id="receipt2-store-address" class="text-[8.5px] leading-tight">Jln. Protokol Dusun III Desa Sei Kamah II</div>
-                  <div id="receipt2-store-phone" class="text-[8.5px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
+                  <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-1">STRUK 2 - ARSIP KASIR</div>
+                </div>
+
+                <div class="flex items-center gap-2 text-left">
+                  <img id="receipt2-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 object-contain shrink-0" />
+                  <div class="leading-tight min-w-0 flex-1">
+                    <div id="receipt2-store-name" class="font-black text-xs uppercase leading-none">LAUNDRY QU</div>
+                    <div id="receipt2-store-slogan" class="text-[8.5px] font-bold leading-tight">Unit Usaha Markaz Yatim Duafa Qurani</div>
+                    <div id="receipt2-store-address" class="text-[8px] leading-tight">Jln. Protokol Dusun III Desa Sei Kamah II</div>
+                    <div id="receipt2-store-phone" class="text-[8px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
+                  </div>
                 </div>
 
                 <div id="receipt2-express-banner" class="hidden thermal-express-banner">
@@ -1034,7 +1065,6 @@
 
                 <div class="thermal-divider"></div>
 
-                <!-- Nomor Nota, Nama Pelanggan, Jumlah Pakaian & Total Biaya Diperbesar di Struk 2 -->
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between items-baseline">
                     <span>NO. NOTA:</span>
@@ -1045,28 +1075,25 @@
                     <strong id="receipt2-cust-name" class="text-[13px] font-black uppercase truncate max-w-[170px]">-</strong>
                   </div>
                   <div class="flex justify-between">
-                    <span>Tgl Masuk:</span>
-                    <span id="receipt2-date-in">-</span>
+                    <span>Tgl Masuk: <span id="receipt2-date-in">-</span></span>
+                    <span>Kasir: <strong id="receipt2-cashier-name">-</strong></span>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Estimasi Selesai:</span>
-                    <strong id="receipt2-eta">-</strong>
+                  <div class="flex justify-between items-baseline py-0.5 border-b border-dotted border-slate-300 text-[10.5px]">
+                    <strong class="font-black uppercase">Estimasi Selesai:</strong>
+                    <strong id="receipt2-eta" class="font-black underline">-</strong>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Kasir:</span>
-                    <span id="receipt2-cashier-name">-</span>
-                  </div>
-                  <div class="flex justify-between items-baseline">
-                    <span>Berat / Pakaian:</span>
+                  <div id="receipt2-items-list" class="space-y-0.5 font-semibold pt-0.5"></div>
+                  <div class="flex justify-between items-baseline pt-0.5 border-t border-dotted border-slate-300">
+                    <span class="font-bold">Berat / Pakaian:</span>
                     <strong id="receipt2-weight-pcs" class="text-[12.5px] font-black">0 Kg / 0 Pcs</strong>
                   </div>
                   <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
-                    <span>TOTAL BIAYA:</span>
+                    <span id="receipt2-total-label">TOTAL BIAYA:</span>
                     <span id="receipt2-total">Rp 0</span>
                   </div>
                   <div class="flex justify-between">
                     <span>Status Pembayaran:</span>
-                    <strong id="receipt2-pay-status">BELUM BAYAR</strong>
+                    <strong id="receipt2-pay-status" class="text-[11px] font-black">BELUM BAYAR</strong>
                   </div>
 
                   <!-- KOTAK BESAR TULISAN "Kembalian ##.###" DI STRUK 2 -->
@@ -1773,17 +1800,18 @@
     </section>
 
     <!-- =======================================================================
-         TAB 6: MEMBER, KARTU QR & PORTAL PELANGGAN (#tab-member)
+         TAB 6: MEMBER, PAKET BULANAN, KARTU QR & PORTAL PELANGGAN (#tab-member)
     ======================================================================== -->
     <section id="tab-member" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
 
         <div class="xl:col-span-5 space-y-5">
+          <!-- 1. Form Registrasi & Edit Member -->
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h2 class="text-lg font-extrabold text-slate-900">Registrasi Member Baru</h2>
-                <p class="text-xs text-slate-500">Tier naik otomatis sesuai akumulasi transaksi</p>
+                <h2 class="text-lg font-extrabold text-slate-900">Registrasi &amp; Edit Member</h2>
+                <p class="text-xs text-slate-500">Evaluasi &amp; masa berlaku Tier selama 2 Tahun (Konsep Shopee)</p>
               </div>
               <div class="bg-amber-100 text-amber-900 px-3 py-1.5 rounded-xl text-right">
                 <span class="block text-[10px] uppercase font-bold">ID Member (4 Angka)</span>
@@ -1792,6 +1820,8 @@
             </div>
 
             <form id="form-member" onsubmit="saveMember(event)" class="space-y-3.5">
+              <input type="hidden" id="member-edit-id" value="" />
+
               <div>
                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama Lengkap Member <span class="text-rose-500">*</span></label>
                 <input type="text" id="member-name" required placeholder="Contoh: Dewi Lestari" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
@@ -1801,12 +1831,32 @@
                 <input type="tel" id="member-phone" required placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
               </div>
               <div>
-                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Alamat Rumah</label>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Alamat Rumah / Asrama Yayasan</label>
                 <input type="text" id="member-address" placeholder="Jln. Protokol Dusun III..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500" />
               </div>
 
+              <!-- Pilihan Kategori Member: Member Pelanggan vs Member Warga Yayasan -->
               <div>
-                <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Tier Awal Member</label>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Kategori Member <span class="text-rose-500">*</span></label>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="member_category_type" value="Pelanggan" checked onchange="toggleMemberTypeFields()" class="peer sr-only" />
+                    <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-extrabold text-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-900 transition">
+                      <i class="fa-solid fa-crown mr-1"></i> Member Pelanggan
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="member_category_type" value="Yayasan" onchange="toggleMemberTypeFields()" class="peer sr-only" />
+                    <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-extrabold text-slate-700 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 peer-checked:text-emerald-900 transition">
+                      <i class="fa-solid fa-mosque mr-1"></i> Warga Yayasan
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Opsi 1: Tier Member Pelanggan Reguler -->
+              <div id="member-regular-tier-box">
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Tier Member Pelanggan (Berlaku 2 Tahun)</label>
                 <div class="grid grid-cols-3 gap-2">
                   <label class="cursor-pointer">
                     <input type="radio" name="member_init_tier" value="Silver" checked class="peer sr-only" />
@@ -1829,60 +1879,220 @@
                 </div>
               </div>
 
-              <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition">
-                <i class="fa-solid fa-crown mr-1"></i> Daftarkan Member &amp; Buat Kartu QR
+              <!-- Opsi 2: Pengaturan Khusus Member Warga Yayasan (Diskon %, Maks Kg, Maks Nominal Rp) -->
+              <div id="member-yayasan-config-box" class="hidden p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-emerald-950 uppercase">
+                    <i class="fa-solid fa-hand-holding-heart text-emerald-600 mr-1"></i> Hak Subsidi / Diskon Warga Yayasan
+                  </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-900 mb-1">Diskon (%)</label>
+                    <div class="relative">
+                      <input type="number" id="member-yayasan-disc" min="0" max="100" value="50" class="w-full px-2.5 py-1.5 pr-6 rounded-lg border border-emerald-400 bg-white font-mono font-extrabold text-emerald-950" />
+                      <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-bold text-emerald-700">%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-900 mb-1">Maks. Berat (Kg)</label>
+                    <div class="relative">
+                      <input type="text" id="member-yayasan-max-kg" value="7" oninput="formatThousandInput(this)" placeholder="0 = Tanpa batas" class="w-full px-2.5 py-1.5 pr-7 rounded-lg border border-emerald-400 bg-white font-mono font-extrabold text-emerald-950" />
+                      <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-emerald-700">Kg</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-900 mb-1">Maks. Harga (Rp)</label>
+                    <input type="text" id="member-yayasan-max-rp" value="35.000" oninput="formatThousandInput(this)" placeholder="0 = Tanpa batas" class="w-full px-2.5 py-1.5 rounded-lg border border-emerald-400 bg-white font-mono font-extrabold text-emerald-950" />
+                  </div>
+                </div>
+                <p class="text-[10px] text-emerald-800 leading-tight">
+                  *Di-reset tiap awal bulan. Jika kuota bulanan tercapai sebelum akhir bulan, diskon otomatis mengikuti Tier Member (Silver/Gold/VIP).
+                </p>
+              </div>
+
+              <div class="flex gap-2">
+                <button type="submit" id="btn-submit-member" class="flex-1 py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow transition">
+                  <i class="fa-solid fa-crown mr-1"></i> <span id="btn-submit-member-text">Daftarkan Member &amp; Buat Kartu QR</span>
+                </button>
+                <button type="button" id="btn-cancel-member" onclick="resetMemberForm()" class="hidden py-2.5 px-3.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition">
+                  Batal Edit
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2. FORM INPUT / PERPANJANG PAKET BULANAN MEMBER (BAYAR DI AWAL, AKTIF 30 HARI) -->
+          <div id="member-monthly-pkg-box" class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border-2 border-indigo-300 p-5 shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-indigo-200 pb-3">
+              <div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-600 text-white uppercase">
+                  Langganan 30 Hari &bull; Bayar di Awal
+                </span>
+                <h3 class="text-base font-extrabold text-indigo-950 mt-1">
+                  <i class="fa-solid fa-calendar-check text-indigo-600 mr-1"></i> Input / Perpanjang Paket Bulanan Member
+                </h3>
+                <p class="text-[11px] text-slate-600">Otomatis masuk ke Laporan Harian Kasir &amp; menambah akumulasi Tier 2 Tahun. Sisa kuota lama otomatis ditambahkan!</p>
+              </div>
+            </div>
+
+            <form id="form-member-monthly-pkg" onsubmit="saveMemberMonthlyPackage(event)" class="space-y-3.5 text-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-bold uppercase text-slate-700 mb-1">Pilih Member <span class="text-rose-500">*</span></label>
+                  <select id="pkg-member-select" required onchange="handlePkgMemberSelectChange()" class="w-full px-3 py-2 rounded-xl border border-indigo-300 bg-white font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Pilih Member --</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-bold uppercase text-slate-700 mb-1">Kasir Penerima <span class="text-rose-500">*</span></label>
+                  <select id="pkg-cashier-select" required class="w-full px-3 py-2 rounded-xl border border-indigo-300 bg-white font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Pilih Kasir --</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Info Status Kuota Saat Ini -->
+              <div id="pkg-member-current-info" class="hidden p-3 rounded-xl bg-white border border-indigo-200 text-[11px] space-y-1"></div>
+
+              <div>
+                <label class="block font-bold uppercase text-slate-700 mb-1.5">Jenis Kuota Paket Bulanan <span class="text-rose-500">*</span></label>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="pkg_quota_type" value="KG" checked onchange="togglePkgQuotaTypeLabel()" class="peer sr-only" />
+                    <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-white text-center font-extrabold text-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white transition">
+                      <i class="fa-solid fa-weight-scale mr-1"></i> Kuota Berat (Kg)
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="pkg_quota_type" value="NOMINAL" onchange="togglePkgQuotaTypeLabel()" class="peer sr-only" />
+                    <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-white text-center font-extrabold text-slate-700 peer-checked:border-purple-600 peer-checked:bg-purple-600 peer-checked:text-white transition">
+                      <i class="fa-solid fa-wallet mr-1"></i> Kuota Nominal (Rp)
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label id="pkg-quota-amount-label" class="block font-bold uppercase text-slate-700 mb-1">Jumlah Kuota Berat (Kg) <span class="text-rose-500">*</span></label>
+                  <div class="relative">
+                    <input type="text" id="pkg-quota-amount" required oninput="formatThousandInput(this)" placeholder="Contoh: 30" class="w-full px-3 py-2 pr-12 rounded-xl border border-indigo-300 bg-white font-mono text-sm font-extrabold text-indigo-950" />
+                    <span id="pkg-quota-unit-badge" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-mono font-extrabold text-[11px]">Kg</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold uppercase text-slate-700 mb-1">Harga Bayar Paket (Rp) <span class="text-rose-500">*</span></label>
+                  <div class="relative">
+                    <input type="text" id="pkg-price-paid" required oninput="formatThousandInput(this)" placeholder="Contoh: 150.000" class="w-full px-3 py-2 rounded-xl border border-emerald-400 bg-white font-mono text-sm font-extrabold text-emerald-800" />
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bolt"></i> Aktifkan / Perpanjang Paket Bulanan (30 Hari)
               </button>
             </form>
           </div>
 
+          <!-- 3. Desain Kartu Member ID Card 2 Sisi (Timbal Balik) -->
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-                <i class="fa-solid fa-id-card text-amber-500 mr-1"></i> Desain Kartu Member Digital
-              </h3>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+                  <i class="fa-solid fa-id-card text-amber-500 mr-1"></i> Kartu Member ID Card (Timbal Balik 2 Sisi)
+                </h3>
+                <p class="text-[11px] text-slate-500">Ukuran Standar ID Card CR80 (85,6mm &times; 54mm) &bull; Depan &amp; Belakang</p>
+              </div>
               <div class="flex items-center gap-2">
                 <button type="button" onclick="downloadMemberCardPng()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center gap-1 transition">
                   <i class="fa-solid fa-download"></i> Download PNG
                 </button>
                 <button type="button" onclick="printMemberCard()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1 transition">
-                  <i class="fa-solid fa-print"></i> Cetak Kartu
+                  <i class="fa-solid fa-print"></i> Cetak ID Card
                 </button>
               </div>
             </div>
 
-            <div id="member-card-canvas" class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-sky-900 to-indigo-950 text-white p-5 shadow-xl border border-sky-400/30">
-              <div class="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-sky-400/10 blur-xl"></div>
-              <div class="flex items-center justify-between border-b border-white/15 pb-3">
-                <div class="flex items-center gap-2.5">
-                  <img id="card-store-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-9 h-9 rounded-lg object-cover bg-white p-0.5" />
-                  <div>
-                    <p id="card-store-name" class="font-extrabold text-sm tracking-wide uppercase">LAUNDRY QU</p>
-                    <p id="card-store-slogan" class="text-[9px] text-sky-300">Unit Usaha Markaz Yatim Duafa Qurani</p>
+            <div id="member-card-canvas" class="flex flex-col items-center gap-4 p-3 bg-slate-100 rounded-2xl border border-slate-200 overflow-x-auto">
+              <!-- SISI DEPAN -->
+              <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-sky-900 to-indigo-950 text-white p-3.5 shadow-lg border border-sky-400/40 flex flex-col justify-between shrink-0" style="width: 340px; height: 214px;">
+                <div class="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-sky-400/10 blur-xl pointer-events-none"></div>
+                <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                  <div class="flex items-center gap-2">
+                    <img id="card-store-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white p-0.5 shrink-0" />
+                    <div class="leading-tight">
+                      <p id="card-store-name" class="font-extrabold text-xs tracking-wide uppercase">LAUNDRY QU</p>
+                      <p id="card-store-slogan" class="text-[8px] text-sky-300 font-semibold">Unit Usaha Markaz Yatim Duafa Qurani</p>
+                    </div>
+                  </div>
+                  <span id="card-member-tier" class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 shadow-2xs">
+                    SILVER 5%
+                  </span>
+                </div>
+
+                <div class="py-1.5 flex items-center justify-between gap-3">
+                  <div class="space-y-1 min-w-0 flex-1">
+                    <div>
+                      <p class="text-[8px] text-slate-300 uppercase tracking-wider">Nama Member</p>
+                      <p id="card-member-name" class="font-extrabold text-sm tracking-wide truncate">BELUM ADA DATA</p>
+                    </div>
+                    <div class="flex items-baseline gap-3">
+                      <div>
+                        <p class="text-[8px] text-slate-300 uppercase tracking-wider">ID Member</p>
+                        <p id="card-member-id" class="font-mono font-black text-base text-amber-300 tracking-widest leading-tight">----</p>
+                      </div>
+                      <div class="truncate">
+                        <p class="text-[8px] text-slate-300 uppercase tracking-wider">No. WhatsApp</p>
+                        <p id="card-member-phone" class="font-mono text-[10px] text-sky-200 font-bold truncate">-</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-white p-1.5 rounded-lg shadow-md shrink-0">
+                    <div id="member-card-qr"></div>
                   </div>
                 </div>
-                <span id="card-member-tier" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-400 text-slate-900">
-                  SILVER 5%
-                </span>
+
+                <div class="border-t border-white/15 pt-1.5 flex items-center justify-between text-[8px] text-slate-200">
+                  <span id="card-front-address" class="truncate max-w-[195px]">Jln. Protokol Dusun III Desa Sei Kamah II</span>
+                  <span class="font-mono font-extrabold text-amber-300 bg-white/10 px-1.5 py-0.5 rounded">laundryqu.github.io</span>
+                </div>
               </div>
-              <div class="py-4 flex items-center justify-between gap-4">
-                <div class="space-y-1.5">
-                  <div>
-                    <p class="text-[10px] text-slate-300 uppercase">Nama Member</p>
-                    <p id="card-member-name" class="font-extrabold text-base tracking-wide">BELUM ADA DATA</p>
-                  </div>
-                  <div>
-                    <p class="text-[10px] text-slate-300 uppercase">ID Login (4 Angka)</p>
-                    <p id="card-member-id" class="font-mono font-extrabold text-xl text-amber-300 tracking-widest">----</p>
-                  </div>
-                  <p id="card-member-phone" class="text-[11px] text-sky-200">-</p>
+
+              <!-- SISI BELAKANG (KETENTUAN NO. 3 SUDAH DIPERBARUI) -->
+              <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-white p-3.5 shadow-lg border border-sky-400/40 flex flex-col justify-between shrink-0" style="width: 340px; height: 214px;">
+                <div class="flex items-center justify-between border-b border-white/15 pb-1.5">
+                  <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-300">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Panduan &amp; Ketentuan Member
+                  </span>
+                  <span class="font-mono text-[8.5px] font-extrabold text-sky-300">laundryqu.github.io</span>
                 </div>
-                <div class="bg-white p-2 rounded-xl shadow-md shrink-0">
-                  <div id="member-card-qr"></div>
+
+                <div class="grid grid-cols-2 gap-2.5 my-auto py-1 text-[8px] leading-snug">
+                  <div class="bg-white/5 p-2 rounded-lg border border-white/10 space-y-1">
+                    <p class="font-extrabold text-sky-300 uppercase text-[8.5px]">Tata Cara Login Member:</p>
+                    <ol class="list-decimal pl-3 space-y-0.5 text-slate-200">
+                      <li>Buka web <strong class="text-amber-300 font-mono">laundryqu.github.io</strong></li>
+                      <li>Pilih menu <strong>Portal Member</strong>.</li>
+                      <li>Masukkan <strong>Nama</strong> &amp; <strong>4 Angka ID Member (<span id="card-back-member-id" class="font-mono text-amber-300">----</span>)</strong>.</li>
+                      <li>Cek status cucian, sisa kuota &amp; progres level secara <em>real-time</em>.</li>
+                    </ol>
+                  </div>
+
+                  <div class="bg-white/5 p-2 rounded-lg border border-white/10 space-y-1">
+                    <p class="font-extrabold text-amber-300 uppercase text-[8.5px]">Ketentuan Member:</p>
+                    <ol class="list-decimal pl-3 space-y-0.5 text-slate-200">
+                      <li>Tunjukkan QR Kartu ini saat transaksi di kasir.</li>
+                      <li>Level Member berlaku 2 tahun: <strong>Silver 5%</strong>, <strong>Gold 10%</strong> (&gt;2Jt), <strong>VIP 15%</strong> (&gt;5Jt).</li>
+                      <li><strong>Paket Bulanan</strong> dibayar di awal (aktif 30 hari). Sisa kuota tidak hangus &amp; bisa dipakai kembali setelah perpanjang paket baru.</li>
+                    </ol>
+                  </div>
                 </div>
-              </div>
-              <div class="border-t border-white/15 pt-2 flex items-center justify-between text-[10px] text-slate-300">
-                <span>Jln. Protokol Dusun III Desa Sei Kamah II</span>
-                <span>0823 6089 2828</span>
+
+                <div class="border-t border-white/15 pt-1.5 flex items-center justify-between text-[8px] text-slate-300">
+                  <span>WA Layanan: <strong id="card-back-store-phone" class="text-white">0823 6089 2828</strong></span>
+                  <span class="font-mono font-extrabold text-sky-300"><i class="fa-solid fa-globe mr-0.5"></i> laundryqu.github.io</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1893,8 +2103,8 @@
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
-                <h3 class="text-lg font-extrabold text-slate-900">Daftar Member &amp; Tier Otomatis</h3>
-                <p class="text-xs text-slate-500">Silver (5%): Default | Gold (10%): &gt; Rp2 Juta | VIP (15%): &gt; Rp5 Juta</p>
+                <h3 class="text-lg font-extrabold text-slate-900">Daftar Member, Paket Bulanan &amp; Tier 2 Tahun</h3>
+                <p class="text-xs text-slate-500">Tier dievaluasi per 2 Tahun (Silver 5% | Gold 10% &gt; Rp2 Juta | VIP 15% &gt; Rp5 Juta)</p>
               </div>
               <div class="flex items-center gap-2">
                 <button type="button" onclick="printReportSection('member')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5 transition">
@@ -1912,9 +2122,9 @@
                   <tr>
                     <th class="p-3 rounded-l-xl">ID 4 Angka</th>
                     <th class="p-3">Nama &amp; WA</th>
-                    <th class="p-3 text-center">Tier &amp; Diskon</th>
-                    <th class="p-3 text-center">Frekuensi Cuci</th>
-                    <th class="p-3 text-center rounded-r-xl">Aksi Kartu</th>
+                    <th class="p-3 text-center">Tier &amp; Paket Bulanan</th>
+                    <th class="p-3 text-center">Akumulasi 2 Tahun</th>
+                    <th class="p-3 text-center rounded-r-xl">Aksi Member</th>
                   </tr>
                 </thead>
                 <tbody id="member-table-tbody" class="divide-y divide-slate-100 font-medium"></tbody>
@@ -1929,7 +2139,7 @@
                   Self-Service Customer Portal
                 </span>
                 <h3 class="text-lg font-extrabold mt-1">Portal Login Pelanggan Member</h3>
-                <p class="text-xs text-sky-200">Cek progres bar tier member &amp; lacak status tahapan cucian secara real-time.</p>
+                <p class="text-xs text-sky-200">Cek sisa kuota Paket Bulanan, masa berlaku tier 2 tahun &amp; lacak cucian real-time.</p>
               </div>
             </div>
 
@@ -3624,13 +3834,16 @@
 
     function getCustomerStampBalanceByPhone(phoneRaw) {
       const cleanPhone = String(phoneRaw || '').replace(/\D/g, '').replace(/^62/, '0');
-      if (cleanPhone.length < 8) return { totalEarned: 0, totalRedeemed: 0, availableStamps: 0, freeWashAvailable: 0 };
+      if (cleanPhone.length < 8) {
+        return { totalEarned: 0, totalRedeemed: 0, availableStamps: 0, freeWashAvailable: 0, activeTxCount: 0 };
+      }
 
       let totalEarned = 0;
       let totalRedeemed = 0;
+      let activeTxCount = 0;
 
       (appData.orders || []).forEach(o => {
-        if (o.isDeleted) return;
+        if (!o || o.isDeleted) return; // Nota yang dibatalkan Admin tidak masuk ke frekuensi & stamp
         const p = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
         if (p === cleanPhone || (p.length >= 8 && p.endsWith(cleanPhone.slice(-8)))) {
           const earned = typeof o.stampsEarned === 'number'
@@ -3638,12 +3851,13 @@
             : computeOrderStampsEarned(o.weightKg, o.subtotal);
           totalEarned += earned;
           totalRedeemed += (Number(o.stampsRedeemed) || 0);
+          activeTxCount += 1;
         }
       });
 
       const availableStamps = Math.max(0, totalEarned - totalRedeemed);
       const freeWashAvailable = Math.floor(availableStamps / 10);
-      return { totalEarned, totalRedeemed, availableStamps, freeWashAvailable };
+      return { totalEarned, totalRedeemed, availableStamps, freeWashAvailable, activeTxCount };
     }
 
     function getKasirPrayerItemsSummary() {
@@ -3786,6 +4000,21 @@
       }
     }
 
+    let selectedKasirUnitFilter = 'ALL';
+
+    function setKasirServiceUnitFilter(unit) {
+      selectedKasirUnitFilter = unit || 'ALL';
+      document.querySelectorAll('.srv-unit-filter-btn').forEach(btn => {
+        const btnUnit = btn.getAttribute('data-unit');
+        if (btnUnit === selectedKasirUnitFilter) {
+          btn.className = "srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-purple-700 text-white shadow-2xs transition";
+        } else {
+          btn.className = "srv-unit-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold text-purple-900 hover:bg-purple-100 transition";
+        }
+      });
+      renderKasirServiceRadios();
+    }
+
     function renderKasirServiceRadios() {
       const srvContainer = document.getElementById('radio-service-list');
       if (!srvContainer) return;
@@ -3793,7 +4022,7 @@
       const services = appData.services || [];
       if (services.length === 0) {
         srvContainer.innerHTML = `
-          <div class="col-span-full p-4 rounded-xl bg-white border border-dashed border-slate-300 text-center text-xs font-bold text-slate-500">
+          <div class="col-span-full p-4 rounded-xl bg-white border border-dashed border-purple-300 text-center text-xs font-bold text-slate-500">
             Belum ada Data (Tambahkan paket layanan di menu 9. Pengaturan &amp; Paket)
           </div>
         `;
@@ -3805,14 +4034,17 @@
       const defaultSrv = services.find(s => s.isDefault) || services[0];
       const activeSrvId = (currentSrv && services.some(s => s.id === currentSrv)) ? currentSrv : defaultSrv.id;
 
-      const filtered = searchQ
-        ? services.filter(s => s.name.toLowerCase().includes(searchQ) || (s.unit || '').toLowerCase().includes(searchQ))
-        : services;
+      const filtered = services.filter(s => {
+        const srvUnit = s.unit || 'Kg';
+        const matchUnit = (selectedKasirUnitFilter === 'ALL') || (srvUnit.toLowerCase() === selectedKasirUnitFilter.toLowerCase());
+        const matchSearch = !searchQ || s.name.toLowerCase().includes(searchQ) || srvUnit.toLowerCase().includes(searchQ);
+        return matchUnit && matchSearch;
+      });
 
       if (filtered.length === 0) {
         srvContainer.innerHTML = `
           <div class="col-span-full p-4 rounded-xl bg-white text-center text-xs font-bold text-slate-400">
-            Paket "${searchQ}" tidak ditemukan.
+            Paket layanan dengan filter tersebut tidak ditemukan.
           </div>
         `;
         return;
@@ -3827,7 +4059,7 @@
         return `
           <label class="cursor-pointer">
             <input type="radio" name="kasir_service" value="${srv.id}" ${checked ? 'checked' : ''} onchange="updateWeightFieldLabelByService(); calculateKasirTotal()" class="peer sr-only" />
-            <div class="p-3 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-sky-600 peer-checked:bg-sky-50 transition flex items-center justify-between gap-2 shadow-2xs">
+            <div class="p-3 rounded-xl border-2 border-purple-200 bg-white peer-checked:border-purple-700 peer-checked:bg-purple-50 transition flex items-center justify-between gap-2 shadow-2xs">
               <div>
                 <div class="flex flex-wrap items-center gap-1">
                   <p class="text-xs font-extrabold text-slate-900">${srv.name}</p>
@@ -3839,7 +4071,7 @@
                   Estimasi: ${srv.estValue} ${unitLabel}
                 </p>
               </div>
-              <span class="font-mono text-xs font-extrabold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200 shrink-0">
+              <span class="font-mono text-xs font-extrabold text-purple-800 bg-purple-100/80 px-2.5 py-1 rounded-lg border border-purple-300 shrink-0">
                 ${formatRupiah(srv.price)}/${priceUnitLabel}
               </span>
             </div>
@@ -3939,26 +4171,329 @@
       calculateKasirTotal();
     }
 
-    function getMemberTierData(member) {
-      if (!member) return { tier: 'Silver', discountPct: 5, nextTarget: 2000000, progressPct: 0, infoText: 'Belum ada Data' };
-      const spent = Number(member.totalSpent) || 0;
-      let tier = 'Silver';
-      let discountPct = 5;
-      let progressPct = Math.min(100, Math.round((spent / 2000000) * 100));
-      let infoText = `Total Transaksi: ${formatRupiah(spent)} (Kurang ${formatRupiah(Math.max(0, 2000001 - spent))} menuju Gold 10%)`;
+    const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000; // Siklus 2 Tahun (730 Hari)
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;   // Masa Aktif Paket Bulanan (30 Hari)
 
-      if (spent > 5000000 || member.initTier === 'VIP') {
-        tier = 'VIP';
-        discountPct = 15;
-        progressPct = 100;
-        infoText = `Total Transaksi: ${formatRupiah(spent)} (Tier Tertinggi VIP 15% Aktif)`;
-      } else if (spent > 2000000 || member.initTier === 'Gold') {
-        tier = 'Gold';
-        discountPct = 10;
-        progressPct = Math.min(100, Math.round((spent / 5000000) * 100));
-        infoText = `Total Transaksi: ${formatRupiah(spent)} (Kurang ${formatRupiah(Math.max(0, 5000001 - spent))} menuju VIP 15%)`;
+    // Cek status Paket Bulanan Member (Aktif <= 30 hari, atau Kadaluarsa tapi Kuota Tersimpan)
+    function getMemberMonthlyPkgStatus(member) {
+      if (!member || !member.monthlyPkg) {
+        return {
+          hasPkg: false,
+          isActive: false,
+          isExpiredWithQuota: false,
+          quotaType: 'KG',
+          remainingQuota: 0,
+          startAt: 0,
+          expiresAt: 0,
+          daysLeft: 0,
+          statusText: 'Tidak ada Paket Bulanan'
+        };
       }
-      return { tier, discountPct, progressPct, infoText };
+
+      const pkg = member.monthlyPkg;
+      const quotaType = pkg.quotaType || 'KG';
+      const remainingQuota = Math.max(0, Number(pkg.remainingQuota) || 0);
+      const startAt = Number(pkg.startAt) || 0;
+      const expiresAt = Number(pkg.expiresAt) || 0;
+      const now = Date.now();
+      const diffMs = expiresAt - now;
+      const daysLeft = diffMs > 0 ? Math.ceil(diffMs / (24 * 3600 * 1000)) : 0;
+
+      const isWithin30Days = now <= expiresAt;
+      const isActive = isWithin30Days && remainingQuota > 0;
+      const isExpiredWithQuota = !isWithin30Days && remainingQuota > 0;
+
+      const quotaFormatted = quotaType === 'KG'
+        ? `${remainingQuota} Kg`
+        : formatRupiah(remainingQuota);
+
+      let statusText = 'Kuota Paket Bulanan Habis (0)';
+      if (isActive) {
+        statusText = `Paket Bulanan Aktif (${daysLeft} Hari Lagi) • Sisa: ${quotaFormatted}`;
+      } else if (isExpiredWithQuota) {
+        statusText = `Masa 30 Hari Berakhir • Kuota Tersimpan: ${quotaFormatted} (Perpanjang paket untuk memakai)`;
+      }
+
+      return {
+        hasPkg: true,
+        isActive,
+        isExpiredWithQuota,
+        quotaType,
+        remainingQuota,
+        quotaFormatted,
+        startAt,
+        expiresAt,
+        daysLeft,
+        statusText
+      };
+    }
+
+    // Menghitung transaksi sepanjang waktu, siklus 2 tahun (Konsep Shopee), & bulan berjalan
+    function getRealCustomerOrderStats(memberId, phoneRaw, memberObj = null) {
+      const cleanTargetPhone = String(phoneRaw || '').replace(/\D/g, '').replace(/^62/, '0');
+      const now = Date.now();
+      const nowDate = new Date(now);
+      const currentMonthKey = `${nowDate.getFullYear()}-${String(nowDate.getMonth() + 1).padStart(2, '0')}`;
+
+      // Tentukan titik awal siklus 2 tahunan member (Konsep Shopee)
+      let baseStartMs = Number(memberObj?.createdAt) || 0;
+      if (!baseStartMs) {
+        baseStartMs = now;
+        (appData.orders || []).forEach(o => {
+          if (!o || o.isDeleted) return;
+          if (memberId && o.memberId === memberId && o.createdAt < baseStartMs) {
+            baseStartMs = o.createdAt;
+          }
+        });
+        if (memberObj && Array.isArray(memberObj.monthlyPkgHistory)) {
+          memberObj.monthlyPkgHistory.forEach(p => {
+            if (!p || p.isDeleted) return;
+            if (p.timestamp < baseStartMs) baseStartMs = p.timestamp;
+          });
+        }
+      }
+
+      const elapsedCycles = Math.max(0, Math.floor((now - baseStartMs) / TWO_YEARS_MS));
+      const currentCycleStartMs = baseStartMs + (elapsedCycles * TWO_YEARS_MS);
+      const currentCycleEndMs = currentCycleStartMs + TWO_YEARS_MS;
+      const prevCycleStartMs = elapsedCycles > 0 ? (currentCycleStartMs - TWO_YEARS_MS) : 0;
+
+      let realSpent = 0;
+      let realTxCount = 0;
+      let currentCycleSpent = 0;
+      let currentCycleTxCount = 0;
+      let prevCycleSpent = 0;
+      let monthlyKg = 0;
+      let monthlyNominal = 0;
+
+      // 1. Hitung dari Nota Cucian Aktif (yang tidak dihapus Admin)
+      (appData.orders || []).forEach(o => {
+        if (!o || o.isDeleted) return;
+        const cleanOrderPhone = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        const isSameMemberId = memberId && o.memberId === memberId;
+        const isSamePhone = cleanTargetPhone.length >= 8 && (
+          cleanOrderPhone === cleanTargetPhone ||
+          (cleanOrderPhone.length >= 8 && cleanOrderPhone.endsWith(cleanTargetPhone.slice(-8)))
+        );
+
+        if (isSameMemberId || (!memberId && isSamePhone)) {
+          const orderTotal = Number(o.total) || 0;
+          const orderSubtotal = Number(o.subtotal) || orderTotal;
+          const orderKg = Number(o.weightKg) || 0;
+          const ts = Number(o.createdAt) || 0;
+
+          realSpent += orderTotal;
+          realTxCount += 1;
+
+          if (ts >= currentCycleStartMs && ts <= currentCycleEndMs) {
+            currentCycleSpent += orderTotal;
+            currentCycleTxCount += 1;
+          } else if (elapsedCycles > 0 && ts >= prevCycleStartMs && ts < currentCycleStartMs) {
+            prevCycleSpent += orderTotal;
+          }
+
+          const d = new Date(ts);
+          const orderMonthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          if (orderMonthKey === currentMonthKey) {
+            monthlyKg += orderKg;
+            monthlyNominal += orderSubtotal;
+          }
+        }
+      });
+
+      // 2. Hitung dari Pembayaran Paket Bulanan Member (Bayar di awal masuk ke Tier & Laporan Harian)
+      const targetMember = memberObj || (appData.members || []).find(m => m.id === memberId);
+      if (targetMember && Array.isArray(targetMember.monthlyPkgHistory)) {
+        targetMember.monthlyPkgHistory.forEach(pkgTx => {
+          if (!pkgTx || pkgTx.isDeleted) return;
+          const paid = Number(pkgTx.pricePaid) || 0;
+          const ts = Number(pkgTx.timestamp) || 0;
+
+          realSpent += paid;
+          realTxCount += 1;
+
+          if (ts >= currentCycleStartMs && ts <= currentCycleEndMs) {
+            currentCycleSpent += paid;
+            currentCycleTxCount += 1;
+          } else if (elapsedCycles > 0 && ts >= prevCycleStartMs && ts < currentCycleStartMs) {
+            prevCycleSpent += paid;
+          }
+        });
+      }
+
+      return {
+        totalSpent: realSpent,
+        txCount: realTxCount,
+        currentCycleSpent,
+        currentCycleTxCount,
+        prevCycleSpent,
+        currentCycleStartMs,
+        currentCycleEndMs,
+        elapsedCycles,
+        monthlyKg,
+        monthlyNominal
+      };
+    }
+
+    function getTierFromSpentAmount(amount) {
+      const val = Number(amount) || 0;
+      if (val > 5000000) return { tier: 'VIP', discountPct: 15, rank: 3 };
+      if (val > 2000000) return { tier: 'Gold', discountPct: 10, rank: 2 };
+      return { tier: 'Silver', discountPct: 5, rank: 1 };
+    }
+
+    // Sinkronkan seluruh data member agar murni mengikuti transaksi aktif & siklus 2 tahun
+    function syncAllMembersRealStats() {
+      (appData.members || []).forEach(m => {
+        if (!m.createdAt) m.createdAt = Date.now();
+        const stats = getRealCustomerOrderStats(m.id, m.phone, m);
+        m.totalSpent = stats.currentCycleSpent;
+        m.txCount = stats.currentCycleTxCount;
+
+        const currTierObj = getTierFromSpentAmount(stats.currentCycleSpent);
+        const prevTierObj = stats.elapsedCycles > 0 ? getTierFromSpentAmount(stats.prevCycleSpent) : { tier: 'Silver', discountPct: 5, rank: 1 };
+        const effectiveObj = currTierObj.rank >= prevTierObj.rank ? currTierObj : prevTierObj;
+        m.initTier = effectiveObj.tier;
+      });
+    }
+
+    function getMemberTierData(member) {
+      if (!member) {
+        return {
+          tier: 'Silver',
+          isYayasan: false,
+          discountPct: 5,
+          yayasanDiscountPct: 0,
+          fallbackTier: 'Silver',
+          fallbackDiscountPct: 5,
+          maxKg: 0,
+          maxNominal: 0,
+          usedMonthKg: 0,
+          usedMonthNominal: 0,
+          remainingMonthKg: Infinity,
+          remainingMonthNominal: Infinity,
+          isQuotaExhausted: false,
+          totalSpent: 0,
+          txCount: 0,
+          progressPct: 0,
+          infoText: 'Belum ada Data',
+          pkgStatus: getMemberMonthlyPkgStatus(null)
+        };
+      }
+
+      const realStats = getRealCustomerOrderStats(member.id, member.phone, member);
+      const cycleSpent = realStats.currentCycleSpent;
+      const cycleTxCount = realStats.currentCycleTxCount;
+      const cycleEndStr = new Date(realStats.currentCycleEndMs).toLocaleDateString('id-ID', { dateStyle: 'medium' });
+
+      member.totalSpent = cycleSpent;
+      member.txCount = cycleTxCount;
+
+      // Evaluasi Tier 2 Tahun (Konsep Shopee: Mempertahankan tier dari siklus 2 tahun sebelumnya, atau naik otomatis di siklus berjalan, lalu di-reset setiap pergantian 2 tahun)
+      const currTierObj = getTierFromSpentAmount(cycleSpent);
+      const prevTierObj = realStats.elapsedCycles > 0
+        ? getTierFromSpentAmount(realStats.prevCycleSpent)
+        : { tier: 'Silver', discountPct: 5, rank: 1 };
+
+      const activeRegObj = currTierObj.rank >= prevTierObj.rank ? currTierObj : prevTierObj;
+      const regularTier = activeRegObj.tier;
+      const regularDiscountPct = activeRegObj.discountPct;
+
+      let regularProgressPct = Math.min(100, Math.round((cycleSpent / 2000000) * 100));
+      let nextTierTargetText = `Kurang ${formatRupiah(Math.max(0, 2000001 - cycleSpent))} menuju Gold 10%`;
+      if (regularTier === 'VIP') {
+        regularProgressPct = 100;
+        nextTierTargetText = `Pertahankan transaksi > Rp 5 Juta s/d ${cycleEndStr}`;
+      } else if (regularTier === 'Gold') {
+        regularProgressPct = Math.min(100, Math.round((cycleSpent / 5000000) * 100));
+        nextTierTargetText = `Kurang ${formatRupiah(Math.max(0, 5000001 - cycleSpent))} menuju VIP 15%`;
+      }
+
+      const pkgStatus = getMemberMonthlyPkgStatus(member);
+      const pkgBadgeNote = pkgStatus.isActive
+        ? ` • [PAKET BULANAN AKTIF: Sisa ${pkgStatus.quotaFormatted} (${pkgStatus.daysLeft} hr)]`
+        : (pkgStatus.isExpiredWithQuota ? ` • [Kuota Tersimpan: ${pkgStatus.quotaFormatted} (Perpanjang utk pakai)]` : '');
+
+      const regularInfoText = `Siklus 2 Thn (s/d ${cycleEndStr}): ${cycleTxCount}x (${formatRupiah(cycleSpent)}) • ${nextTierTargetText}${pkgBadgeNote}`;
+
+      // Jika kategori Member Warga Yayasan (Kuota di-reset tiap awal bulan)
+      if (member.memberType === 'Yayasan') {
+        const yayasanDiscPct = Number(member.yayasanDiscountPct ?? 50);
+        const maxKg = Number(member.yayasanMaxKg ?? 0);
+        const maxNominal = Number(member.yayasanMaxNominal ?? 0);
+
+        const usedMonthKg = realStats.monthlyKg;
+        const usedMonthNominal = realStats.monthlyNominal;
+
+        const remainingMonthKg = maxKg > 0 ? Math.max(0, maxKg - usedMonthKg) : Infinity;
+        const remainingMonthNominal = maxNominal > 0 ? Math.max(0, maxNominal - usedMonthNominal) : Infinity;
+
+        const isKgExhausted = maxKg > 0 && usedMonthKg >= maxKg;
+        const isNominalExhausted = maxNominal > 0 && usedMonthNominal >= maxNominal;
+        const isQuotaExhausted = isKgExhausted || isNominalExhausted;
+
+        const effectiveDiscountPct = isQuotaExhausted ? regularDiscountPct : yayasanDiscPct;
+
+        const quotaParts = [];
+        if (maxKg > 0) quotaParts.push(`Kuota Kg Bulan Ini: ${usedMonthKg}/${maxKg} Kg`);
+        if (maxNominal > 0) quotaParts.push(`Kuota Bulan Ini: ${formatRupiah(usedMonthNominal)} / ${formatRupiah(maxNominal)}`);
+        const quotaSummary = quotaParts.length > 0 ? quotaParts.join(' • ') : 'Tanpa Batas Kuota Bulanan';
+
+        let progressPct = 100;
+        if (maxNominal > 0) {
+          progressPct = Math.min(100, Math.round((usedMonthNominal / maxNominal) * 100));
+        } else if (maxKg > 0) {
+          progressPct = Math.min(100, Math.round((usedMonthKg / maxKg) * 100));
+        }
+
+        const statusNote = isQuotaExhausted
+          ? `⚠️ Target Bulanan Tercapai → Otomatis Berlaku Diskon ${regularTier} (${regularDiscountPct}%)`
+          : `Aktif Diskon Yayasan ${yayasanDiscPct}% (Jika kuota habis → ${regularTier} ${regularDiscountPct}%)`;
+
+        return {
+          tier: isQuotaExhausted ? `Yayasan (${regularTier})` : 'Warga Yayasan',
+          isYayasan: true,
+          discountPct: effectiveDiscountPct,
+          yayasanDiscountPct: yayasanDiscPct,
+          fallbackTier: regularTier,
+          fallbackDiscountPct: regularDiscountPct,
+          maxKg,
+          maxNominal,
+          usedMonthKg,
+          usedMonthNominal,
+          remainingMonthKg,
+          remainingMonthNominal,
+          isQuotaExhausted,
+          totalSpent: cycleSpent,
+          txCount: cycleTxCount,
+          cycleEndStr,
+          progressPct,
+          infoText: `${quotaSummary} • ${statusNote}${pkgBadgeNote}`,
+          pkgStatus
+        };
+      }
+
+      return {
+        tier: regularTier,
+        isYayasan: false,
+        discountPct: regularDiscountPct,
+        yayasanDiscountPct: 0,
+        fallbackTier: regularTier,
+        fallbackDiscountPct: regularDiscountPct,
+        maxKg: 0,
+        maxNominal: 0,
+        usedMonthKg: realStats.monthlyKg,
+        usedMonthNominal: realStats.monthlyNominal,
+        remainingMonthKg: Infinity,
+        remainingMonthNominal: Infinity,
+        isQuotaExhausted: false,
+        totalSpent: cycleSpent,
+        txCount: cycleTxCount,
+        cycleEndStr,
+        progressPct: regularProgressPct,
+        infoText: regularInfoText,
+        pkgStatus
+      };
     }
 
     function lookupMemberOnKasir(query) {
@@ -3984,6 +4519,13 @@
           listEl.innerHTML = filtered.map(m => {
             const tData = getMemberTierData(m);
             const isChecked = selectedMemberOnKasir && selectedMemberOnKasir.id === m.id;
+            const badgeColor = tData.pkgStatus.isActive
+              ? 'bg-indigo-600 text-white'
+              : (tData.isYayasan ? 'bg-emerald-200 text-emerald-950' : 'bg-amber-200 text-amber-900');
+            const badgeText = tData.pkgStatus.isActive
+              ? `Paket: ${tData.pkgStatus.quotaFormatted}`
+              : `${tData.tier} ${tData.discountPct}%`;
+
             return `
               <label class="cursor-pointer">
                 <input type="radio" name="kasir_member_pick" value="${m.id}" ${isChecked ? 'checked' : ''} onchange="selectMemberForKasir('${m.id}')" class="peer sr-only" />
@@ -3992,7 +4534,7 @@
                     <span class="font-mono font-extrabold text-amber-800">${m.id}</span>
                     <span class="font-bold text-slate-800 ml-1">${m.name}</span>
                   </div>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900">${tData.tier} ${tData.discountPct}%</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${badgeColor}">${badgeText}</span>
                 </div>
               </label>
             `;
@@ -4022,7 +4564,18 @@
       tierBox.classList.remove('hidden');
       document.getElementById('kasir-member-tier-name').textContent = member.name;
       document.getElementById('kasir-member-tier-id').textContent = member.id;
-      document.getElementById('kasir-member-tier-badge').textContent = `${tData.tier.toUpperCase()} (Diskon ${tData.discountPct}%)`;
+
+      const badgeEl = document.getElementById('kasir-member-tier-badge');
+      if (tData.pkgStatus.isActive) {
+        badgeEl.textContent = `PAKET BULANAN AKTIF (Sisa: ${tData.pkgStatus.quotaFormatted})`;
+        badgeEl.className = "px-2.5 py-1 rounded-full text-xs font-extrabold bg-indigo-100 text-indigo-800 border border-indigo-300";
+      } else {
+        badgeEl.textContent = `${tData.tier.toUpperCase()} (Diskon ${tData.discountPct}%)`;
+        badgeEl.className = tData.isYayasan
+          ? "px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300"
+          : "px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800";
+      }
+
       document.getElementById('kasir-member-tier-bar').style.width = `${tData.progressPct}%`;
       document.getElementById('kasir-member-tier-info').textContent = tData.infoText;
 
@@ -4140,7 +4693,7 @@
         activeVoucherOnKasir = null;
         if (statusEl) {
           statusEl.textContent = "Kosongkan jika tidak memakai voucher.";
-          statusEl.className = "text-[11px] text-slate-500 mt-1";
+          statusEl.className = "text-[11px] text-amber-900 font-medium mt-1";
         }
         calculateKasirTotal();
         return;
@@ -4152,13 +4705,13 @@
         const label = found.type === 'PERCENT' ? `${found.value}%` : formatRupiah(found.value);
         if (statusEl) {
           statusEl.textContent = `Voucher ${found.code} aktif! Potongan ${label}`;
-          statusEl.className = "text-[11px] text-emerald-600 font-bold mt-1";
+          statusEl.className = "text-[11px] text-emerald-700 font-extrabold mt-1";
         }
       } else {
         activeVoucherOnKasir = null;
         if (statusEl) {
           statusEl.textContent = "Kode voucher tidak ditemukan.";
-          statusEl.className = "text-[11px] text-rose-600 font-bold mt-1";
+          statusEl.className = "text-[11px] text-rose-600 font-extrabold mt-1";
         }
       }
       calculateKasirTotal();
@@ -4239,9 +4792,60 @@
 
       const custCategory = document.querySelector('input[name="cust_category"]:checked')?.value || 'Umum';
       let memberDiscount = 0;
+      let pkgUsedType = null;
+      let pkgUsedAmount = 0;
+      let pkgRemainingAfter = 0;
+
       if (custCategory === 'Member' && selectedMemberOnKasir) {
         const tData = getMemberTierData(selectedMemberOnKasir);
-        memberDiscount = Math.round(subtotal * (tData.discountPct / 100));
+        const pkgStatus = tData.pkgStatus;
+
+        // 1. Cek apakah Member memiliki Paket Bulanan Aktif (<= 30 Hari & Kuota > 0)
+        if (pkgStatus && pkgStatus.isActive) {
+          pkgUsedType = pkgStatus.quotaType;
+          if (pkgUsedType === 'KG') {
+            pkgUsedAmount = Math.min(pkgStatus.remainingQuota, weightOrSetVal);
+            pkgRemainingAfter = Math.max(0, Number((pkgStatus.remainingQuota - pkgUsedAmount).toFixed(2)));
+            const coveredRatio = weightOrSetVal > 0 ? (pkgUsedAmount / weightOrSetVal) : 1;
+            const coveredSubtotal = Math.round(subtotal * coveredRatio);
+            const uncoveredSubtotal = Math.max(0, subtotal - coveredSubtotal);
+            // Jika kuota habis di tengah transaksi, sisa berat yang tidak ter-cover otomatis memakai diskon Tier Member
+            const tierDiscOnExcess = Math.round(uncoveredSubtotal * (tData.fallbackDiscountPct / 100));
+            memberDiscount = coveredSubtotal + tierDiscOnExcess;
+          } else {
+            // Kuota NOMINAL (Rp)
+            pkgUsedAmount = Math.min(pkgStatus.remainingQuota, subtotal);
+            pkgRemainingAfter = Math.max(0, pkgStatus.remainingQuota - pkgUsedAmount);
+            const uncoveredSubtotal = Math.max(0, subtotal - pkgUsedAmount);
+            // Sisa tagihan di luar kuota nominal otomatis mendapat diskon Tier Member
+            const tierDiscOnExcess = Math.round(uncoveredSubtotal * (tData.fallbackDiscountPct / 100));
+            memberDiscount = pkgUsedAmount + tierDiscOnExcess;
+          }
+        } else if (tData.isYayasan) {
+          // 2. Jika Warga Yayasan (Tanpa Paket Bulanan Aktif)
+          if (tData.isQuotaExhausted) {
+            memberDiscount = Math.round(subtotal * (tData.fallbackDiscountPct / 100));
+          } else {
+            let ratioKg = 1;
+            if (tData.maxKg > 0 && weightOrSetVal > 0) {
+              ratioKg = Math.min(1, Math.max(0, tData.remainingMonthKg) / weightOrSetVal);
+            }
+            let ratioNominal = 1;
+            if (tData.maxNominal > 0 && subtotal > 0) {
+              ratioNominal = Math.min(1, Math.max(0, tData.remainingMonthNominal) / subtotal);
+            }
+            const yayasanRatio = Math.min(ratioKg, ratioNominal);
+            const yayasanPortion = Math.round(subtotal * yayasanRatio);
+            const excessPortion = Math.max(0, subtotal - yayasanPortion);
+
+            const discYayasan = Math.round(yayasanPortion * (tData.yayasanDiscountPct / 100));
+            const discFallback = Math.round(excessPortion * (tData.fallbackDiscountPct / 100));
+            memberDiscount = discYayasan + discFallback;
+          }
+        } else {
+          // 3. Member Pelanggan Reguler (atau Paket Bulanan sudah > 30 hari / habis)
+          memberDiscount = Math.round(subtotal * (tData.discountPct / 100));
+        }
       }
 
       let voucherDiscount = 0;
@@ -4274,24 +4878,24 @@
       if (stampBox && appData.settings.promoStampEnabled !== false) {
         stampBox.classList.remove('hidden');
         const bal = getCustomerStampBalanceByPhone(custPhoneVal);
-        document.getElementById('kasir-stamp-status-text').textContent =
-          `Stamp Pelanggan Saat Ini: ${bal.availableStamps} / 10 Stamp (${bal.freeWashAvailable}x Hak Gratis Cuci)`;
-        document.getElementById('kasir-stamp-earned-now').textContent = `Nota ini: +${stampsNow} Stamp`;
+        document.getElementById('kasir-stamp-status-text').textContent = `${bal.availableStamps}/10`;
+        document.getElementById('kasir-stamp-earned-now').textContent = `+${stampsNow}`;
 
         const redeemLabel = document.getElementById('kasir-stamp-redeem-label');
         const redeemCheck = document.getElementById('kasir-redeem-free-wash');
         const freeVal = Number(appData.settings.promoStampMaxFreeValue) || 18000;
-        document.getElementById('kasir-stamp-free-val-label').textContent = formatRupiah(freeVal);
+        const freeValLabel = document.getElementById('kasir-stamp-free-val-label');
+        if (freeValLabel) freeValLabel.textContent = formatRupiah(freeVal);
 
         if (bal.freeWashAvailable > 0) {
           redeemLabel.classList.remove('hidden');
-          redeemLabel.classList.add('flex');
+          redeemLabel.classList.add('inline-flex');
           if (redeemCheck && redeemCheck.checked) {
             stampFreeDiscount = Math.min(subtotal, freeVal);
           }
         } else {
           redeemLabel.classList.add('hidden');
-          redeemLabel.classList.remove('flex');
+          redeemLabel.classList.remove('inline-flex');
           if (redeemCheck) redeemCheck.checked = false;
         }
       } else if (stampBox) {
@@ -4299,7 +4903,6 @@
       }
       voucherDiscount += stampFreeDiscount;
 
-      // Genapkan Total Tagihan Akhir ke kelipatan 500 (< 300 ke bawah, >= 300 ke 500)
       const rawGrandTotal = Math.max(0, subtotal + deliveryFee - memberDiscount - voucherDiscount);
       const grandTotal = roundToNearest500(rawGrandTotal);
 
@@ -4312,7 +4915,9 @@
       }
 
       let autoPayStatus = 'Belum Bayar';
-      if (!rawInputStr || rawPaid <= 0) {
+      if (pkgUsedAmount > 0 && grandTotal === 0) {
+        autoPayStatus = 'Lunas';
+      } else if (!rawInputStr || rawPaid <= 0) {
         rawPaid = 0;
         autoPayStatus = 'Belum Bayar';
       } else if (rawPaid < grandTotal) {
@@ -4324,7 +4929,6 @@
       const remainingAmount = Math.max(0, grandTotal - rawPaid);
       const changeAmount = Math.max(0, rawPaid - grandTotal);
 
-      // Tampilkan opsi Simpan Kembalian di Nota jika terdapat kembalian > 0
       const saveChangeWrap = document.getElementById('kasir-save-change-wrapper');
       const saveChangeBadge = document.getElementById('kasir-save-change-badge');
       const saveChangeCheck = document.getElementById('kasir-save-change-on-nota');
@@ -4347,7 +4951,10 @@
         paidAmount: rawPaid,
         remainingAmount,
         changeAmount,
-        autoPayStatus
+        autoPayStatus,
+        pkgUsedType,
+        pkgUsedAmount,
+        pkgRemainingAfter
       };
 
       const statusBox = document.getElementById('kasir-auto-paystatus-box');
@@ -4357,7 +4964,7 @@
       if (statusBox && statusText && popupStatusPill) {
         if (autoPayStatus === 'Lunas') {
           statusBox.className = "py-2.5 px-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 font-extrabold text-sm flex items-center justify-between";
-          statusText.textContent = "LUNAS";
+          statusText.textContent = pkgUsedAmount > 0 && grandTotal === 0 ? "LUNAS (PAKET BULANAN)" : "LUNAS";
           popupStatusPill.className = "px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30";
           popupStatusPill.textContent = "LUNAS";
         } else if (autoPayStatus === 'DP') {
@@ -4378,7 +4985,9 @@
       document.getElementById('summary-delivery-fee').textContent = formatRupiah(deliveryFee);
       document.getElementById('summary-member-discount').textContent = `- ${formatRupiah(memberDiscount)}`;
       document.getElementById('summary-voucher-discount').textContent = `- ${formatRupiah(voucherDiscount)}`;
-      document.getElementById('summary-grand-total').textContent = formatRupiah(grandTotal);
+      document.getElementById('summary-grand-total').textContent = pkgUsedAmount > 0 && grandTotal === 0
+        ? (pkgUsedType === 'KG' ? `Sisa ${pkgRemainingAfter} Kg` : `Sisa ${formatRupiah(pkgRemainingAfter)}`)
+        : formatRupiah(grandTotal);
       document.getElementById('summary-paid-amount').textContent = formatRupiah(rawPaid);
       document.getElementById('summary-remaining-amount').textContent = formatRupiah(remainingAmount);
       document.getElementById('summary-change-amount').textContent = formatRupiah(changeAmount);
@@ -4445,8 +5054,7 @@
       const unitLabel = getActiveWeightUnitLabel();
       const perfume = document.querySelector('input[name="kasir_perfume"]:checked')?.value || '-';
       const rack = document.getElementById('kasir-rack-location')?.value || '-';
-      const clothDetails = document.getElementById('kasir-cloth-details')?.value || '-';
-      const payMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'Tunai';
+      const clothDetails = document.getElementById('kasir-cloth-details')?.value || '';
 
       const items = getSelectedOrderServicesForKasir();
       const deadlineMs = computeDeadlineMsFromServices(items, Date.now());
@@ -4480,41 +5088,98 @@
         : 'Umum';
       document.getElementById('receipt-delivery-type').textContent = deliveryType;
 
+      const itemsHtmlStr = items.length === 0
+        ? `<div class="text-slate-400 italic">Belum ada Data layanan</div>`
+        : items.map(it => {
+            const unitPriceText = `${formatRupiah(it.price)}/${it.unit}`;
+            return `
+              <div class="flex justify-between items-baseline gap-1">
+                <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)} @ ${unitPriceText})</span>
+                <span class="font-bold shrink-0">${formatRupiah(roundToNearest500(it.subtotal))}</span>
+              </div>
+            `;
+          }).join('');
+
       const itemsContainer = document.getElementById('receipt-items-list');
-      if (itemsContainer) {
-        if (items.length === 0) {
-          itemsContainer.innerHTML = `<div class="text-slate-400 italic">Belum ada Data layanan</div>`;
-        } else {
-          itemsContainer.innerHTML = items.map(it => `
-            <div class="flex justify-between">
-              <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
-              <span>${formatRupiah(roundToNearest500(it.subtotal))}</span>
-            </div>
-          `).join('');
-        }
-      }
+      if (itemsContainer) itemsContainer.innerHTML = itemsHtmlStr;
+      const itemsContainer2 = document.getElementById('receipt2-items-list');
+      if (itemsContainer2) itemsContainer2.innerHTML = itemsHtmlStr;
 
       const qtyLabelEl = document.getElementById('receipt-qty-label');
       if (qtyLabelEl) qtyLabelEl.textContent = `Total ${unitLabel} / Pakaian:`;
       document.getElementById('receipt-weight-pcs').textContent = `${weightOrSetVal} ${unitLabel} / ${pcsCount} Pcs`;
       document.getElementById('receipt-perfume').textContent = perfume;
       document.getElementById('receipt-rack').textContent = rack;
-      document.getElementById('receipt-cloth-details').textContent = [clothDetails, getKasirPrayerItemsSummary().text].filter(Boolean).join(' ') || '-';
+
+      const combinedKet = [clothDetails, getKasirPrayerItemsSummary().text].filter(Boolean).join(' ');
+      const rowKet = document.getElementById('receipt-row-ket');
+      document.getElementById('receipt-cloth-details').textContent = combinedKet || '-';
+      if (rowKet) rowKet.classList.toggle('hidden', !combinedKet);
+
+      const totalDisc = (tot.memberDiscount || 0) + (tot.voucherDiscount || 0);
+      const hasExtraOrDisc = (tot.deliveryFee > 0) || (totalDisc > 0);
+
+      const rowSub = document.getElementById('receipt-row-subtotal');
+      const rowOngkir = document.getElementById('receipt-row-ongkir');
+      const rowDisc = document.getElementById('receipt-row-discount');
+
+      if (rowSub) rowSub.classList.toggle('hidden', !hasExtraOrDisc);
+      if (rowOngkir) rowOngkir.classList.toggle('hidden', !(tot.deliveryFee > 0));
+      if (rowDisc) rowDisc.classList.toggle('hidden', !(totalDisc > 0));
 
       document.getElementById('receipt-subtotal').textContent = formatRupiah(tot.subtotal);
       document.getElementById('receipt-ongkir').textContent = formatRupiah(tot.deliveryFee);
-      document.getElementById('receipt-discount').textContent = `- ${formatRupiah(tot.memberDiscount + tot.voucherDiscount)}`;
-      document.getElementById('receipt-total').textContent = formatRupiah(tot.grandTotal);
-      document.getElementById('receipt-pay-status').textContent = `${payStatus.toUpperCase()} (${payMethod})`;
+      document.getElementById('receipt-discount').textContent = tot.pkgUsedAmount > 0
+        ? (tot.pkgUsedType === 'KG' ? `Potong Paket ${tot.pkgUsedAmount} Kg` : `Potong Paket ${formatRupiah(tot.pkgUsedAmount)}`)
+        : `- ${formatRupiah(totalDisc)}`;
+
+      // Ubah TOTAL BIAYA menjadi SISA BERAT atau SISA NOMINAL jika menggunakan Paket Bulanan
+      const totalLabel1 = document.getElementById('receipt-total-label');
+      const totalVal1 = document.getElementById('receipt-total');
+      const totalLabel2 = document.getElementById('receipt2-total-label');
+      const totalVal2 = document.getElementById('receipt2-total');
+
+      if (tot.pkgUsedAmount > 0) {
+        const remLabel = tot.pkgUsedType === 'KG' ? 'SISA BERAT:' : 'SISA NOMINAL:';
+        const remVal = tot.pkgUsedType === 'KG' ? `${tot.pkgRemainingAfter} Kg` : formatRupiah(tot.pkgRemainingAfter);
+        if (totalLabel1) totalLabel1.textContent = remLabel;
+        if (totalVal1) totalVal1.textContent = remVal;
+        if (totalLabel2) totalLabel2.textContent = remLabel;
+        if (totalVal2) totalVal2.textContent = remVal;
+      } else {
+        if (totalLabel1) totalLabel1.textContent = 'TOTAL BIAYA:';
+        if (totalVal1) totalVal1.textContent = formatRupiah(tot.grandTotal);
+        if (totalLabel2) totalLabel2.textContent = 'TOTAL BIAYA:';
+        if (totalVal2) totalVal2.textContent = formatRupiah(tot.grandTotal);
+      }
+
+      const statusDisplayStr = (tot.pkgUsedAmount > 0 && tot.grandTotal === 0)
+        ? 'LUNAS (PAKET BULANAN)'
+        : payStatus.toUpperCase();
+      document.getElementById('receipt-pay-status').textContent = statusDisplayStr;
+
+      const paidWrap = document.getElementById('receipt-paid-wrap');
+      const rowBalance = document.getElementById('receipt-row-balance');
       document.getElementById('receipt-paid').textContent = formatRupiah(tot.paidAmount);
 
-      if (payStatus === 'Lunas') {
-        document.getElementById('receipt-balance-label').textContent = 'Kembalian:';
-        document.getElementById('receipt-balance').textContent = formatRupiah(tot.changeAmount);
-      } else {
+      if (tot.pkgUsedAmount > 0 && tot.grandTotal > 0) {
+        paidWrap?.classList.remove('hidden');
+        rowBalance?.classList.remove('hidden');
+        document.getElementById('receipt-balance-label').textContent = 'Tagihan Kelebihan Kuota:';
+        document.getElementById('receipt-balance').textContent = formatRupiah(tot.grandTotal);
+      } else if (payStatus === 'DP') {
+        paidWrap?.classList.remove('hidden');
+        rowBalance?.classList.remove('hidden');
         document.getElementById('receipt-balance-label').textContent = 'Sisa Tagihan:';
         document.getElementById('receipt-balance').textContent = formatRupiah(tot.remainingAmount);
+      } else if (payStatus === 'Lunas' && tot.changeAmount > 0) {
+        paidWrap?.classList.remove('hidden');
+        rowBalance?.classList.add('hidden');
+      } else {
+        paidWrap?.classList.add('hidden');
+        rowBalance?.classList.add('hidden');
       }
+
       document.getElementById('receipt-sign-cashier').textContent = `( ${cashierName} )`;
 
       // STRUK 2
@@ -4525,17 +5190,15 @@
       document.getElementById('receipt2-cust-name').textContent = custName;
       const r2WeightPcs = document.getElementById('receipt2-weight-pcs');
       if (r2WeightPcs) r2WeightPcs.textContent = `${weightOrSetVal} ${unitLabel} / ${pcsCount} Pcs`;
-      document.getElementById('receipt2-total').textContent = formatRupiah(tot.grandTotal);
-      document.getElementById('receipt2-pay-status').textContent = `${payStatus.toUpperCase()} (${payMethod})`;
+      document.getElementById('receipt2-pay-status').textContent = statusDisplayStr;
       document.getElementById('receipt2-sign-customer').textContent = `( ${custName} )`;
 
-      // KOTAK BESAR TULISAN "Kembalian ##.###"
       const changeBox1 = document.getElementById('receipt-large-change-box');
-      const changeText1 = document.getElementById('receipt-large-change-text') || document.getElementById('receipt-large-change-val');
-      const changeSub1 = document.getElementById('receipt-large-change-sub') || document.getElementById('receipt-large-change-note');
+      const changeText1 = document.getElementById('receipt-large-change-text');
+      const changeSub1 = document.getElementById('receipt-large-change-sub');
       const changeBox2 = document.getElementById('receipt2-large-change-box');
-      const changeText2 = document.getElementById('receipt2-large-change-text') || document.getElementById('receipt2-large-change-val');
-      const changeSub2 = document.getElementById('receipt2-large-change-sub') || document.getElementById('receipt2-large-change-note');
+      const changeText2 = document.getElementById('receipt2-large-change-text');
+      const changeSub2 = document.getElementById('receipt2-large-change-sub');
 
       if (tot.changeAmount > 0) {
         const formattedChangeNum = formatNumberID(tot.changeAmount);
@@ -4571,6 +5234,327 @@
           });
         }
       });
+    }
+
+    function buildOrderCompactReceiptHtml(order, mode = 'BOTH') {
+      const s = appData.settings;
+      const showLogo = s.printerShowLogo !== false;
+      const pageBreakClass = s.printerPageBreak ? 'page-break-receipt' : '';
+      const previewMaxWidth = (s.printerPaperWidth === '80mm') ? '360px' : '290px';
+      const dateInStr = new Date(order.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
+      const etaStr = new Date(order.deadlineMs).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+      const sisa = Math.max(0, (order.total || 0) - (order.paidAmount || 0));
+      const kembalian = Number(order.changeAmount) || 0;
+      const unitLabel = order.weightUnit || 'Kg';
+      const expressText = getExpressHighlightText(order.items || []);
+      const expressBannerHtml = expressText
+        ? `<div class="thermal-express-banner">${expressText}</div>`
+        : '';
+
+      const itemsHtml = (order.items || []).map(it => {
+        const unitPriceText = `${formatRupiah(it.price)}/${it.unit}`;
+        return `
+          <div class="flex justify-between items-baseline gap-1">
+            <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)} @ ${unitPriceText})</span>
+            <span class="font-bold shrink-0">${formatRupiah(roundToNearest500(it.subtotal))}</span>
+          </div>
+        `;
+      }).join('');
+
+      const buildHeaderHtml = (badgeLabel) => `
+        <div class="text-center">
+          <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-1">${badgeLabel}</div>
+        </div>
+        <div class="flex items-center gap-2 text-left">
+          ${showLogo ? `<img src="${s.logoUrl}" alt="Logo" class="w-9 h-9 object-contain shrink-0" />` : ''}
+          <div class="leading-tight min-w-0 flex-1">
+            <div class="font-black text-xs uppercase leading-none">${s.storeName}</div>
+            <div class="text-[8.5px] font-bold leading-tight">${s.storeSlogan}</div>
+            <div class="text-[8px] leading-tight">${s.storeAddress}</div>
+            <div class="text-[8px] leading-tight">HP: ${s.storePhone}</div>
+          </div>
+        </div>
+      `;
+
+      const hasPkgUsed = Number(order.pkgUsedAmount) > 0;
+      const totalDisc = (Number(order.memberDiscount) || 0) + (Number(order.voucherDiscount) || 0);
+      const ongkirVal = Number(order.deliveryFee) || 0;
+      const hasExtraOrDisc = (ongkirVal > 0) || (totalDisc > 0);
+
+      const discText = hasPkgUsed
+        ? (order.pkgUsedType === 'KG' ? `Potong Paket ${order.pkgUsedAmount} Kg` : `Potong Paket ${formatRupiah(order.pkgUsedAmount)}`)
+        : `- ${formatRupiah(totalDisc)}`;
+
+      const extraCostRowsHtml = `
+        ${hasExtraOrDisc ? `<div class="flex justify-between"><span>Subtotal Layanan:</span><span>${formatRupiah(order.subtotal)}</span></div>` : ''}
+        ${ongkirVal > 0 ? `<div class="flex justify-between"><span>Ongkos Kirim:</span><span>${formatRupiah(ongkirVal)}</span></div>` : ''}
+        ${totalDisc > 0 ? `<div class="flex justify-between"><span>Diskon / Paket:</span><span>${discText}</span></div>` : ''}
+      `;
+
+      // Baris Utama Total: Berubah jadi SISA BERAT atau SISA NOMINAL jika memakai Paket Bulanan
+      const mainTotalLabel = hasPkgUsed
+        ? (order.pkgUsedType === 'KG' ? 'SISA BERAT:' : 'SISA NOMINAL:')
+        : 'TOTAL BIAYA:';
+      const mainTotalValue = hasPkgUsed
+        ? (order.pkgUsedType === 'KG' ? `${order.pkgRemainingAfter ?? 0} Kg` : formatRupiah(order.pkgRemainingAfter ?? 0))
+        : formatRupiah(order.total);
+
+      const excessBillHtml = (hasPkgUsed && Number(order.total) > 0)
+        ? `<div class="flex justify-between font-bold"><span>Tagihan Kelebihan Kuota:</span><span>${formatRupiah(order.total)}</span></div>`
+        : '';
+
+      const payStatusLabel = (hasPkgUsed && Number(order.total) === 0)
+        ? 'LUNAS (PAKET BULANAN)'
+        : order.payStatus.toUpperCase();
+
+      const dpOrPaidRowHtml = order.payStatus === 'DP'
+        ? `
+          ${excessBillHtml}
+          <div class="flex justify-between items-baseline">
+            <span>Status: <strong class="text-[11px] font-black">DP</strong></span>
+            <span>Bayar: <strong>${formatRupiah(order.paidAmount || 0)}</strong></span>
+          </div>
+          <div class="flex justify-between">
+            <span>Sisa Tagihan:</span>
+            <strong class="font-black">${formatRupiah(sisa)}</strong>
+          </div>
+        `
+        : `
+          ${excessBillHtml}
+          <div class="flex justify-between items-baseline">
+            <span>Status Pembayaran:</span>
+            <strong class="text-[11px] font-black">${payStatusLabel}</strong>
+          </div>
+          ${kembalian > 0 ? `<div class="flex justify-between"><span>Uang Diterima:</span><strong>${formatRupiah((order.total || 0) + kembalian)}</strong></div>` : ''}
+        `;
+
+      const largeChangeBoxHtml = kembalian > 0 ? `
+        <div class="my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
+          <div class="text-[15px] font-black uppercase tracking-wide leading-tight">
+            Kembalian ${formatNumberID(kembalian)}
+          </div>
+          <div class="text-[8.5px] font-bold uppercase mt-0.5">
+            ${order.changeSavedOnNota && !order.changeReturnedAtPickup
+              ? 'DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN BARANG)'
+              : (order.changeReturnedAtPickup ? 'KEMBALIAN SUDAH DISERAHKAN SAAT PENGAMBILAN' : 'KEMBALIAN TUNAI PELANGGAN')}
+          </div>
+        </div>
+      ` : '';
+
+      const ketRowHtml = order.clothDetails
+        ? `<div class="text-[8.5px] leading-tight"><span>Ket: </span><span>${order.clothDetails}</span></div>`
+        : '';
+
+      const struk1Html = `
+        <div class="thermal-paper rounded-lg border border-slate-300 ${mode === 'BOTH' ? pageBreakClass : ''}" style="max-width:${previewMaxWidth};">
+          ${buildHeaderHtml('STRUK 1 - NOTA PELANGGAN')}
+          ${expressBannerHtml}
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            <div class="flex justify-between items-baseline">
+              <span>NO. NOTA: <strong class="text-[15px] font-black tracking-wider">${order.id}</strong></span>
+              <span class="font-bold">${order.custCategory}${order.memberId ? ' ' + order.memberId : ''}</span>
+            </div>
+            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+              <span>Pelanggan:</span>
+              <strong class="text-[13px] font-black uppercase truncate max-w-[175px]">${order.custName}</strong>
+            </div>
+            <div class="flex justify-between">
+              <span>Masuk: ${dateInStr}</span>
+              <span>Kasir: <strong>${order.cashierName || '-'}</strong></span>
+            </div>
+            <div class="flex justify-between items-baseline py-0.5 border-b border-dotted border-slate-300 text-[10.5px]">
+              <strong class="font-black uppercase">Estimasi Selesai:</strong>
+              <strong class="font-black underline">${etaStr}</strong>
+            </div>
+            <div class="flex justify-between">
+              <span>Alamat:</span>
+              <span class="truncate max-w-[160px] text-right">${order.custAddress || '-'}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Kurir/Rak:</span>
+              <span>${order.deliveryType} / <strong>${order.rackLocation || '-'}</strong></span>
+            </div>
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            <div class="space-y-0.5 font-semibold">${itemsHtml}</div>
+            <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
+              <span class="font-bold">Total ${unitLabel} / Pakaian:</span>
+              <strong class="text-[13px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
+            </div>
+            <div class="flex justify-between">
+              <span>Parfum: ${order.perfume || '-'}</span>
+            </div>
+            ${ketRowHtml}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            ${extraCostRowsHtml}
+            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+              <span>${mainTotalLabel}</span>
+              <span>${mainTotalValue}</span>
+            </div>
+            ${dpOrPaidRowHtml}
+            ${largeChangeBoxHtml}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="text-[8px] leading-tight space-y-0.5">
+            ${LAUNDRY_TERMS_HTML}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <div class="text-center">
+              <div class="modal-qr-target bg-white p-0.5 rounded inline-block" data-qr="${order.id}"></div>
+              <div class="text-[7.5px] font-bold">SCAN QR NOTA</div>
+            </div>
+            <div class="flex-1 text-center text-[9px]">
+              <div class="font-bold">Hormat Kami, Kasir</div>
+              <div class="h-9"></div>
+              <div class="font-extrabold underline">( ${order.cashierName || 'Kasir'} )</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const struk2Html = `
+        <div class="thermal-paper rounded-lg border border-slate-300" style="max-width:${previewMaxWidth};">
+          ${buildHeaderHtml('STRUK 2 - ARSIP KASIR')}
+          ${expressBannerHtml}
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            <div class="flex justify-between items-baseline">
+              <span>NO. NOTA:</span>
+              <strong class="text-[15px] font-black tracking-wider">${order.id}</strong>
+            </div>
+            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+              <span>Nama Pelanggan:</span>
+              <strong class="text-[13px] font-black uppercase truncate max-w-[170px]">${order.custName}</strong>
+            </div>
+            <div class="flex justify-between">
+              <span>Masuk: ${dateInStr}</span>
+              <span>Kasir: <strong>${order.cashierName || '-'}</strong></span>
+            </div>
+            <div class="flex justify-between items-baseline py-0.5 border-b border-dotted border-slate-300 text-[10.5px]">
+              <strong class="font-black uppercase">Estimasi Selesai:</strong>
+              <strong class="font-black underline">${etaStr}</strong>
+            </div>
+            <div class="space-y-0.5 font-semibold pt-0.5">${itemsHtml}</div>
+            <div class="flex justify-between items-baseline pt-0.5 border-t border-dotted border-slate-300">
+              <span class="font-bold">Berat / Pakaian:</span>
+              <strong class="text-[12.5px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
+            </div>
+            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+              <span>${mainTotalLabel}</span>
+              <span>${mainTotalValue}</span>
+            </div>
+            ${dpOrPaidRowHtml}
+            ${largeChangeBoxHtml}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="text-[8px] leading-tight space-y-0.5">
+            ${LAUNDRY_TERMS_HTML}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <div class="text-center">
+              <div class="modal-qr-target bg-white p-0.5 rounded inline-block" data-qr="${order.id}"></div>
+              <div class="text-[7.5px] font-bold">SCAN QR NOTA</div>
+            </div>
+            <div class="flex-1 text-center text-[9px]">
+              <div class="font-bold">Setuju, Pelanggan</div>
+              <div class="h-9"></div>
+              <div class="font-extrabold underline">( ${order.custName} )</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const rinciWorker = (order.stageHistory && order.stageHistory[1] && order.stageHistory[1].worker) || order.cashierName || '-';
+      const clothLines = (order.clothDetails || '').split('\n').map(l => l.trim()).filter(Boolean);
+      const clothListHtml = clothLines.length > 0
+        ? `<ol class="list-decimal pl-4 space-y-0.5 text-[9px] font-semibold">${clothLines.map(line => `<li>${line}</li>`).join('')}</ol>`
+        : `<p class="text-[9px] italic">Paket Tanpa Alur Rinci per potong</p>`;
+
+      const struk3Html = `
+        <div class="thermal-paper rounded-lg border border-slate-300" style="max-width:${previewMaxWidth};">
+          ${buildHeaderHtml('STRUK 3 - RINCIAN PAKAIAN')}
+          ${expressBannerHtml}
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            <div class="flex justify-between items-baseline"><span>NO. NOTA:</span><strong class="text-[15px] font-black tracking-wider">${order.id}</strong></div>
+            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300"><span>Pelanggan:</span><strong class="text-[13px] font-black uppercase">${order.custName}</strong></div>
+            <div class="flex justify-between"><span>Masuk: ${dateInStr}</span><span>Petugas: <strong>${rinciWorker}</strong></span></div>
+            <div class="flex justify-between items-baseline py-0.5 border-b border-dotted border-slate-300 text-[10.5px]">
+              <strong class="font-black uppercase">Estimasi Selesai:</strong>
+              <strong class="font-black underline">${etaStr}</strong>
+            </div>
+            <div class="flex justify-between"><span>Lokasi Rak:</span><strong>${order.rackLocation || '-'}</strong></div>
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            <div class="font-extrabold uppercase">Paket Layanan:</div>
+            ${itemsHtml}
+            <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
+              <span class="font-bold">Total ${unitLabel} / Pakaian:</span>
+              <strong class="text-[13px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
+            </div>
+            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
+              <span>${mainTotalLabel}</span>
+              <span>${mainTotalValue}</span>
+            </div>
+            ${excessBillHtml}
+            ${largeChangeBoxHtml}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="space-y-0.5 text-[9.5px]">
+            <div class="font-extrabold uppercase">Daftar Rincian Pakaian:</div>
+            ${clothListHtml}
+          </div>
+
+          <div class="thermal-divider"></div>
+
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <div class="text-center">
+              <div class="modal-qr-target bg-white p-0.5 rounded inline-block" data-qr="${order.id}"></div>
+              <div class="text-[7.5px] font-bold">SCAN QR NOTA</div>
+            </div>
+            <div class="flex-1 text-[8px] leading-tight">
+              <strong>Ketentuan:</strong> Rincian pakaian telah diperiksa bersama petugas Laundry QU. Komplain maks. 1x24 jam dengan membawa struk ini.
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (mode === 'ONE') return struk1Html;
+      if (mode === 'TWO') return struk2Html;
+      if (mode === 'THREE') return struk3Html;
+      return `
+        <div class="space-y-3">
+          ${struk1Html}
+          <div class="text-center text-[9px] font-mono text-slate-400 no-print">--- &#9986; POTONG DI SINI &#9986; ---</div>
+          ${struk2Html}
+        </div>
+      `;
     }
 
     function submitNewOrder(e) {
@@ -4625,6 +5609,14 @@
       const hasMerinciStage = activeStages.includes(1);
       const isRinciDone = !hasMerinciStage || Boolean(rawClothDetails.length > 0);
 
+      // Potong kuota Paket Bulanan Member jika terpakai pada nota ini
+      if (custCategory === 'Member' && selectedMemberOnKasir && tot.pkgUsedAmount > 0) {
+        const mIdx = (appData.members || []).findIndex(m => m.id === selectedMemberOnKasir.id);
+        if (mIdx !== -1 && appData.members[mIdx].monthlyPkg) {
+          appData.members[mIdx].monthlyPkg.remainingQuota = tot.pkgRemainingAfter;
+        }
+      }
+
       const newOrder = {
         id: notaId,
         createdAt,
@@ -4659,6 +5651,9 @@
         changeAmount: tot.changeAmount,
         changeSavedOnNota: isChangeSavedOnNota,
         changeReturnedAtPickup: false,
+        pkgUsedType: tot.pkgUsedType || null,
+        pkgUsedAmount: tot.pkgUsedAmount || 0,
+        pkgRemainingAfter: tot.pkgRemainingAfter ?? null,
         activeStages,
         currentStage: initialStage,
         stageHistory: {},
@@ -4693,13 +5688,7 @@
         });
       }
 
-      if (custCategory === 'Member' && selectedMemberOnKasir) {
-        const mIdx = appData.members.findIndex(m => m.id === selectedMemberOnKasir.id);
-        if (mIdx !== -1) {
-          appData.members[mIdx].totalSpent = (Number(appData.members[mIdx].totalSpent) || 0) + tot.grandTotal;
-          appData.members[mIdx].txCount = (Number(appData.members[mIdx].txCount) || 0) + 1;
-        }
-      }
+      syncAllMembersRealStats();
 
       selectedWorkflowOrderId = notaId;
       if (payStatus !== 'Lunas') {
@@ -4770,292 +5759,6 @@
     // =========================================================================
     // 8B. POP-UP NOTA SIAP CETAK SETELAH SIMPAN & FITUR CETAK ULANG NOTA
     // =========================================================================
-    function buildOrderCompactReceiptHtml(order, mode = 'BOTH') {
-      const s = appData.settings;
-      const showLogo = s.printerShowLogo !== false;
-      const pageBreakClass = s.printerPageBreak ? 'page-break-receipt' : '';
-      const dateInStr = new Date(order.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
-      const etaStr = new Date(order.deadlineMs).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
-      const sisa = Math.max(0, (order.total || 0) - (order.paidAmount || 0));
-      const kembalian = Number(order.changeAmount) || 0;
-      const unitLabel = order.weightUnit || 'Kg';
-      const expressText = getExpressHighlightText(order.items || []);
-      const expressBannerHtml = expressText
-        ? `<div class="thermal-express-banner">${expressText}</div>`
-        : '';
-
-      const itemsHtml = (order.items || []).map(it => `
-        <div class="flex justify-between">
-          <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
-          <span>${formatRupiah(roundToNearest500(it.subtotal))}</span>
-        </div>
-      `).join('');
-
-      const largeChangeBoxHtml = kembalian > 0 ? `
-        <div class="my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
-          <div class="text-[15px] font-black uppercase tracking-wide leading-tight">
-            Kembalian ${formatNumberID(kembalian)}
-          </div>
-          <div class="text-[8.5px] font-bold uppercase mt-0.5">
-            ${order.changeSavedOnNota && !order.changeReturnedAtPickup
-              ? 'DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN BARANG)'
-              : (order.changeReturnedAtPickup ? 'KEMBALIAN SUDAH DISERAHKAN SAAT PENGAMBILAN' : 'KEMBALIAN TUNAI PELANGGAN')}
-          </div>
-        </div>
-      ` : '';
-
-      const struk1Html = `
-        <div class="thermal-paper rounded-lg border border-slate-300 ${mode === 'BOTH' ? pageBreakClass : ''}">
-          <div class="text-center">
-            <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 1 - NOTA PELANGGAN</div>
-            ${showLogo ? `<img src="${s.logoUrl}" alt="Logo" class="w-8 h-8 mx-auto object-contain mb-0.5" />` : ''}
-            <div class="font-extrabold text-xs uppercase leading-none">${s.storeName}</div>
-            <div class="text-[9px] font-bold leading-tight">${s.storeSlogan}</div>
-            <div class="text-[8.5px] leading-tight">${s.storeAddress}</div>
-            <div class="text-[8.5px] leading-tight">HP: ${s.storePhone}</div>
-          </div>
-
-          ${expressBannerHtml}
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between items-baseline">
-              <span>NO. NOTA: <strong class="text-[15px] font-black tracking-wider">${order.id}</strong></span>
-              <span class="font-bold">${order.custCategory}${order.memberId ? ' ' + order.memberId : ''}</span>
-            </div>
-            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
-              <span>Pelanggan:</span>
-              <strong class="text-[13px] font-black uppercase truncate max-w-[175px]">${order.custName}</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Masuk: ${dateInStr}</span>
-              <span>Kasir: <strong>${order.cashierName || '-'}</strong></span>
-            </div>
-            <div class="flex justify-between">
-              <span>Estimasi:</span>
-              <strong>${etaStr}</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Alamat:</span>
-              <span class="truncate max-w-[160px] text-right">${order.custAddress || '-'}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Kurir/Rak:</span>
-              <span>${order.deliveryType} / <strong>${order.rackLocation || '-'}</strong></span>
-            </div>
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="space-y-0.5 font-semibold">${itemsHtml}</div>
-            <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
-              <span class="font-bold">Total ${unitLabel} / Pakaian:</span>
-              <strong class="text-[13px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Parfum: ${order.perfume || '-'}</span>
-            </div>
-            <div class="text-[8.5px] leading-tight">
-              <span>Ket: </span><span>${order.clothDetails || '-'}</span>
-            </div>
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between">
-              <span>Subtotal / Ongkir:</span>
-              <span>${formatRupiah(order.subtotal)} / ${formatRupiah(order.deliveryFee)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Total Diskon:</span>
-              <span>- ${formatRupiah((order.memberDiscount || 0) + (order.voucherDiscount || 0))}</span>
-            </div>
-            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
-              <span>TOTAL BIAYA:</span>
-              <span>${formatRupiah(order.total)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Status: <strong>${order.payStatus.toUpperCase()} (${order.payMethod})</strong></span>
-              <span>Bayar: ${formatRupiah(order.paidAmount || 0)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>${order.payStatus === 'Lunas' ? 'Kembalian:' : 'Sisa Tagihan:'}</span>
-              <strong>${formatRupiah(order.payStatus === 'Lunas' ? kembalian : sisa)}</strong>
-            </div>
-            ${largeChangeBoxHtml}
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="text-[8px] leading-tight space-y-0.5">
-            ${LAUNDRY_TERMS_HTML}
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="flex items-center justify-between gap-2 pt-1">
-            <div class="text-center">
-              <div class="modal-qr-target bg-white p-0.5 rounded inline-block" data-qr="${order.id}"></div>
-              <div class="text-[7.5px] font-bold">SCAN QR NOTA</div>
-            </div>
-            <div class="flex-1 text-center text-[9px]">
-              <div class="font-bold">Hormat Kami, Kasir</div>
-              <div class="h-9"></div>
-              <div class="font-extrabold underline">( ${order.cashierName || 'Kasir'} )</div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const struk2Html = `
-        <div class="thermal-paper rounded-lg border border-slate-300">
-          <div class="text-center">
-            <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 2 - ARSIP KASIR</div>
-            <div class="font-extrabold text-xs uppercase leading-none">${s.storeName}</div>
-            <div class="text-[9px] font-bold leading-tight">${s.storeSlogan}</div>
-            <div class="text-[8.5px] leading-tight">${s.storeAddress}</div>
-            <div class="text-[8.5px] leading-tight">HP: ${s.storePhone}</div>
-          </div>
-
-          ${expressBannerHtml}
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between items-baseline">
-              <span>NO. NOTA:</span>
-              <strong class="text-[15px] font-black tracking-wider">${order.id}</strong>
-            </div>
-            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
-              <span>Nama Pelanggan:</span>
-              <strong class="text-[13px] font-black uppercase truncate max-w-[170px]">${order.custName}</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Tgl Masuk:</span>
-              <span>${dateInStr}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Estimasi Selesai:</span>
-              <strong>${etaStr}</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Kasir:</span>
-              <span>${order.cashierName || '-'}</span>
-            </div>
-            <div class="flex justify-between items-baseline">
-              <span>Berat / Pakaian:</span>
-              <strong class="text-[12.5px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
-            </div>
-            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
-              <span>TOTAL BIAYA:</span>
-              <span>${formatRupiah(order.total)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Status Pembayaran:</span>
-              <strong>${order.payStatus.toUpperCase()} (${order.payMethod})</strong>
-            </div>
-            ${largeChangeBoxHtml}
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="text-[8px] leading-tight space-y-0.5">
-            ${LAUNDRY_TERMS_HTML}
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="flex items-center justify-between gap-2 pt-1">
-            <div class="text-center">
-              <div class="modal-qr-target bg-white p-0.5 rounded inline-block" data-qr="${order.id}"></div>
-              <div class="text-[7.5px] font-bold">SCAN QR NOTA</div>
-            </div>
-            <div class="flex-1 text-center text-[9px]">
-              <div class="font-bold">Setuju, Pelanggan</div>
-              <div class="h-9"></div>
-              <div class="font-extrabold underline">( ${order.custName} )</div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const rinciWorker = (order.stageHistory && order.stageHistory[1] && order.stageHistory[1].worker) || order.cashierName || '-';
-      const clothLines = (order.clothDetails || '').split('\n').map(l => l.trim()).filter(Boolean);
-      const clothListHtml = clothLines.length > 0
-        ? `<ol class="list-decimal pl-4 space-y-0.5 text-[9px] font-semibold">${clothLines.map(line => `<li>${line}</li>`).join('')}</ol>`
-        : `<p class="text-[9px] italic">Paket Tanpa Alur Rinci per potong</p>`;
-
-      const struk3Html = `
-        <div class="thermal-paper rounded-lg border border-slate-300">
-          <div class="text-center">
-            <div class="text-[8px] font-extrabold uppercase tracking-wider bg-slate-200 text-slate-900 px-1.5 py-0.5 rounded inline-block mb-0.5">STRUK 3 - RINCIAN PAKAIAN</div>
-            <div class="font-extrabold text-xs uppercase leading-none">${s.storeName}</div>
-            <div class="text-[9px] font-bold leading-tight">${s.storeSlogan}</div>
-            <div class="text-[8.5px] leading-tight">${s.storeAddress}</div>
-            <div class="text-[8.5px] leading-tight">HP: ${s.storePhone}</div>
-          </div>
-
-          ${expressBannerHtml}
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="flex justify-between items-baseline"><span>NO. NOTA:</span><strong class="text-[15px] font-black tracking-wider">${order.id}</strong></div>
-            <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300"><span>Pelanggan:</span><strong class="text-[13px] font-black uppercase">${order.custName}</strong></div>
-            <div class="flex justify-between"><span>Masuk: ${dateInStr}</span><span>Selesai: <strong>${etaStr}</strong></span></div>
-            <div class="flex justify-between"><span>Petugas Rinci:</span><strong>${rinciWorker}</strong></div>
-            <div class="flex justify-between"><span>Lokasi Rak:</span><strong>${order.rackLocation || '-'}</strong></div>
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="font-extrabold uppercase">Paket Layanan:</div>
-            ${itemsHtml}
-            <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
-              <span class="font-bold">Total ${unitLabel} / Pakaian:</span>
-              <strong class="text-[13px] font-black">${order.weightKg} ${unitLabel} / ${order.pcsCount} Pcs</strong>
-            </div>
-            <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-800 my-0.5">
-              <span>TOTAL BIAYA:</span>
-              <span>${formatRupiah(order.total)}</span>
-            </div>
-            ${largeChangeBoxHtml}
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="space-y-0.5 text-[9.5px]">
-            <div class="font-extrabold uppercase">Daftar Rincian Pakaian:</div>
-            ${clothListHtml}
-          </div>
-
-          <div class="thermal-divider"></div>
-
-          <div class="flex items-center justify-between gap-2 pt-1">
-            <div class="text-center">
-              <div class="modal-qr-target bg-white p-0.5 rounded inline-block" data-qr="${order.id}"></div>
-              <div class="text-[7.5px] font-bold">SCAN QR NOTA</div>
-            </div>
-            <div class="flex-1 text-[8px] leading-tight">
-              <strong>Ketentuan:</strong> Rincian pakaian telah diperiksa bersama petugas Laundry QU. Komplain maks. 1x24 jam dengan membawa struk ini.
-            </div>
-          </div>
-        </div>
-      `;
-
-      if (mode === 'ONE') return struk1Html;
-      if (mode === 'TWO') return struk2Html;
-      if (mode === 'THREE') return struk3Html;
-      return `
-        <div class="space-y-3">
-          ${struk1Html}
-          <div class="text-center text-[9px] font-mono text-slate-400 no-print">--- &#9986; POTONG DI SINI &#9986; ---</div>
-          ${struk2Html}
-        </div>
-      `;
-    }
-
     function renderQrInsideContainer(containerEl) {
       if (!containerEl || typeof QRCode === 'undefined') return;
       containerEl.querySelectorAll('.modal-qr-target').forEach(el => {
@@ -6023,6 +6726,16 @@
       if (selectedWorkflowOrderId === order.id) selectedWorkflowOrderId = null;
       if (selectedSettlementOrderId === order.id) selectedSettlementOrderId = null;
 
+      // Jika nota yang dibatalkan menggunakan Paket Bulanan Member, kembalikan kuotanya
+      if (order.memberId && Number(order.pkgUsedAmount) > 0) {
+        const m = (appData.members || []).find(item => item.id === order.memberId);
+        if (m && m.monthlyPkg) {
+          m.monthlyPkg.remainingQuota = Number(((Number(m.monthlyPkg.remainingQuota) || 0) + Number(order.pkgUsedAmount)).toFixed(2));
+        }
+      }
+
+      syncAllMembersRealStats();
+
       saveData();
       alert(`Nota ${order.id} telah ditandai DIHAPUS ADMIN oleh ${authAdmin.label}.\nNomor nota ${order.id} tetap tercatat di Laporan Harian dan tidak akan dipakai ulang.`);
     }
@@ -6522,12 +7235,203 @@
     }
 
     // =========================================================================
-    // 12. TAB 6: MEMBER, KARTU QR & PORTAL PELANGGAN
+    // 12. TAB 6: MEMBER, PAKET BULANAN, KARTU QR & PORTAL PELANGGAN
     // =========================================================================
+    function toggleMemberTypeFields() {
+      const catType = document.querySelector('input[name="member_category_type"]:checked')?.value || 'Pelanggan';
+      const regularBox = document.getElementById('member-regular-tier-box');
+      const yayasanBox = document.getElementById('member-yayasan-config-box');
+      if (catType === 'Yayasan') {
+        regularBox?.classList.add('hidden');
+        yayasanBox?.classList.remove('hidden');
+      } else {
+        regularBox?.classList.remove('hidden');
+        yayasanBox?.classList.add('hidden');
+      }
+    }
+
+    function togglePkgQuotaTypeLabel() {
+      const qType = document.querySelector('input[name="pkg_quota_type"]:checked')?.value || 'KG';
+      const labelEl = document.getElementById('pkg-quota-amount-label');
+      const badgeEl = document.getElementById('pkg-quota-unit-badge');
+      const inputEl = document.getElementById('pkg-quota-amount');
+      if (qType === 'NOMINAL') {
+        if (labelEl) labelEl.innerHTML = `Jumlah Kuota Nominal (Rp) <span class="text-rose-500">*</span>`;
+        if (badgeEl) badgeEl.textContent = 'Rp';
+        if (inputEl) inputEl.placeholder = 'Contoh: 200.000';
+      } else {
+        if (labelEl) labelEl.innerHTML = `Jumlah Kuota Berat (Kg) <span class="text-rose-500">*</span>`;
+        if (badgeEl) badgeEl.textContent = 'Kg';
+        if (inputEl) inputEl.placeholder = 'Contoh: 30';
+      }
+      handlePkgMemberSelectChange();
+    }
+
+    function handlePkgMemberSelectChange() {
+      const memberId = document.getElementById('pkg-member-select')?.value;
+      const infoBox = document.getElementById('pkg-member-current-info');
+      if (!infoBox) return;
+
+      const member = (appData.members || []).find(m => m.id === memberId);
+      if (!member) {
+        infoBox.classList.add('hidden');
+        return;
+      }
+
+      const pkgStatus = getMemberMonthlyPkgStatus(member);
+      infoBox.classList.remove('hidden');
+
+      if (pkgStatus.isActive) {
+        infoBox.innerHTML = `
+          <div class="font-extrabold text-indigo-800"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> ${pkgStatus.statusText}</div>
+          <div class="text-slate-600">Berlaku s/d: <strong>${new Date(pkgStatus.expiresAt).toLocaleDateString('id-ID', { dateStyle: 'medium' })}</strong>. Pembelian paket baru akan <strong>menambahkan kuota</strong> &amp; memperpanjang masa aktif 30 hari dari hari ini.</div>
+        `;
+      } else if (pkgStatus.isExpiredWithQuota) {
+        infoBox.innerHTML = `
+          <div class="font-extrabold text-amber-800"><i class="fa-solid fa-lock text-amber-600 mr-1"></i> ${pkgStatus.statusText}</div>
+          <div class="text-slate-600">Sisa kuota tersimpan (<strong>${pkgStatus.quotaFormatted}</strong>) akan otomatis <strong>diaktifkan kembali &amp; ditambahkan</strong> ke kuota paket baru selama 30 hari!</div>
+        `;
+      } else {
+        infoBox.innerHTML = `
+          <div class="font-bold text-slate-700">Member ini belum memiliki kuota Paket Bulanan aktif.</div>
+        `;
+      }
+    }
+
+    function openBuyMonthlyPackageForMember(memberId) {
+      const selectEl = document.getElementById('pkg-member-select');
+      if (selectEl) {
+        selectEl.value = memberId;
+        handlePkgMemberSelectChange();
+      }
+      const member = (appData.members || []).find(m => m.id === memberId);
+      if (member && member.monthlyPkg && member.monthlyPkg.quotaType) {
+        const radio = document.querySelector(`input[name="pkg_quota_type"][value="${member.monthlyPkg.quotaType}"]`);
+        if (radio) {
+          radio.checked = true;
+          togglePkgQuotaTypeLabel();
+        }
+      }
+      document.getElementById('member-monthly-pkg-box')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('pkg-quota-amount')?.focus();
+    }
+
+    function saveMemberMonthlyPackage(e) {
+      e.preventDefault();
+      const memberId = document.getElementById('pkg-member-select')?.value;
+      const cashierName = document.getElementById('pkg-cashier-select')?.value || selectedCashierOnKasir || 'Admin Kasir';
+      const quotaType = document.querySelector('input[name="pkg_quota_type"]:checked')?.value || 'KG';
+      const quotaAdded = parseFormattedNumber(document.getElementById('pkg-quota-amount')?.value);
+      const pricePaid = parseFormattedNumber(document.getElementById('pkg-price-paid')?.value);
+
+      if (!memberId) {
+        alert("Pilih Member terlebih dahulu!");
+        return;
+      }
+      if (quotaAdded <= 0 || pricePaid <= 0) {
+        alert("Masukkan Jumlah Kuota dan Harga Bayar Paket dengan benar!");
+        return;
+      }
+
+      const mIdx = (appData.members || []).findIndex(m => m.id === memberId);
+      if (mIdx === -1) return;
+      const member = appData.members[mIdx];
+
+      const prevPkg = member.monthlyPkg || null;
+      let carriedOverQuota = 0;
+
+      // Jika masih ada sisa kuota lama (baik masih aktif maupun sudah lewat 30 hari / tersimpan), tambahkan ke kuota baru!
+      if (prevPkg && Number(prevPkg.remainingQuota) > 0) {
+        if (prevPkg.quotaType === quotaType) {
+          carriedOverQuota = Number(prevPkg.remainingQuota) || 0;
+        } else {
+          if (!confirm(`Member masih memiliki sisa kuota dengan tipe berbeda (${prevPkg.remainingQuota} ${prevPkg.quotaType}). Ganti tipe kuota menjadi ${quotaType}? (Sisa tipe lama akan di-reset)`)) {
+            return;
+          }
+          carriedOverQuota = 0;
+        }
+      }
+
+      const now = Date.now();
+      const expiresAt = now + THIRTY_DAYS_MS;
+      const newTotalRemaining = Number((carriedOverQuota + quotaAdded).toFixed(2));
+
+      member.monthlyPkg = {
+        quotaType,
+        remainingQuota: newTotalRemaining,
+        lastAddedQuota: quotaAdded,
+        carriedOverQuota,
+        startAt: now,
+        expiresAt
+      };
+
+      if (!Array.isArray(member.monthlyPkgHistory)) member.monthlyPkgHistory = [];
+      const pkgTxId = 'PKG-' + now;
+      member.monthlyPkgHistory.unshift({
+        id: pkgTxId,
+        timestamp: now,
+        pricePaid,
+        quotaType,
+        quotaAdded,
+        carriedOverQuota,
+        totalQuotaAfter: newTotalRemaining,
+        cashierName,
+        isDeleted: false
+      });
+
+      // Catat pembayaran Paket Bulanan di awal ke Arus Kas & Laporan Harian Kasir
+      const quotaLabel = quotaType === 'KG' ? `${quotaAdded} Kg` : formatRupiah(quotaAdded);
+      appData.cashflows.unshift({
+        id: 'CF-' + now,
+        timestamp: now,
+        description: `Pembayaran Paket Bulanan (+${quotaLabel}) - Member ${member.id} (${member.name}) oleh ${cashierName}`,
+        category: `Paket Bulanan Member (Tunai)`,
+        type: 'IN',
+        amount: pricePaid,
+        memberId: member.id,
+        pkgTxId,
+        isDeleted: false
+      });
+
+      document.getElementById('pkg-quota-amount').value = '';
+      document.getElementById('pkg-price-paid').value = '';
+
+      syncAllMembersRealStats();
+      saveData();
+      handlePkgMemberSelectChange();
+
+      const totalFormatted = quotaType === 'KG' ? `${newTotalRemaining} Kg` : formatRupiah(newTotalRemaining);
+      alert(`Paket Bulanan untuk ${member.name} (${member.id}) berhasil diaktifkan selama 30 hari!\n\n` +
+            `• Kuota Baru: +${quotaLabel}\n` +
+            `• Sisa Kuota Lama Ditambahkan: ${carriedOverQuota > 0 ? (quotaType === 'KG' ? carriedOverQuota + ' Kg' : formatRupiah(carriedOverQuota)) : '0'}\n` +
+            `• Total Kuota Aktif Sekarang: ${totalFormatted}\n` +
+            `• Pembayaran ${formatRupiah(pricePaid)} telah masuk ke Laporan Harian & Akumulasi Tier 2 Tahun.`);
+    }
+
     function renderMemberSection() {
-      const nextId = getNextMemberId();
+      syncAllMembersRealStats();
+
+      const editId = document.getElementById('member-edit-id')?.value;
       const idPrev = document.getElementById('member-id-preview');
-      if (idPrev) idPrev.textContent = nextId;
+      if (idPrev && !editId) idPrev.textContent = getNextMemberId();
+
+      // Populate dropdown member & kasir pada form Paket Bulanan
+      const pkgMemberSelect = document.getElementById('pkg-member-select');
+      if (pkgMemberSelect) {
+        const currentSelectedM = pkgMemberSelect.value;
+        const members = appData.members || [];
+        pkgMemberSelect.innerHTML = `<option value="">-- Pilih Member --</option>` +
+          members.map(m => `<option value="${m.id}" ${m.id === currentSelectedM ? 'selected' : ''}>${m.id} - ${m.name}</option>`).join('');
+      }
+
+      const pkgCashierSelect = document.getElementById('pkg-cashier-select');
+      if (pkgCashierSelect) {
+        const currentSelectedC = pkgCashierSelect.value || selectedCashierOnKasir || '';
+        const employees = appData.employees || [];
+        pkgCashierSelect.innerHTML = employees.length === 0
+          ? `<option value="Admin Kasir">Admin Kasir</option>`
+          : employees.map(emp => `<option value="${emp.name}" ${emp.name === currentSelectedC ? 'selected' : ''}>${emp.name} (${emp.role})</option>`).join('');
+      }
 
       const tbody = document.getElementById('member-table-tbody');
       if (!tbody) return;
@@ -6553,9 +7457,31 @@
 
       tbody.innerHTML = members.map(m => {
         const tData = getMemberTierData(m);
-        const badgeClass = tData.tier === 'VIP'
-          ? 'bg-purple-100 text-purple-800'
-          : (tData.tier === 'Gold' ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-800');
+        const pkgStatus = tData.pkgStatus;
+
+        const badgeClass = tData.isYayasan
+          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+          : (tData.tier === 'VIP'
+            ? 'bg-purple-100 text-purple-800'
+            : (tData.tier === 'Gold' ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-800'));
+
+        const yayasanInfo = tData.isYayasan
+          ? `<span class="block text-[10px] ${tData.isQuotaExhausted ? 'text-rose-600' : 'text-emerald-700'} font-bold mt-0.5">
+               Bulan Ini: ${tData.maxKg > 0 ? `${tData.usedMonthKg}/${tData.maxKg}Kg` : ''} ${tData.maxNominal > 0 ? `${formatRupiah(tData.usedMonthNominal)}/${formatRupiah(tData.maxNominal)}` : ''}
+               ${tData.isQuotaExhausted ? ` (Ikut ${tData.fallbackTier} ${tData.fallbackDiscountPct}%)` : ''}
+             </span>`
+          : '';
+
+        const pkgBadgeHtml = pkgStatus.isActive
+          ? `<span class="inline-block mt-1 px-2 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-extrabold">
+               Paket Aktif: Sisa ${pkgStatus.quotaFormatted} (${pkgStatus.daysLeft} hr)
+             </span>`
+          : (pkgStatus.isExpiredWithQuota
+            ? `<span class="inline-block mt-1 px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-extrabold">
+                 Kuota Tersimpan: ${pkgStatus.quotaFormatted} (Perpanjang utk pakai)
+               </span>`
+            : '');
+
         return `
           <tr>
             <td class="p-3 font-mono font-extrabold text-amber-700">${m.id}</td>
@@ -6564,19 +7490,33 @@
               <p class="text-[11px] font-mono text-slate-500">${m.phone}</p>
             </td>
             <td class="p-3 text-center">
-              <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold ${badgeClass}">
-                ${tData.tier} (${tData.discountPct}%)
-              </span>
+              <div>
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold ${badgeClass}">
+                  ${tData.tier} (${tData.discountPct}%)
+                </span>
+              </div>
+              ${yayasanInfo}
+              ${pkgBadgeHtml}
             </td>
             <td class="p-3 text-center font-mono">
-              <span class="font-bold text-slate-800">${formatRupiah(m.totalSpent || 0)}</span>
-              <span class="block text-[10px] text-slate-500">${m.txCount || 0}x Transaksi</span>
+              <span class="font-extrabold text-slate-900">${tData.txCount}x Transaksi</span>
+              <span class="block text-[10px] font-bold text-sky-700">2 Thn: ${formatRupiah(tData.totalSpent)}</span>
+              <span class="block text-[9.5px] text-slate-400">Reset: ${tData.cycleEndStr || '-'}</span>
             </td>
-            <td class="p-3 text-center space-x-1.5">
-              <button type="button" onclick="previewMemberCard('${m.id}')" class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs">
-                <i class="fa-solid fa-id-card mr-1"></i> Kartu QR
+            <td class="p-3 text-center space-x-1">
+              <button type="button" onclick="openBuyMonthlyPackageForMember('${m.id}')" title="Input / Perpanjang Paket Bulanan" class="px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px]">
+                <i class="fa-solid fa-calendar-plus"></i> Paket
               </button>
-              <button type="button" onclick="deleteMember('${m.id}')" class="text-rose-600 hover:text-rose-800 px-1.5">
+              <button type="button" onclick="previewMemberCard('${m.id}')" title="Lihat Kartu QR" class="px-2 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px]">
+                <i class="fa-solid fa-id-card"></i>
+              </button>
+              <button type="button" onclick="editMember('${m.id}')" title="Edit Data & Kuota Member" class="px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px]">
+                <i class="fa-solid fa-pen-to-square"></i> Edit
+              </button>
+              <button type="button" onclick="switchMemberCategoryQuick('${m.id}')" title="Alihkan Pelanggan <-> Warga Yayasan" class="px-2 py-1 rounded-lg ${tData.isYayasan ? 'bg-slate-700 hover:bg-slate-600' : 'bg-emerald-600 hover:bg-emerald-500'} text-white font-bold text-[11px]">
+                <i class="fa-solid fa-repeat"></i> ${tData.isYayasan ? 'Ke Pelanggan' : 'Ke Yayasan'}
+              </button>
+              <button type="button" onclick="deleteMember('${m.id}')" title="Hapus Member" class="text-rose-600 hover:text-rose-800 px-1">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </td>
@@ -6589,29 +7529,138 @@
 
     function saveMember(e) {
       e.preventDefault();
-      const id = getNextMemberId();
+      const editId = document.getElementById('member-edit-id')?.value || '';
       const name = document.getElementById('member-name').value.trim();
       const phone = document.getElementById('member-phone').value.trim();
       const address = document.getElementById('member-address').value.trim();
-      const initTier = document.querySelector('input[name="member_init_tier"]:checked')?.value || 'Silver';
+      const memberType = document.querySelector('input[name="member_category_type"]:checked')?.value || 'Pelanggan';
 
-      const initialSpent = initTier === 'VIP' ? 5000001 : (initTier === 'Gold' ? 2000001 : 0);
+      const yayasanDiscountPct = Math.min(100, Math.max(0, Number(document.getElementById('member-yayasan-disc')?.value || 50)));
+      const yayasanMaxKg = Math.max(0, parseFormattedNumber(document.getElementById('member-yayasan-max-kg')?.value || '0'));
+      const yayasanMaxNominal = Math.max(0, parseFormattedNumber(document.getElementById('member-yayasan-max-rp')?.value || '0'));
 
-      appData.members.push({
-        id,
-        name,
-        phone,
-        address,
-        initTier,
-        totalSpent: initialSpent,
-        txCount: 0
-      });
+      if (editId) {
+        const idx = (appData.members || []).findIndex(m => m.id === editId);
+        if (idx !== -1) {
+          const existing = appData.members[idx];
+          const realStats = getRealCustomerOrderStats(editId, phone, existing);
+          appData.members[idx] = {
+            ...existing,
+            name,
+            phone,
+            address,
+            memberType,
+            yayasanDiscountPct,
+            yayasanMaxKg,
+            yayasanMaxNominal,
+            totalSpent: realStats.currentCycleSpent,
+            txCount: realStats.currentCycleTxCount
+          };
+          selectedMemberCardId = editId;
+        }
+      } else {
+        const id = getNextMemberId();
+        const createdAt = Date.now();
+        const newMemberObj = {
+          id,
+          createdAt,
+          name,
+          phone,
+          address,
+          memberType,
+          initTier: 'Silver',
+          yayasanDiscountPct,
+          yayasanMaxKg,
+          yayasanMaxNominal,
+          monthlyPkg: null,
+          monthlyPkgHistory: [],
+          totalSpent: 0,
+          txCount: 0
+        };
+        const realStats = getRealCustomerOrderStats(id, phone, newMemberObj);
+        newMemberObj.totalSpent = realStats.currentCycleSpent;
+        newMemberObj.txCount = realStats.currentCycleTxCount;
 
-      selectedMemberCardId = id;
+        appData.members.push(newMemberObj);
+        selectedMemberCardId = id;
+      }
+
+      syncAllMembersRealStats();
+      resetMemberForm();
+      saveData();
+    }
+
+    function editMember(memberId) {
+      const m = (appData.members || []).find(item => item.id === memberId);
+      if (!m) return;
+
+      const tData = getMemberTierData(m);
+
+      document.getElementById('member-edit-id').value = m.id;
+      document.getElementById('member-id-preview').textContent = m.id;
+      document.getElementById('member-name').value = m.name || '';
+      document.getElementById('member-phone').value = m.phone || '';
+      document.getElementById('member-address').value = m.address || '';
+
+      const catType = m.memberType === 'Yayasan' ? 'Yayasan' : 'Pelanggan';
+      const catRadio = document.querySelector(`input[name="member_category_type"][value="${catType}"]`);
+      if (catRadio) catRadio.checked = true;
+      toggleMemberTypeFields();
+
+      const currentRealTier = tData.isYayasan ? 'Silver' : tData.tier;
+      const tierRadio = document.querySelector(`input[name="member_init_tier"][value="${currentRealTier}"]`);
+      if (tierRadio) tierRadio.checked = true;
+
+      document.getElementById('member-yayasan-disc').value = m.yayasanDiscountPct ?? 50;
+      document.getElementById('member-yayasan-max-kg').value = formatNumberID(m.yayasanMaxKg ?? 7);
+      document.getElementById('member-yayasan-max-rp').value = formatNumberID(m.yayasanMaxNominal ?? 35000);
+
+      document.getElementById('btn-submit-member-text').textContent = `Update Data Member (${m.id})`;
+      document.getElementById('btn-cancel-member')?.classList.remove('hidden');
+      document.getElementById('form-member')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function switchMemberCategoryQuick(memberId) {
+      const m = (appData.members || []).find(item => item.id === memberId);
+      if (!m) return;
+
+      if (m.memberType === 'Yayasan') {
+        if (!confirm(`Alihkan ${m.name} (${m.id}) dari Member Warga Yayasan menjadi Member Pelanggan Reguler?\n(Tier akan disesuaikan dengan akumulasi transaksi 2 tahun berjalan)`)) return;
+        m.memberType = 'Pelanggan';
+      } else {
+        const disc = prompt(`Alihkan ${m.name} (${m.id}) menjadi Member Warga Yayasan.\nMasukkan Diskon Warga Yayasan (%):`, m.yayasanDiscountPct ?? "50");
+        if (disc === null) return;
+        const maxKg = prompt(`Masukkan Maksimal Berat (Kg) per bulan (Isi 0 jika tanpa batas):`, m.yayasanMaxKg ?? "7");
+        if (maxKg === null) return;
+        const maxRp = prompt(`Masukkan Maksimal Nominal Harga (Rp) per bulan (Isi 0 jika tanpa batas):`, m.yayasanMaxNominal ?? "35000");
+        if (maxRp === null) return;
+
+        m.memberType = 'Yayasan';
+        m.yayasanDiscountPct = Math.min(100, Math.max(0, parseFormattedNumber(disc)));
+        m.yayasanMaxKg = Math.max(0, parseFormattedNumber(maxKg));
+        m.yayasanMaxNominal = Math.max(0, parseFormattedNumber(maxRp));
+      }
+
+      syncAllMembersRealStats();
+      saveData();
+    }
+
+    function resetMemberForm() {
+      if (document.getElementById('member-edit-id')) document.getElementById('member-edit-id').value = '';
+      if (document.getElementById('member-id-preview')) document.getElementById('member-id-preview').textContent = getNextMemberId();
       document.getElementById('member-name').value = '';
       document.getElementById('member-phone').value = '';
       document.getElementById('member-address').value = '';
-      saveData();
+
+      const pelRadio = document.querySelector('input[name="member_category_type"][value="Pelanggan"]');
+      if (pelRadio) pelRadio.checked = true;
+      toggleMemberTypeFields();
+
+      const silverRadio = document.querySelector('input[name="member_init_tier"][value="Silver"]');
+      if (silverRadio) silverRadio.checked = true;
+
+      document.getElementById('btn-submit-member-text').textContent = 'Daftarkan Member & Buat Kartu QR';
+      document.getElementById('btn-cancel-member')?.classList.add('hidden');
     }
 
     function previewMemberCard(memberId) {
@@ -6623,23 +7672,59 @@
       document.getElementById('card-store-name').textContent = appData.settings.storeName.toUpperCase();
       document.getElementById('card-store-slogan').textContent = appData.settings.storeSlogan;
       document.getElementById('card-store-logo').src = appData.settings.logoUrl;
-      document.getElementById('card-member-tier').textContent = `${tData.tier.toUpperCase()} • ${tData.discountPct}% OFF`;
+
+      const tierBadge = document.getElementById('card-member-tier');
+      if (tData.pkgStatus && tData.pkgStatus.isActive) {
+        tierBadge.textContent = `PAKET BULANAN • ${tData.pkgStatus.quotaFormatted}`;
+        tierBadge.className = "px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-indigo-400 text-slate-950 shadow-2xs";
+      } else if (tData.isYayasan) {
+        tierBadge.textContent = `WARGA YAYASAN • ${tData.yayasanDiscountPct}%`;
+        tierBadge.className = "px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-400 text-slate-950 shadow-2xs";
+      } else {
+        tierBadge.textContent = `${tData.tier.toUpperCase()} • ${tData.discountPct}% OFF`;
+        tierBadge.className = "px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 shadow-2xs";
+      }
+
       document.getElementById('card-member-id').textContent = member.id;
       document.getElementById('card-member-name').textContent = member.name.toUpperCase();
       document.getElementById('card-member-phone').textContent = member.phone;
+
+      const frontAddr = document.getElementById('card-front-address');
+      if (frontAddr) frontAddr.textContent = appData.settings.storeAddress;
+
+      const backId = document.getElementById('card-back-member-id');
+      if (backId) backId.textContent = member.id;
+
+      const backPhone = document.getElementById('card-back-store-phone');
+      if (backPhone) backPhone.textContent = appData.settings.storePhone;
 
       const qrContainer = document.getElementById('member-card-qr');
       if (qrContainer && typeof QRCode !== 'undefined') {
         qrContainer.innerHTML = '';
         new QRCode(qrContainer, {
           text: member.id,
-          width: 78,
-          height: 78,
+          width: 64,
+          height: 64,
           colorDark: "#0f172a",
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.M
         });
       }
+    }
+
+    function printMemberCard() {
+      if ((appData.members || []).length === 0) {
+        alert("Belum ada Data Member.");
+        return;
+      }
+      const cardEl = document.getElementById('member-card-canvas');
+      if (!cardEl) return;
+      document.querySelectorAll('.printable-active').forEach(el => el.classList.remove('printable-active'));
+      cardEl.classList.add('printable-active', 'report-a4-print');
+      window.print();
+      setTimeout(() => {
+        cardEl.classList.remove('printable-active', 'report-a4-print');
+      }, 500);
     }
 
     function downloadMemberCardPng() {
@@ -6655,18 +7740,6 @@
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
-    }
-
-    function printMemberCard() {
-      if ((appData.members || []).length === 0) {
-        alert("Belum ada Data Member.");
-        return;
-      }
-      const cardEl = document.getElementById('member-card-canvas');
-      if (!cardEl) return;
-      document.querySelectorAll('.printable-active').forEach(el => el.classList.remove('printable-active'));
-      cardEl.classList.add('printable-active', 'report-a4-print');
-      window.print();
     }
 
     function deleteMember(memberId) {
