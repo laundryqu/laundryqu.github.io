@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Laundry QU POS - Unit Usaha Markaz Yatim Duafa Qurani</title>
+  <title>Laundry QU POS - Unit Usaha Yayasan MYDQ</title>
 
   <!-- 1. Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -223,7 +223,7 @@
         <img id="mobile-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 rounded-lg bg-white p-0.5 object-contain" />
         <div>
           <h1 id="mobile-store-name" class="font-extrabold text-sm tracking-tight leading-none">Laundry QU</h1>
-          <p id="mobile-store-slogan" class="text-[10px] text-sky-400 font-medium leading-tight mt-0.5">Unit Usaha Markaz Yatim Duafa Qurani</p>
+          <p id="mobile-store-slogan" class="text-[10px] text-sky-400 font-medium leading-tight mt-0.5">Unit Usaha Yayasan MYDQ</p>
         </div>
       </div>
     </div>
@@ -249,7 +249,7 @@
         <img id="sidebar-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo Laundry" class="w-11 h-11 rounded-xl bg-white p-1 object-contain shadow-md shrink-0" />
         <div class="overflow-hidden">
           <h2 id="sidebar-store-name" class="font-extrabold text-base tracking-tight truncate text-white">Laundry QU</h2>
-          <p id="sidebar-store-slogan" class="text-[11px] text-sky-400 leading-tight font-semibold">Unit Usaha Markaz Yatim Duafa Qurani</p>
+          <p id="sidebar-store-slogan" class="text-[11px] text-sky-400 leading-tight font-semibold">Unit Usaha Yayasan MYDQ</p>
         </div>
       </div>
       <button type="button" onclick="toggleMobileSidebar()" class="md:hidden text-slate-400 hover:text-white p-1.5">
@@ -343,7 +343,7 @@
         <i class="fa-solid fa-camera"></i> Scan QR Nota / Member
       </button>
       <div class="text-[10px] text-slate-400 text-center leading-tight">
-        Laundry QU &bull; Markaz Yatim Duafa Qurani
+        Laundry QU &bull; Unit Usaha Yayasan MYDQ
       </div>
     </div>
   </aside>
@@ -519,8 +519,35 @@
               </div>
             </div>
 
-            <!-- 2. Input Pelanggan, ALAMAT PELANGGAN + SIMBOL STAMP, & Blok Kuning Transparan Berat/Pcs -->
+            <!-- 2. Berat Cucian & Jumlah Pakaian -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+              <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-yellow-400/20 border-2 border-yellow-400/60 backdrop-blur-xs">
+                <div>
+                  <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-950 mb-1.5">
+                    <i class="fa-solid fa-weight-scale text-yellow-700 mr-1"></i> <span id="kasir-weight-label">Berat Cucian (Kg)</span> <span class="text-rose-600">*</span>
+                  </label>
+                  <div class="relative">
+                    <input type="text" id="kasir-weight" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan angka..." class="w-full px-3.5 py-2.5 pr-20 rounded-xl border border-yellow-500/70 bg-white/90 text-sm font-extrabold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+                    <span id="kasir-weight-unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-yellow-900 bg-yellow-200/80 px-2 py-0.5 rounded border border-yellow-400">Kg</span>
+                  </div>
+                  <p id="kasir-bundle-info" class="hidden text-[11px] font-bold text-indigo-800 mt-1"></p>
+                </div>
+                <div>
+                  <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-950 mb-1.5">
+                    <i class="fa-solid fa-shirt text-yellow-700 mr-1"></i> Jumlah Pakaian (Pcs) <span class="text-rose-600">*</span>
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <div class="relative flex-1">
+                      <input type="text" id="kasir-pcs" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan jumlah pcs..." class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-yellow-500/70 bg-white/90 text-sm font-extrabold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+                      <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-yellow-900">Pcs</span>
+                    </div>
+                    <button type="button" id="kasir-prayer-promo-box" onclick="openPrayerPromoDialog()" title="Atur promo gratis cuci pakaian sholat" aria-label="Atur promo gratis cuci pakaian sholat" class="shrink-0 w-11 h-11 rounded-xl bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 text-emerald-700 text-xl transition flex items-center justify-center">
+                      <i class="fa-solid fa-person-praying"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   Nama Pelanggan <span class="text-rose-500">*</span>
@@ -559,28 +586,6 @@
                 </div>
               </div>
 
-              <!-- BLOK BERAT & JUMLAH PAKAIAN (KUNING TRANSPARAN) -->
-              <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-yellow-400/20 border-2 border-yellow-400/60 backdrop-blur-xs">
-                <div>
-                  <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-950 mb-1.5">
-                    <i class="fa-solid fa-weight-scale text-yellow-700 mr-1"></i> <span id="kasir-weight-label">Berat Cucian (Kg)</span> <span class="text-rose-600">*</span>
-                  </label>
-                  <div class="relative">
-                    <input type="text" id="kasir-weight" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan angka..." class="w-full px-3.5 py-2.5 pr-20 rounded-xl border border-yellow-500/70 bg-white/90 text-sm font-extrabold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
-                    <span id="kasir-weight-unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-yellow-900 bg-yellow-200/80 px-2 py-0.5 rounded border border-yellow-400">Kg</span>
-                  </div>
-                  <p id="kasir-bundle-info" class="hidden text-[11px] font-bold text-indigo-800 mt-1"></p>
-                </div>
-                <div>
-                  <label class="block text-xs font-extrabold uppercase tracking-wider text-yellow-950 mb-1.5">
-                    <i class="fa-solid fa-shirt text-yellow-700 mr-1"></i> Jumlah Pakaian (Pcs) <span class="text-rose-600">*</span>
-                  </label>
-                  <div class="relative">
-                    <input type="text" id="kasir-pcs" required value="" oninput="formatThousandInput(this); calculateKasirTotal()" placeholder="Masukkan jumlah pcs..." class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-yellow-500/70 bg-white/90 text-sm font-extrabold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
-                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-yellow-900">Pcs</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <!-- 3. PILIH PAKET LAYANAN (UNGU TRANSPARAN + FILTER JENIS PAKET DI SEBELAH CARI) -->
@@ -715,54 +720,23 @@
               </div>
             </div>
 
-            <!-- 5. Input Lokasi Rak & Catatan Awal -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  Lokasi Rak Penyimpanan <span class="text-slate-400 font-normal">(Opsional)</span>
-                </label>
-                <input type="text" id="kasir-rack-location" oninput="updateReceiptPreview()" placeholder="Misal: Rak A-02 (Bisa diisi nanti)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
-              </div>
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                    Catatan / Rincian Awal <span class="text-slate-400 font-normal">(Opsional)</span>
-                  </label>
-                  <button type="button" onclick="startVoiceInput('kasir-cloth-details')" class="text-[11px] font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1">
-                    <i class="fa-solid fa-microphone"></i> Voice
-                  </button>
+            <div id="kasir-prayer-promo-dialog" class="hidden fixed inset-0 z-[100] bg-slate-950/60 p-4 items-center justify-center" onclick="if(event.target === this) closePrayerPromoDialog()" onkeydown="if(event.key === 'Escape') closePrayerPromoDialog()">
+              <div role="dialog" aria-modal="true" aria-labelledby="prayer-promo-title" class="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl space-y-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 id="prayer-promo-title" class="font-extrabold text-slate-900"><i class="fa-solid fa-person-praying text-emerald-600 mr-1"></i> Promo Gratis Cuci Pakaian Sholat</h3>
+                    <p class="text-xs text-slate-500 mt-1">Tentukan jumlah pakaian yang dicuci gratis.</p>
+                  </div>
+                  <button type="button" onclick="closePrayerPromoDialog()" aria-label="Tutup" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <input type="text" id="kasir-cloth-details" oninput="updateReceiptPreview()" placeholder="Misal: Ada pakaian luntur / rincian..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
-              </div>
-            </div>
-
-            <!-- 5B. PANEL GRATIS PAKAIAN SHOLAT (Stamp sudah dipindah ke sebelah Alamat) -->
-            <div id="kasir-promos-wrapper" class="space-y-3 pt-2 border-t border-slate-100">
-              <!-- Box Gratis Cuci Pakaian Sholat (Sajadah, Mukena, Lobe, Sarung Sholat) -->
-              <div id="kasir-prayer-promo-box" class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-2.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-extrabold text-emerald-950 uppercase">
-                    <i class="fa-solid fa-mosque text-emerald-600 mr-1"></i> Promo Gratis Cuci Pakaian Sholat (Rp 0)
-                  </span>
-                  <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 text-[10px] font-extrabold">GRATIS</span>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                  <label class="flex items-center justify-between gap-2 p-3 rounded-xl border border-emerald-200">Sajadah <input type="number" id="pray-sajadah" min="0" value="0" oninput="calculateKasirTotal()" class="w-16 px-2 py-1 rounded-lg border border-slate-300 text-center font-mono font-extrabold" /></label>
+                  <label class="flex items-center justify-between gap-2 p-3 rounded-xl border border-emerald-200">Mukena <input type="number" id="pray-mukena" min="0" value="0" oninput="calculateKasirTotal()" class="w-16 px-2 py-1 rounded-lg border border-slate-300 text-center font-mono font-extrabold" /></label>
+                  <label class="flex items-center justify-between gap-2 p-3 rounded-xl border border-emerald-200">Lobe / Peci <input type="number" id="pray-lobe" min="0" value="0" oninput="calculateKasirTotal()" class="w-16 px-2 py-1 rounded-lg border border-slate-300 text-center font-mono font-extrabold" /></label>
+                  <label class="flex items-center justify-between gap-2 p-3 rounded-xl border border-emerald-200">Sarung <input type="number" id="pray-sarung" min="0" value="0" oninput="calculateKasirTotal()" class="w-16 px-2 py-1 rounded-lg border border-slate-300 text-center font-mono font-extrabold" /></label>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
-                    <span class="font-bold text-slate-700">Sajadah</span>
-                    <input type="number" id="pray-sajadah" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
-                  </div>
-                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
-                    <span class="font-bold text-slate-700">Mukena</span>
-                    <input type="number" id="pray-mukena" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
-                  </div>
-                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
-                    <span class="font-bold text-slate-700">Lobe / Peci</span>
-                    <input type="number" id="pray-lobe" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
-                  </div>
-                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
-                    <span class="font-bold text-slate-700">Sarung</span>
-                    <input type="number" id="pray-sarung" min="0" value="0" oninput="calculateKasirTotal()" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
-                  </div>
+                <div class="flex justify-end">
+                  <button type="button" onclick="closePrayerPromoDialog()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold">Selesai</button>
                 </div>
               </div>
             </div>
@@ -790,47 +764,6 @@
 
             <!-- 7. Pembayaran Otomatis -->
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                    Status Pembayaran (Otomatis)
-                  </label>
-                  <div id="kasir-auto-paystatus-box" class="py-2.5 px-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 font-extrabold text-sm flex items-center justify-between">
-                    <span id="kasir-auto-paystatus-text">BELUM BAYAR</span>
-                    <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-white/80">Sesuai Nominal</span>
-                  </div>
-                  <p class="text-[10px] text-slate-500 mt-1">
-                    Kosong/0 = <strong>Belum Bayar</strong> &bull; Kurang = <strong>DP</strong> &bull; Pas/Lebih = <strong>Lunas</strong>
-                  </p>
-                </div>
-
-                <div>
-                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                    Metode Pembayaran
-                  </label>
-                  <div class="grid grid-cols-3 gap-2">
-                    <label class="cursor-pointer">
-                      <input type="radio" name="payment_method" value="Tunai" checked onchange="updateReceiptPreview()" class="peer sr-only" />
-                      <div class="py-2.5 px-2 rounded-xl border-2 border-slate-200 bg-white text-center text-xs font-extrabold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
-                        <i class="fa-solid fa-money-bill-wave mr-1"></i> Tunai
-                      </div>
-                    </label>
-                    <label class="cursor-not-allowed opacity-50" title="Fitur QRIS sedang dinonaktifkan sementara">
-                      <input type="radio" name="payment_method" value="QRIS" disabled class="sr-only" />
-                      <div class="py-2.5 px-2 rounded-xl border-2 border-slate-200 bg-slate-100 text-center text-xs font-bold text-slate-400">
-                        <i class="fa-solid fa-qrcode mr-1"></i> QRIS
-                      </div>
-                    </label>
-                    <label class="cursor-not-allowed opacity-50" title="Fitur Transfer sedang dinonaktifkan sementara">
-                      <input type="radio" name="payment_method" value="Transfer" disabled class="sr-only" />
-                      <div class="py-2.5 px-2 rounded-xl border-2 border-slate-200 bg-slate-100 text-center text-xs font-bold text-slate-400">
-                        <i class="fa-solid fa-building-columns mr-1"></i> Transfer
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
               <div id="kasir-paid-input-wrapper" class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200">
                 <div>
                   <label class="block text-xs font-extrabold text-slate-800 uppercase">Nominal Uang Diterima / DP (Rp)</label>
@@ -851,6 +784,44 @@
                     <span id="thousand-suffix-badge" class="absolute right-2 top-1/2 -translate-y-1/2 bg-sky-100 text-sky-800 font-mono font-bold px-1.5 py-0.5 rounded text-xs border border-sky-300 pointer-events-none">
                       .000
                     </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                    Status Pembayaran (Otomatis)
+                  </label>
+                  <div id="kasir-auto-paystatus-box" class="py-2.5 px-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-700 font-extrabold text-sm flex items-center justify-between">
+                    <span id="kasir-auto-paystatus-text">BELUM BAYAR</span>
+                    <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-white/80">Sesuai Nominal</span>
+                  </div>
+                  <p class="text-[10px] text-slate-500 mt-1">
+                    Kosong/0 = <strong>Belum Bayar</strong> &bull; Kurang = <strong>DP</strong> &bull; Pas/Lebih = <strong>Lunas</strong>
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Metode Pembayaran</label>
+                  <div class="grid grid-cols-3 gap-2">
+                    <label class="cursor-pointer">
+                      <input type="radio" name="payment_method" value="Tunai" checked onchange="updateReceiptPreview()" class="peer sr-only" />
+                      <div class="py-2.5 px-2 rounded-xl border-2 border-slate-200 bg-white text-center text-xs font-extrabold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                        <i class="fa-solid fa-money-bill-wave mr-1"></i> Tunai
+                      </div>
+                    </label>
+                    <label class="cursor-not-allowed opacity-50" title="Fitur QRIS sedang dinonaktifkan sementara">
+                      <input type="radio" name="payment_method" value="QRIS" disabled class="sr-only" />
+                      <div class="py-2.5 px-2 rounded-xl border-2 border-slate-200 bg-slate-100 text-center text-xs font-bold text-slate-400">
+                        <i class="fa-solid fa-qrcode mr-1"></i> QRIS
+                      </div>
+                    </label>
+                    <label class="cursor-not-allowed opacity-50" title="Fitur Transfer sedang dinonaktifkan sementara">
+                      <input type="radio" name="payment_method" value="Transfer" disabled class="sr-only" />
+                      <div class="py-2.5 px-2 rounded-xl border-2 border-slate-200 bg-slate-100 text-center text-xs font-bold text-slate-400">
+                        <i class="fa-solid fa-building-columns mr-1"></i> Transfer
+                      </div>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -911,9 +882,9 @@
                   <img id="receipt-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-9 h-9 object-contain shrink-0" />
                   <div class="leading-tight min-w-0 flex-1">
                     <div id="receipt-store-name" class="font-black text-xs uppercase leading-none">LAUNDRY QU</div>
-                    <div id="receipt-store-slogan" class="text-[8.5px] font-bold leading-tight">Unit Usaha Markaz Yatim Duafa Qurani</div>
-                    <div id="receipt-store-address" class="text-[8px] leading-tight">Jln. Protokol Dusun III Desa Sei Kamah II</div>
-                    <div id="receipt-store-phone" class="text-[8px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
+                    <div id="receipt-store-slogan" class="text-[8.5px] font-bold leading-tight">Unit Usaha Yayasan MYDQ</div>
+                    <div id="receipt-store-address" class="text-[8px] leading-tight">Jln. Protokol - Sei Kamah II</div>
+                    <div id="receipt-store-phone" class="text-[8px] leading-tight">HP: 0823 6089 2828</div>
                   </div>
                 </div>
 
@@ -927,11 +898,13 @@
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between items-baseline">
                     <span>NO. NOTA: <strong id="receipt-nota-id" class="text-[15px] font-black tracking-wider">000001</strong></span>
-                    <span id="receipt-cust-type" class="font-bold">Umum</span>
+                    <strong id="receipt-pay-status" class="text-[15px] font-black uppercase tracking-wider">BELUM BAYAR</strong>
                   </div>
                   <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
-                    <span>Pelanggan:</span>
-                    <strong id="receipt-cust-name" class="text-[13px] font-black uppercase truncate max-w-[175px]">-</strong>
+                    <span id="receipt-cust-type">Pelanggan:</span>
+                    <span class="flex items-baseline gap-1 min-w-0">
+                      <strong id="receipt-cust-name" class="text-[13px] font-black uppercase truncate max-w-[150px]">-</strong>
+                    </span>
                   </div>
                   <div class="flex justify-between">
                     <span>Masuk: <span id="receipt-date-in">-</span></span>
@@ -988,9 +961,9 @@
                     <span id="receipt-total-label">TOTAL BIAYA:</span>
                     <span id="receipt-total">Rp 0</span>
                   </div>
-                  <div class="flex justify-between items-baseline">
-                    <span>Status: <strong id="receipt-pay-status" class="text-[11px] font-black">BELUM BAYAR</strong></span>
-                    <span id="receipt-paid-wrap" class="hidden">Bayar: <strong id="receipt-paid">Rp 0</strong></span>
+                  <div id="receipt-paid-wrap" class="hidden flex justify-between items-baseline">
+                    <span>Bayar:</span>
+                    <strong id="receipt-paid">Rp 0</strong>
                   </div>
                   <div id="receipt-row-balance" class="hidden flex justify-between">
                     <span id="receipt-balance-label">Sisa Tagihan:</span>
@@ -1013,13 +986,13 @@
                 <div class="text-[8px] leading-tight space-y-0.5">
                   <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
                   <ol class="list-decimal pl-3 space-y-0">
-                    <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-                    <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
-                    <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
+                    <li>Pengambilan cucian wajib bawa struk ini.</li>
+                    <li>Komplain maks. 1x24 jam sejak pakaian diambil.</li>
+                    <li>Wajib memberitahu jika ada pakaian yang luntur.</li>
                     <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-                    <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
-                    <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
-                    <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
+                    <li>Barang tertinggal di saku bukan tanggung jawab kami.</li>
+                    <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000/hari.</li>
+                    <li>Dengan menandatangani Nota ini, maka pelanggan setuju dengan semua ketentuan.</li>
                   </ol>
                 </div>
 
@@ -1053,9 +1026,9 @@
                   <img id="receipt2-logo-img" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 object-contain shrink-0" />
                   <div class="leading-tight min-w-0 flex-1">
                     <div id="receipt2-store-name" class="font-black text-xs uppercase leading-none">LAUNDRY QU</div>
-                    <div id="receipt2-store-slogan" class="text-[8.5px] font-bold leading-tight">Unit Usaha Markaz Yatim Duafa Qurani</div>
-                    <div id="receipt2-store-address" class="text-[8px] leading-tight">Jln. Protokol Dusun III Desa Sei Kamah II</div>
-                    <div id="receipt2-store-phone" class="text-[8px] leading-tight">HP: 0823 6089 2828 / 0822 1188 2667</div>
+                    <div id="receipt2-store-slogan" class="text-[8.5px] font-bold leading-tight">Unit Usaha Yayasan MYDQ</div>
+                    <div id="receipt2-store-address" class="text-[8px] leading-tight">Jln. Protokol - Sei Kamah II</div>
+                    <div id="receipt2-store-phone" class="text-[8px] leading-tight">HP: 0823 6089 2828</div>
                   </div>
                 </div>
 
@@ -1067,11 +1040,11 @@
 
                 <div class="space-y-0.5 text-[9.5px]">
                   <div class="flex justify-between items-baseline">
-                    <span>NO. NOTA:</span>
-                    <strong id="receipt2-nota-id" class="text-[15px] font-black tracking-wider">000001</strong>
+                    <span>NO. NOTA: <strong id="receipt2-nota-id" class="text-[15px] font-black tracking-wider">000001</strong></span>
+                    <strong id="receipt2-pay-status" class="text-[15px] font-black uppercase tracking-wider">BELUM BAYAR</strong>
                   </div>
                   <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
-                    <span>Nama Pelanggan:</span>
+                    <span id="receipt2-cust-type">Pelanggan:</span>
                     <strong id="receipt2-cust-name" class="text-[13px] font-black uppercase truncate max-w-[170px]">-</strong>
                   </div>
                   <div class="flex justify-between">
@@ -1091,11 +1064,6 @@
                     <span id="receipt2-total-label">TOTAL BIAYA:</span>
                     <span id="receipt2-total">Rp 0</span>
                   </div>
-                  <div class="flex justify-between">
-                    <span>Status Pembayaran:</span>
-                    <strong id="receipt2-pay-status" class="text-[11px] font-black">BELUM BAYAR</strong>
-                  </div>
-
                   <!-- KOTAK BESAR TULISAN "Kembalian ##.###" DI STRUK 2 -->
                   <div id="receipt2-large-change-box" class="hidden my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
                     <div id="receipt2-large-change-text" class="text-[15px] font-black uppercase tracking-wide leading-tight">
@@ -1112,13 +1080,13 @@
                 <div class="text-[8px] leading-tight space-y-0.5">
                   <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
                   <ol class="list-decimal pl-3 space-y-0">
-                    <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-                    <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
-                    <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
+                    <li>Pengambilan cucian wajib bawa struk ini.</li>
+                    <li>Komplain maks. 1x24 jam sejak pakaian diambil.</li>
+                    <li>Wajib memberitahu jika ada pakaian yang luntur.</li>
                     <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-                    <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
-                    <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
-                    <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
+                    <li>Barang tertinggal di saku bukan tanggung jawab kami.</li>
+                    <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000/hari.</li>
+                    <li>Dengan menandatangani Nota ini, maka pelanggan setuju dengan semua ketentuan.</li>
                   </ol>
                 </div>
 
@@ -1346,7 +1314,7 @@
                 </div>
                 <div class="flex items-center gap-1.5">
                   <button type="button" id="btn-voice-dictate" onclick="toggleVoiceToTextWorkflow()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
-                    <i class="fa-solid fa-microphone"></i> <span>Bicara (VTT)</span>
+                    <i class="fa-solid fa-microphone"></i> <span>Bicara (Ctrl / Shift / \ / `)</span>
                   </button>
                   <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
                     <i class="fa-solid fa-camera"></i> <span id="cloth-photo-btn-text">Foto Pakaian</span>
@@ -2023,7 +1991,7 @@
                     <img id="card-store-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white p-0.5 shrink-0" />
                     <div class="leading-tight">
                       <p id="card-store-name" class="font-extrabold text-xs tracking-wide uppercase">LAUNDRY QU</p>
-                      <p id="card-store-slogan" class="text-[8px] text-sky-300 font-semibold">Unit Usaha Markaz Yatim Duafa Qurani</p>
+                      <p id="card-store-slogan" class="text-[8px] text-sky-300 font-semibold">Unit Usaha Yayasan MYDQ</p>
                     </div>
                   </div>
                   <span id="card-member-tier" class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 shadow-2xs">
@@ -2054,7 +2022,7 @@
                 </div>
 
                 <div class="border-t border-white/15 pt-1.5 flex items-center justify-between text-[8px] text-slate-200">
-                  <span id="card-front-address" class="truncate max-w-[195px]">Jln. Protokol Dusun III Desa Sei Kamah II</span>
+                  <span id="card-front-address" class="truncate max-w-[195px]">Jln. Protokol - Sei Kamah II</span>
                   <span class="font-mono font-extrabold text-amber-300 bg-white/10 px-1.5 py-0.5 rounded">laundryqu.github.io</span>
                 </div>
               </div>
@@ -3131,13 +3099,13 @@
     const LAUNDRY_TERMS_HTML = `
       <div class="font-extrabold uppercase">Ketentuan Laundry QU:</div>
       <ol class="list-decimal pl-3 space-y-0">
-        <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-        <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
-        <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
+        <li>Pengambilan cucian wajib bawa struk ini.</li>
+        <li>Komplain maks. 1x24 jam sejak pakaian diambil.</li>
+        <li>Wajib memberitahu jika ada pakaian yang luntur.</li>
         <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-        <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
-        <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
-        <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
+        <li>Barang tertinggal di saku bukan tanggung jawab kami.</li>
+        <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000/hari.</li>
+        <li>Dengan menandatangani Nota ini, maka pelanggan setuju dengan semua ketentuan.</li>
       </ol>
     `;
 
@@ -3150,9 +3118,9 @@
     const defaultState = {
       settings: {
         storeName: "Laundry QU",
-        storeSlogan: "Unit Usaha Markaz Yatim Duafa Qurani",
-        storePhone: "0823 6089 2828 dan 0822 1188 2667",
-        storeAddress: "Jln. Protokol Dusun III Desa Sei Kamah II",
+        storeSlogan: "Unit Usaha Yayasan MYDQ",
+        storePhone: "0823 6089 2828",
+        storeAddress: "Jln. Protokol - Sei Kamah II",
         adminPassword: "1234",
         logoUrl: "https://cdn-icons-png.flaticon.com/512/2975/2975175.png",
         lat: LAUNDRY_LAT,
@@ -3360,6 +3328,15 @@
       const merged = JSON.parse(JSON.stringify(defaultState));
       if (!data || typeof data !== 'object') return merged;
       if (data.settings) merged.settings = { ...merged.settings, ...data.settings };
+      if (merged.settings.storeSlogan === 'Unit Usaha Markaz Yatim Duafa Qurani') {
+        merged.settings.storeSlogan = defaultState.settings.storeSlogan;
+      }
+      if (merged.settings.storeAddress === 'Jln. Protokol Dusun III Desa Sei Kamah II') {
+        merged.settings.storeAddress = defaultState.settings.storeAddress;
+      }
+      if (['0823 6089 2828 dan 0822 1188 2667', '0823 6089 2828 / 0822 1188 2667'].includes(merged.settings.storePhone)) {
+        merged.settings.storePhone = defaultState.settings.storePhone;
+      }
       if (data.adminUsers) merged.adminUsers = Object.values(data.adminUsers).filter(Boolean);
       if (data.employees) merged.employees = Object.values(data.employees).filter(Boolean);
       if (data.services) merged.services = Object.values(data.services).filter(Boolean);
@@ -3802,7 +3779,8 @@
       document.getElementById('kasir-cust-address').value = p.custAddress || '';
       document.getElementById('kasir-weight').value = formatNumberID(p.weightKg || 1);
       document.getElementById('kasir-pcs').value = formatNumberID(p.pcsCount || 1);
-      document.getElementById('kasir-cloth-details').value = p.clothDetails || '';
+      const clothDetailsInput = document.getElementById('kasir-cloth-details');
+      if (clothDetailsInput) clothDetailsInput.value = p.clothDetails || '';
 
       const delivRadio = document.querySelector(`input[name="delivery_type"][value="${p.deliveryType || 'Jemput & Antar'}"]`);
       if (delivRadio) delivRadio.checked = true;
@@ -3878,6 +3856,23 @@
         totalPcs: sajadah + mukena + lobe + sarung,
         text: parts.length > 0 ? `[GRATIS CUCI PAKAIAN SHOLAT: ${parts.join(', ')}]` : ''
       };
+    }
+
+    function openPrayerPromoDialog() {
+      if (appData.settings.promoPrayerEnabled === false) return;
+      const dialog = document.getElementById('kasir-prayer-promo-dialog');
+      if (!dialog) return;
+      dialog.classList.remove('hidden');
+      dialog.classList.add('flex');
+      dialog.querySelector('input')?.focus();
+    }
+
+    function closePrayerPromoDialog() {
+      const dialog = document.getElementById('kasir-prayer-promo-dialog');
+      if (!dialog) return;
+      dialog.classList.add('hidden');
+      dialog.classList.remove('flex');
+      document.getElementById('kasir-prayer-promo-box')?.focus();
     }
 
     function savePromoSettings(e) {
@@ -4231,27 +4226,46 @@
     // Menghitung transaksi sepanjang waktu, siklus 2 tahun (Konsep Shopee), & bulan berjalan
     function getRealCustomerOrderStats(memberId, phoneRaw, memberObj = null) {
       const cleanTargetPhone = String(phoneRaw || '').replace(/\D/g, '').replace(/^62/, '0');
+      const targetNameLower = String(memberObj?.name || '').trim().toLowerCase();
       const now = Date.now();
       const nowDate = new Date(now);
       const currentMonthKey = `${nowDate.getFullYear()}-${String(nowDate.getMonth() + 1).padStart(2, '0')}`;
+      const paddedMemId = memberId ? String(memberId).padStart(4, '0') : '';
 
-      // Tentukan titik awal siklus 2 tahunan member (Konsep Shopee)
-      let baseStartMs = Number(memberObj?.createdAt) || 0;
-      if (!baseStartMs) {
-        baseStartMs = now;
-        (appData.orders || []).forEach(o => {
-          if (!o || o.isDeleted) return;
-          if (memberId && o.memberId === memberId && o.createdAt < baseStartMs) {
-            baseStartMs = o.createdAt;
-          }
-        });
-        if (memberObj && Array.isArray(memberObj.monthlyPkgHistory)) {
-          memberObj.monthlyPkgHistory.forEach(p => {
-            if (!p || p.isDeleted) return;
-            if (p.timestamp < baseStartMs) baseStartMs = p.timestamp;
-          });
+      // Cari waktu transaksi pertama milik member ini agar nota lama sebelum edit data tetap dihitung
+      let earliestTxMs = Infinity;
+      (appData.orders || []).forEach(o => {
+        if (!o || o.isDeleted) return;
+        const cleanOrderPhone = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        const oMemId = o.memberId ? String(o.memberId).padStart(4, '0') : '';
+        const oCustName = String(o.custName || '').trim().toLowerCase();
+
+        const isSameMemberId = paddedMemId && oMemId === paddedMemId;
+        const isSamePhone = cleanTargetPhone.length >= 8 && (
+          cleanOrderPhone === cleanTargetPhone ||
+          (cleanOrderPhone.length >= 8 && cleanOrderPhone.endsWith(cleanTargetPhone.slice(-8)))
+        );
+        const isSameName = !oMemId && targetNameLower && oCustName === targetNameLower;
+
+        if (isSameMemberId || isSamePhone || isSameName) {
+          const ts = Number(o.createdAt) || 0;
+          if (ts > 0 && ts < earliestTxMs) earliestTxMs = ts;
         }
+      });
+
+      const targetMember = memberObj || (appData.members || []).find(m => String(m.id).padStart(4, '0') === paddedMemId);
+      if (targetMember && Array.isArray(targetMember.monthlyPkgHistory)) {
+        targetMember.monthlyPkgHistory.forEach(p => {
+          if (!p || p.isDeleted) return;
+          const ts = Number(p.timestamp) || 0;
+          if (ts > 0 && ts < earliestTxMs) earliestTxMs = ts;
+        });
       }
+
+      const recordedCreatedAt = Number(targetMember?.createdAt || memberObj?.createdAt) || 0;
+      let baseStartMs = recordedCreatedAt > 0
+        ? Math.min(recordedCreatedAt, earliestTxMs)
+        : (earliestTxMs < Infinity ? earliestTxMs : now);
 
       const elapsedCycles = Math.max(0, Math.floor((now - baseStartMs) / TWO_YEARS_MS));
       const currentCycleStartMs = baseStartMs + (elapsedCycles * TWO_YEARS_MS);
@@ -4266,30 +4280,34 @@
       let monthlyKg = 0;
       let monthlyNominal = 0;
 
-      // 1. Hitung dari Nota Cucian Aktif (yang tidak dihapus Admin)
       (appData.orders || []).forEach(o => {
         if (!o || o.isDeleted) return;
         const cleanOrderPhone = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
-        const isSameMemberId = memberId && o.memberId === memberId;
+        const oMemId = o.memberId ? String(o.memberId).padStart(4, '0') : '';
+        const oCustName = String(o.custName || '').trim().toLowerCase();
+
+        const isSameMemberId = paddedMemId && oMemId === paddedMemId;
         const isSamePhone = cleanTargetPhone.length >= 8 && (
           cleanOrderPhone === cleanTargetPhone ||
           (cleanOrderPhone.length >= 8 && cleanOrderPhone.endsWith(cleanTargetPhone.slice(-8)))
         );
+        const isSameName = !oMemId && targetNameLower && oCustName === targetNameLower;
 
-        if (isSameMemberId || (!memberId && isSamePhone)) {
+        if (isSameMemberId || isSamePhone || isSameName) {
           const orderTotal = Number(o.total) || 0;
           const orderSubtotal = Number(o.subtotal) || orderTotal;
-          const orderKg = Number(o.weightKg) || 0;
+          const txVal = Math.max(orderSubtotal, orderTotal);
+          const orderKg = Math.round(Number(o.weightKg) || 0);
           const ts = Number(o.createdAt) || 0;
 
-          realSpent += orderTotal;
+          realSpent += txVal;
           realTxCount += 1;
 
-          if (ts >= currentCycleStartMs && ts <= currentCycleEndMs) {
-            currentCycleSpent += orderTotal;
+          if ((elapsedCycles === 0 && ts <= currentCycleEndMs) || (ts >= currentCycleStartMs && ts <= currentCycleEndMs)) {
+            currentCycleSpent += txVal;
             currentCycleTxCount += 1;
           } else if (elapsedCycles > 0 && ts >= prevCycleStartMs && ts < currentCycleStartMs) {
-            prevCycleSpent += orderTotal;
+            prevCycleSpent += txVal;
           }
 
           const d = new Date(ts);
@@ -4301,8 +4319,6 @@
         }
       });
 
-      // 2. Hitung dari Pembayaran Paket Bulanan Member (Bayar di awal masuk ke Tier & Laporan Harian)
-      const targetMember = memberObj || (appData.members || []).find(m => m.id === memberId);
       if (targetMember && Array.isArray(targetMember.monthlyPkgHistory)) {
         targetMember.monthlyPkgHistory.forEach(pkgTx => {
           if (!pkgTx || pkgTx.isDeleted) return;
@@ -4312,7 +4328,7 @@
           realSpent += paid;
           realTxCount += 1;
 
-          if (ts >= currentCycleStartMs && ts <= currentCycleEndMs) {
+          if ((elapsedCycles === 0 && ts <= currentCycleEndMs) || (ts >= currentCycleStartMs && ts <= currentCycleEndMs)) {
             currentCycleSpent += paid;
             currentCycleTxCount += 1;
           } else if (elapsedCycles > 0 && ts >= prevCycleStartMs && ts < currentCycleStartMs) {
@@ -4322,31 +4338,33 @@
       }
 
       return {
-        totalSpent: realSpent,
+        totalSpent: Math.round(realSpent),
         txCount: realTxCount,
-        currentCycleSpent,
+        currentCycleSpent: Math.round(currentCycleSpent),
         currentCycleTxCount,
-        prevCycleSpent,
+        prevCycleSpent: Math.round(prevCycleSpent),
         currentCycleStartMs,
         currentCycleEndMs,
         elapsedCycles,
-        monthlyKg,
-        monthlyNominal
+        monthlyKg: Math.round(monthlyKg),
+        monthlyNominal: Math.round(monthlyNominal)
       };
     }
 
     function getTierFromSpentAmount(amount) {
       const val = Number(amount) || 0;
-      if (val > 5000000) return { tier: 'VIP', discountPct: 15, rank: 3 };
-      if (val > 2000000) return { tier: 'Gold', discountPct: 10, rank: 2 };
+      if (val >= 5000000) return { tier: 'VIP', discountPct: 15, rank: 3 };
+      if (val >= 2000000) return { tier: 'Gold', discountPct: 10, rank: 2 };
       return { tier: 'Silver', discountPct: 5, rank: 1 };
     }
 
-    // Sinkronkan seluruh data member agar murni mengikuti transaksi aktif & siklus 2 tahun
     function syncAllMembersRealStats() {
       (appData.members || []).forEach(m => {
-        if (!m.createdAt) m.createdAt = Date.now();
         const stats = getRealCustomerOrderStats(m.id, m.phone, m);
+        // Kunci createdAt ke waktu awal siklus (transaksi pertama / waktu pendaftaran awal), bukan Date.now() saat edit
+        if (!m.createdAt || m.createdAt > stats.currentCycleStartMs) {
+          m.createdAt = stats.currentCycleStartMs;
+        }
         m.totalSpent = stats.currentCycleSpent;
         m.txCount = stats.currentCycleTxCount;
 
@@ -4400,13 +4418,13 @@
       const regularDiscountPct = activeRegObj.discountPct;
 
       let regularProgressPct = Math.min(100, Math.round((cycleSpent / 2000000) * 100));
-      let nextTierTargetText = `Kurang ${formatRupiah(Math.max(0, 2000001 - cycleSpent))} menuju Gold 10%`;
+      let nextTierTargetText = `Kurang ${formatRupiah(Math.max(0, 2000000 - cycleSpent))} menuju Gold 10%`;
       if (regularTier === 'VIP') {
         regularProgressPct = 100;
         nextTierTargetText = `Pertahankan transaksi > Rp 5 Juta s/d ${cycleEndStr}`;
       } else if (regularTier === 'Gold') {
         regularProgressPct = Math.min(100, Math.round((cycleSpent / 5000000) * 100));
-        nextTierTargetText = `Kurang ${formatRupiah(Math.max(0, 5000001 - cycleSpent))} menuju VIP 15%`;
+        nextTierTargetText = `Kurang ${formatRupiah(Math.max(0, 5000000 - cycleSpent))} menuju VIP 15%`;
       }
 
       const pkgStatus = getMemberMonthlyPkgStatus(member);
@@ -4873,9 +4891,11 @@
 
       let stampFreeDiscount = 0;
       const custPhoneVal = document.getElementById('kasir-cust-phone')?.value || '';
-      const stampsNow = computeOrderStampsEarned(weightOrSetVal, subtotal);
+      const isMemberPkgOrYayasan = (custCategory === 'Member' && selectedMemberOnKasir) &&
+        (selectedMemberOnKasir.memberType === 'Yayasan' || getMemberMonthlyPkgStatus(selectedMemberOnKasir).isActive);
+      const stampsNow = isMemberPkgOrYayasan ? 0 : computeOrderStampsEarned(weightOrSetVal, subtotal);
 
-      if (stampBox && appData.settings.promoStampEnabled !== false) {
+      if (stampBox && appData.settings.promoStampEnabled !== false && !isMemberPkgOrYayasan) {
         stampBox.classList.remove('hidden');
         const bal = getCustomerStampBalanceByPhone(custPhoneVal);
         document.getElementById('kasir-stamp-status-text').textContent = `${bal.availableStamps}/10`;
@@ -5083,9 +5103,9 @@
       document.getElementById('receipt-cashier-name').textContent = cashierName;
       document.getElementById('receipt-cust-name').textContent = custName;
       document.getElementById('receipt-cust-address').textContent = custAddress;
-      document.getElementById('receipt-cust-type').textContent = custType === 'Member' && selectedMemberOnKasir
-        ? `Member ${selectedMemberOnKasir.id}`
-        : 'Umum';
+      const customerTypeLabel = custType === 'Member' ? 'Member:' : 'Pelanggan:';
+      document.getElementById('receipt-cust-type').textContent = customerTypeLabel;
+      document.getElementById('receipt2-cust-type').textContent = customerTypeLabel;
       document.getElementById('receipt-delivery-type').textContent = deliveryType;
 
       const itemsHtmlStr = items.length === 0
@@ -5154,9 +5174,9 @@
       }
 
       const statusDisplayStr = (tot.pkgUsedAmount > 0 && tot.grandTotal === 0)
-        ? 'LUNAS (PAKET BULANAN)'
-        : payStatus.toUpperCase();
-      document.getElementById('receipt-pay-status').textContent = statusDisplayStr;
+        ? 'Lunas'
+        : payStatus;
+      document.getElementById('receipt-pay-status').textContent = statusDisplayStr.toUpperCase();
 
       const paidWrap = document.getElementById('receipt-paid-wrap');
       const rowBalance = document.getElementById('receipt-row-balance');
@@ -5190,7 +5210,7 @@
       document.getElementById('receipt2-cust-name').textContent = custName;
       const r2WeightPcs = document.getElementById('receipt2-weight-pcs');
       if (r2WeightPcs) r2WeightPcs.textContent = `${weightOrSetVal} ${unitLabel} / ${pcsCount} Pcs`;
-      document.getElementById('receipt2-pay-status').textContent = statusDisplayStr;
+      document.getElementById('receipt2-pay-status').textContent = statusDisplayStr.toUpperCase();
       document.getElementById('receipt2-sign-customer').textContent = `( ${custName} )`;
 
       const changeBox1 = document.getElementById('receipt-large-change-box');
@@ -5304,14 +5324,14 @@
         : '';
 
       const payStatusLabel = (hasPkgUsed && Number(order.total) === 0)
-        ? 'LUNAS (PAKET BULANAN)'
-        : order.payStatus.toUpperCase();
+        ? 'LUNAS'
+        : (order.payStatus || 'Belum Bayar').toUpperCase();
+      const customerTypeLabel = order.custCategory === 'Member' ? 'Member:' : 'Pelanggan:';
 
       const dpOrPaidRowHtml = order.payStatus === 'DP'
         ? `
           ${excessBillHtml}
           <div class="flex justify-between items-baseline">
-            <span>Status: <strong class="text-[11px] font-black">DP</strong></span>
             <span>Bayar: <strong>${formatRupiah(order.paidAmount || 0)}</strong></span>
           </div>
           <div class="flex justify-between">
@@ -5321,10 +5341,6 @@
         `
         : `
           ${excessBillHtml}
-          <div class="flex justify-between items-baseline">
-            <span>Status Pembayaran:</span>
-            <strong class="text-[11px] font-black">${payStatusLabel}</strong>
-          </div>
           ${kembalian > 0 ? `<div class="flex justify-between"><span>Uang Diterima:</span><strong>${formatRupiah((order.total || 0) + kembalian)}</strong></div>` : ''}
         `;
 
@@ -5354,11 +5370,13 @@
           <div class="space-y-0.5 text-[9.5px]">
             <div class="flex justify-between items-baseline">
               <span>NO. NOTA: <strong class="text-[15px] font-black tracking-wider">${order.id}</strong></span>
-              <span class="font-bold">${order.custCategory}${order.memberId ? ' ' + order.memberId : ''}</span>
+              <strong class="text-[15px] font-black uppercase tracking-wider">${payStatusLabel}</strong>
             </div>
             <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
-              <span>Pelanggan:</span>
-              <strong class="text-[13px] font-black uppercase truncate max-w-[175px]">${order.custName}</strong>
+              <span>${customerTypeLabel}</span>
+              <span class="flex items-baseline gap-1 min-w-0">
+                <strong class="text-[13px] font-black uppercase truncate max-w-[150px]">${order.custName}</strong>
+              </span>
             </div>
             <div class="flex justify-between">
               <span>Masuk: ${dateInStr}</span>
@@ -5434,11 +5452,11 @@
 
           <div class="space-y-0.5 text-[9.5px]">
             <div class="flex justify-between items-baseline">
-              <span>NO. NOTA:</span>
-              <strong class="text-[15px] font-black tracking-wider">${order.id}</strong>
+              <span>NO. NOTA: <strong class="text-[15px] font-black tracking-wider">${order.id}</strong></span>
+              <strong class="text-[15px] font-black uppercase tracking-wider">${payStatusLabel}</strong>
             </div>
             <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
-              <span>Nama Pelanggan:</span>
+              <span>${customerTypeLabel}</span>
               <strong class="text-[13px] font-black uppercase truncate max-w-[170px]">${order.custName}</strong>
             </div>
             <div class="flex justify-between">
@@ -5589,8 +5607,8 @@
       const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value || 'Datang Sendiri';
       const distKm = parseFormattedNumber(document.getElementById('delivery-distance-km')?.value);
       const perfume = document.querySelector('input[name="kasir_perfume"]:checked')?.value || '-';
-      const rackLocation = document.getElementById('kasir-rack-location').value.trim();
-      const rawClothDetails = document.getElementById('kasir-cloth-details').value.trim();
+      const rackLocation = document.getElementById('kasir-rack-location')?.value.trim() || '';
+      const rawClothDetails = document.getElementById('kasir-cloth-details')?.value.trim() || '';
       const payMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'Tunai';
 
       const createdAt = Date.now();
@@ -5708,13 +5726,16 @@
     }
 
     function resetKasirForm(resetCashier = false) {
+      closePrayerPromoDialog();
       document.getElementById('kasir-cust-name').value = '';
       document.getElementById('kasir-cust-phone').value = '';
       document.getElementById('kasir-cust-address').value = '';
       document.getElementById('kasir-weight').value = '';
       document.getElementById('kasir-pcs').value = '';
-      document.getElementById('kasir-rack-location').value = '';
-      document.getElementById('kasir-cloth-details').value = '';
+      const rackLocationInput = document.getElementById('kasir-rack-location');
+      if (rackLocationInput) rackLocationInput.value = '';
+      const clothDetailsInput = document.getElementById('kasir-cloth-details');
+      if (clothDetailsInput) clothDetailsInput.value = '';
       document.getElementById('kasir-voucher-code').value = '';
       document.getElementById('kasir-paid-amount').value = '';
 
@@ -6188,8 +6209,18 @@
         }
       }
 
-      document.getElementById('wf-cloth-details-input').value = order.clothDetails || '';
-      document.getElementById('wf-cloth-pcs-input').value = formatNumberID(order.pcsCount || 1);
+      // 2. Di dalam renderSelectedWorkflowPanel(), ganti baris pengisian wf-cloth-details-input dengan ini:
+const detailsInputEl = document.getElementById('wf-cloth-details-input');
+const pcsInputEl = document.getElementById('wf-cloth-pcs-input');
+const savedDraftText = localStorage.getItem(`draft_rinci_${order.id}`);
+const savedDraftPcs = localStorage.getItem(`draft_pcs_${order.id}`);
+
+if (detailsInputEl && document.activeElement !== detailsInputEl) {
+  detailsInputEl.value = savedDraftText !== null ? savedDraftText : (order.clothDetails || '');
+}
+if (pcsInputEl && document.activeElement !== pcsInputEl) {
+  pcsInputEl.value = formatNumberID(savedDraftPcs !== null ? savedDraftPcs : (order.pcsCount || 1));
+}
       document.getElementById('wf-rack-input').value = order.rackLocation || '';
       recalculateDetailedPcsFromText();
 
@@ -6385,6 +6416,9 @@
         const nextStage = activeStages.find(s => s > 1);
         order.currentStage = typeof nextStage === 'number' ? nextStage : 2;
       }
+      // 3. Tambahkan 2 baris ini tepat sebelum pemanggilan saveData() di saveWorkflowClothDetails() & completeWorkflowStage():
+localStorage.removeItem(`draft_rinci_${order.id}`);
+localStorage.removeItem(`draft_pcs_${order.id}`);
 
       saveData();
       alert(`Rincian pakaian Nota ${order.id} berhasil disimpan! Struk Nota ke-3 kini siap dicetak dan alur berikutnya telah terbuka.`);
@@ -6445,6 +6479,7 @@
       const targetEl = document.getElementById('wf-cloth-details-input');
 
       if (isVoiceListening && activeSpeechRecognizer) {
+        isPttKeyHeld = false;
         activeSpeechRecognizer.stop();
         isVoiceListening = false;
         return;
@@ -6481,47 +6516,58 @@
         isVoiceListening = false;
         if (btn) {
           btn.className = "px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition";
-          btn.innerHTML = `<i class="fa-solid fa-microphone"></i> <span>Bicara (VTT)</span>`;
+          btn.innerHTML = `<i class="fa-solid fa-microphone"></i> <span>Bicara (Tahan Ctrl / Shift / \\ / \`)</span>`;
         }
       };
 
       activeSpeechRecognizer.start();
     }
 
-    function recalculateDetailedPcsFromText() {
-      const text = document.getElementById('wf-cloth-details-input')?.value || '';
-      const expectedPcs = parseFormattedNumber(document.getElementById('wf-cloth-pcs-input')?.value || '0');
-      const totalEl = document.getElementById('wf-parsed-pcs-total');
-      const badgeEl = document.getElementById('wf-pcs-match-badge');
-      if (!totalEl || !badgeEl) return;
+    // 1. Simpan draft otomatis setiap kali karyawan mengetik atau menggunakan Voice-to-Text
+function recalculateDetailedPcsFromText() {
+  saveWorkflowDraft();
+  const textEl = document.getElementById('wf-cloth-details-input');
+  const pcsEl = document.getElementById('wf-cloth-pcs-input');
+  const text = textEl?.value || '';
+  const expectedPcs = parseFormattedNumber(pcsEl?.value || '0');
 
-      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-      let sumPcs = 0;
+  // Auto-save draft rincian & target Pcs berdasarkan ID Nota yang sedang dibuka
+  if (selectedWorkflowOrderId) {
+    localStorage.setItem(`draft_rinci_${selectedWorkflowOrderId}`, text);
+    localStorage.setItem(`draft_pcs_${selectedWorkflowOrderId}`, String(expectedPcs));
+  }
 
-      lines.forEach(line => {
-        const matches = line.match(/\d+/g);
-        if (matches && matches.length > 0) {
-          sumPcs += parseInt(matches[matches.length - 1], 10);
-        } else {
-          sumPcs += 1;
-        }
-      });
+  const totalEl = document.getElementById('wf-parsed-pcs-total');
+  const badgeEl = document.getElementById('wf-pcs-match-badge');
+  if (!totalEl || !badgeEl) return;
 
-      totalEl.textContent = `${sumPcs} Pcs`;
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  let sumPcs = 0;
 
-      if (lines.length === 0) {
-        badgeEl.textContent = "Belum ada rincian";
-        badgeEl.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-center bg-slate-100 text-slate-500";
-      } else if (sumPcs === expectedPcs) {
-        badgeEl.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> COCOK (${sumPcs} / ${expectedPcs} Pcs)`;
-        badgeEl.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-center bg-emerald-100 text-emerald-800 border border-emerald-300";
-      } else {
-        const diff = sumPcs - expectedPcs;
-        const statusDiff = diff > 0 ? `Lebih ${diff} Pcs` : `Kurang ${Math.abs(diff)} Pcs`;
-        badgeEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> TIDAK SAMA: ${statusDiff} (${sumPcs}/${expectedPcs})`;
-        badgeEl.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-center bg-rose-100 text-rose-800 border border-rose-300 animate-pulse";
-      }
+  lines.forEach(line => {
+    const matches = line.match(/\d+/g);
+    if (matches && matches.length > 0) {
+      sumPcs += parseInt(matches[matches.length - 1], 10);
+    } else {
+      sumPcs += 1;
     }
+  });
+
+  totalEl.textContent = `${sumPcs} Pcs`;
+
+  if (lines.length === 0) {
+    badgeEl.textContent = "Belum ada rincian";
+    badgeEl.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-center bg-slate-100 text-slate-500";
+  } else if (sumPcs === expectedPcs) {
+    badgeEl.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> COCOK (${sumPcs} / ${expectedPcs} Pcs)`;
+    badgeEl.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-center bg-emerald-100 text-emerald-800 border border-emerald-300";
+  } else {
+    const diff = sumPcs - expectedPcs;
+    const statusDiff = diff > 0 ? `Lebih ${diff} Pcs` : `Kurang ${Math.abs(diff)} Pcs`;
+    badgeEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> TIDAK SAMA: ${statusDiff} (${sumPcs}/${expectedPcs})`;
+    badgeEl.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-center bg-rose-100 text-rose-800 border border-rose-300 animate-pulse";
+  }
+}
 
     function compressImageFile(file, maxWidth = 900, quality = 0.72) {
       return new Promise((resolve, reject) => {
@@ -9070,9 +9116,9 @@
     function updateStoreBrandingUI() {
       const s = appData.settings || {};
       const name = s.storeName || 'Laundry QU';
-      const slogan = s.storeSlogan || 'Unit Usaha Markaz Yatim Duafa Qurani';
-      const addr = s.storeAddress || 'Jln. Protokol Dusun III Desa Sei Kamah II';
-      const phone = s.storePhone || '0823 6089 2828 dan 0822 1188 2667';
+      const slogan = s.storeSlogan || 'Unit Usaha Yayasan MYDQ';
+      const addr = s.storeAddress || 'Jln. Protokol - Sei Kamah II';
+      const phone = s.storePhone || '0823 6089 2828';
       const logo = s.logoUrl || 'https://cdn-icons-png.flaticon.com/512/2975/2975175.png';
 
       ['mobile-store-name', 'sidebar-store-name', 'receipt-store-name', 'receipt2-store-name'].forEach(id => {
@@ -9129,6 +9175,313 @@
       refreshAllViews();
       initFirebaseSync();
     });
+
+    // =========================================================================
+// FITUR AUTO-SAVE DRAFT (KASIR & MERINCI) + PUSH-TO-TALK VTT (TAHAN TOMBOL)
+// =========================================================================
+const KASIR_DRAFT_KEY = 'laundry_qu_draft_kasir';
+const ACTIVE_UI_STATE_KEY = 'laundry_qu_ui_state';
+let isRestoringKasirDraft = false;
+let isPttKeyHeld = false;
+let isPttResultAddedForCurrentHold = false;
+
+// 1. Simpan & Pulihkan Posisi Tab dan Nota yang Sedang Dibuka
+function saveActiveUiState(tabName) {
+  const currentTab = tabName || document.querySelector('.tab-panel:not(.hidden)')?.id?.replace('tab-', '') || 'kasir';
+  localStorage.setItem(ACTIVE_UI_STATE_KEY, JSON.stringify({
+    tab: currentTab,
+    workflowOrderId: selectedWorkflowOrderId,
+    settlementOrderId: selectedSettlementOrderId
+  }));
+}
+
+function restoreActiveUiState() {
+  try {
+    const raw = localStorage.getItem(ACTIVE_UI_STATE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    if (state.workflowOrderId) selectedWorkflowOrderId = state.workflowOrderId;
+    if (state.settlementOrderId) selectedSettlementOrderId = state.settlementOrderId;
+    if (state.tab && ['kasir', 'progres', 'pelunasan', 'laporanharian', 'karyawan', 'member', 'stok'].includes(state.tab)) {
+      switchTab(state.tab);
+    }
+  } catch (e) {
+    console.warn('Gagal memulihkan state UI:', e);
+  }
+}
+
+// 2. Auto-Save Draft Form Buat Nota (Tab 1 Kasir)
+function saveKasirDraft() {
+  if (isRestoringKasirDraft) return;
+  const draft = {
+    cashier: selectedCashierOnKasir,
+    custCategory: document.querySelector('input[name="cust_category"]:checked')?.value || 'Umum',
+    memberId: selectedMemberOnKasir ? selectedMemberOnKasir.id : null,
+    custName: document.getElementById('kasir-cust-name')?.value || '',
+    custPhone: document.getElementById('kasir-cust-phone')?.value || '',
+    custAddress: document.getElementById('kasir-cust-address')?.value || '',
+    redeemFreeWash: Boolean(document.getElementById('kasir-redeem-free-wash')?.checked),
+    weight: document.getElementById('kasir-weight')?.value || '',
+    pcs: document.getElementById('kasir-pcs')?.value || '',
+    serviceId: document.querySelector('input[name="kasir_service"]:checked')?.value || '',
+    multiCart: multiServiceCart || [],
+    deliveryType: document.querySelector('input[name="delivery_type"]:checked')?.value || 'Datang Sendiri',
+    coords: selectedCustomerCoords,
+    distanceKm: document.getElementById('delivery-distance-km')?.value || '0',
+    rackLocation: document.getElementById('kasir-rack-location')?.value || '',
+    clothDetails: document.getElementById('kasir-cloth-details')?.value || '',
+    praySajadah: document.getElementById('pray-sajadah')?.value || '0',
+    prayMukena: document.getElementById('pray-mukena')?.value || '0',
+    prayLobe: document.getElementById('pray-lobe')?.value || '0',
+    praySarung: document.getElementById('pray-sarung')?.value || '0',
+    perfume: document.querySelector('input[name="kasir_perfume"]:checked')?.value || '',
+    voucherCode: document.getElementById('kasir-voucher-code')?.value || '',
+    autoThousand: Boolean(document.getElementById('kasir-auto-thousand')?.checked),
+    paidAmount: document.getElementById('kasir-paid-amount')?.value || '',
+    saveChangeOnNota: Boolean(document.getElementById('kasir-save-change-on-nota')?.checked),
+    pickupOrderNum: activeProcessingPickupOrderNumber
+  };
+  localStorage.setItem(KASIR_DRAFT_KEY, JSON.stringify(draft));
+}
+
+function restoreKasirDraft() {
+  try {
+    const raw = localStorage.getItem(KASIR_DRAFT_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    isRestoringKasirDraft = true;
+
+    if (d.cashier && (appData.employees || []).some(e => e.name === d.cashier)) {
+      selectedCashierOnKasir = d.cashier;
+      const staffRadio = document.querySelector(`input[name="kasir_staff"][value="${CSS.escape(d.cashier)}"]`);
+      if (staffRadio) staffRadio.checked = true;
+      updateCashierHeaderDisplay();
+    }
+
+    if (d.custCategory) {
+      const catRadio = document.querySelector(`input[name="cust_category"][value="${d.custCategory}"]`);
+      if (catRadio) catRadio.checked = true;
+      handleCustomerCategoryChange(d.custCategory);
+      if (d.custCategory === 'Member' && d.memberId) {
+        selectMemberForKasir(d.memberId);
+      }
+    }
+
+    if (document.getElementById('kasir-cust-name')) document.getElementById('kasir-cust-name').value = d.custName || '';
+    if (document.getElementById('kasir-cust-phone')) document.getElementById('kasir-cust-phone').value = d.custPhone || '';
+    if (document.getElementById('kasir-cust-address')) document.getElementById('kasir-cust-address').value = d.custAddress || '';
+    if (document.getElementById('kasir-weight')) document.getElementById('kasir-weight').value = d.weight || '';
+    if (document.getElementById('kasir-pcs')) document.getElementById('kasir-pcs').value = d.pcs || '';
+    if (document.getElementById('kasir-rack-location')) document.getElementById('kasir-rack-location').value = d.rackLocation || '';
+    if (document.getElementById('kasir-cloth-details')) document.getElementById('kasir-cloth-details').value = d.clothDetails || '';
+
+    if (d.serviceId) {
+      const srvRadio = document.querySelector(`input[name="kasir_service"][value="${CSS.escape(d.serviceId)}"]`);
+      if (srvRadio) srvRadio.checked = true;
+      updateWeightFieldLabelByService();
+    }
+
+    if (Array.isArray(d.multiCart)) {
+      multiServiceCart = d.multiCart;
+      renderMultiServiceCart();
+    }
+
+    if (d.deliveryType) {
+      const delRadio = document.querySelector(`input[name="delivery_type"][value="${d.deliveryType}"]`);
+      if (delRadio) delRadio.checked = true;
+      if (d.coords && d.coords.lat && d.coords.lng) selectedCustomerCoords = d.coords;
+      handleDeliveryTypeChange(d.deliveryType);
+      if (document.getElementById('delivery-distance-km')) {
+        document.getElementById('delivery-distance-km').value = d.distanceKm || '0';
+      }
+    }
+
+    if (document.getElementById('pray-sajadah')) document.getElementById('pray-sajadah').value = d.praySajadah || '0';
+    if (document.getElementById('pray-mukena')) document.getElementById('pray-mukena').value = d.prayMukena || '0';
+    if (document.getElementById('pray-lobe')) document.getElementById('pray-lobe').value = d.prayLobe || '0';
+    if (document.getElementById('pray-sarung')) document.getElementById('pray-sarung').value = d.praySarung || '0';
+
+    if (d.perfume) {
+      const perfRadio = document.querySelector(`input[name="kasir_perfume"][value="${CSS.escape(d.perfume)}"]`);
+      if (perfRadio) perfRadio.checked = true;
+    }
+
+    if (document.getElementById('kasir-voucher-code')) {
+      document.getElementById('kasir-voucher-code').value = d.voucherCode || '';
+      if (d.voucherCode) applyVoucherOnKasir(d.voucherCode);
+    }
+
+    if (document.getElementById('kasir-auto-thousand')) {
+      document.getElementById('kasir-auto-thousand').checked = d.autoThousand !== false;
+      document.getElementById('thousand-suffix-badge')?.classList.toggle('hidden', d.autoThousand === false);
+    }
+
+    if (document.getElementById('kasir-paid-amount')) document.getElementById('kasir-paid-amount').value = d.paidAmount || '';
+    if (document.getElementById('kasir-redeem-free-wash')) document.getElementById('kasir-redeem-free-wash').checked = Boolean(d.redeemFreeWash);
+    if (document.getElementById('kasir-save-change-on-nota')) document.getElementById('kasir-save-change-on-nota').checked = Boolean(d.saveChangeOnNota);
+
+    activeProcessingPickupOrderNumber = d.pickupOrderNum || null;
+    isRestoringKasirDraft = false;
+    calculateKasirTotal();
+  } catch (e) {
+    isRestoringKasirDraft = false;
+    console.warn('Gagal memulihkan draft kasir:', e);
+  }
+}
+
+function clearKasirDraft() {
+  localStorage.removeItem(KASIR_DRAFT_KEY);
+}
+
+// 3. Auto-Save Draft Merinci Pakaian & Rak (Tab 2 Progres)
+function saveWorkflowDraft() {
+  if (!selectedWorkflowOrderId) return;
+  const details = document.getElementById('wf-cloth-details-input')?.value ?? '';
+  const pcs = document.getElementById('wf-cloth-pcs-input')?.value ?? '';
+  const rack = document.getElementById('wf-rack-input')?.value ?? '';
+  localStorage.setItem(`draft_wf_${selectedWorkflowOrderId}`, JSON.stringify({
+    details,
+    pcs,
+    rack,
+    updatedAt: Date.now()
+  }));
+}
+
+function getWorkflowDraft(orderId) {
+  try {
+    const raw = localStorage.getItem(`draft_wf_${orderId}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearWorkflowDraft(orderId) {
+  if (!orderId) return;
+  localStorage.removeItem(`draft_wf_${orderId}`);
+}
+
+// 4. Push-to-Talk untuk VTT Merinci
+function startPushToTalkVTT() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return;
+  if (isVoiceListening && activeSpeechRecognizer) return;
+
+  const btn = document.getElementById('btn-voice-dictate');
+  const targetEl = document.getElementById('wf-cloth-details-input');
+
+  activeSpeechRecognizer = new SpeechRecognition();
+  activeSpeechRecognizer.lang = 'id-ID';
+  activeSpeechRecognizer.continuous = true;
+  activeSpeechRecognizer.interimResults = false;
+
+  activeSpeechRecognizer.onstart = () => {
+    if (!isPttKeyHeld) {
+      activeSpeechRecognizer.stop();
+      return;
+    }
+    isVoiceListening = true;
+    if (btn) {
+      btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 animate-pulse text-slate-950 text-xs font-extrabold flex items-center gap-1.5 shadow-lg ring-4 ring-amber-400/50";
+      btn.innerHTML = `<i class="fa-solid fa-microphone-lines"></i> <span>Mendengarkan... (Lepas tombol untuk jeda)</span>`;
+    }
+    if (targetEl) {
+      targetEl.classList.add('ring-4', 'ring-amber-400', 'bg-amber-50/40');
+    }
+  };
+
+  activeSpeechRecognizer.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        const sentence = event.results[i][0].transcript.trim();
+        if (sentence && targetEl) {
+          const currentText = targetEl.value.trimEnd();
+          if (isPttResultAddedForCurrentHold) {
+            targetEl.value = currentText ? `${currentText} ${sentence}` : sentence;
+          } else {
+            targetEl.value = currentText ? `${currentText}\n${sentence}` : sentence;
+            isPttResultAddedForCurrentHold = true;
+          }
+          recalculateDetailedPcsFromText();
+        }
+      }
+    }
+  };
+
+  activeSpeechRecognizer.onend = () => {
+    // Jika tombol masih ditahan tapi browser memutus sesi jeda, nyalakan lagi otomatis
+    if (isPttKeyHeld) {
+      try {
+        activeSpeechRecognizer.start();
+        return;
+      } catch (e) {}
+    }
+    isVoiceListening = false;
+    if (btn) {
+      btn.className = "px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition";
+      btn.innerHTML = `<i class="fa-solid fa-microphone"></i> <span>Bicara (Tahan Ctrl / Shift / \\ / \`)</span>`;
+    }
+    if (targetEl) {
+      targetEl.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-50/40');
+    }
+  };
+
+  try {
+    activeSpeechRecognizer.start();
+  } catch (e) {
+    console.warn('VTT start error:', e);
+  }
+}
+
+function stopPushToTalkVTT() {
+  isPttKeyHeld = false;
+  if (activeSpeechRecognizer && isVoiceListening) {
+    try {
+      activeSpeechRecognizer.stop();
+    } catch (e) {}
+  }
+}
+
+function isPttShortcutKey(e) {
+  return ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight', 'Backslash', 'Backquote'].includes(e.code)
+    || e.key === 'Control'
+    || e.key === 'Shift'
+    || e.key === '\\'
+    || e.key === '|'
+    || e.key === '`'
+    || e.key === '~';
+}
+
+function isPttShortcutAllowed(e) {
+  const progresPanel = document.getElementById('tab-progres');
+  const detailContent = document.getElementById('workflow-detail-content');
+  if (!progresPanel || progresPanel.classList.contains('hidden')) return false;
+  if (!detailContent || detailContent.classList.contains('hidden')) return false;
+
+  return isPttShortcutKey(e);
+}
+
+window.addEventListener('keydown', (e) => {
+  if (!isPttShortcutAllowed(e)) return;
+  e.preventDefault();
+  if (e.repeat || isPttKeyHeld) return; // Abaikan event auto-repeat saat tombol ditahan
+  isPttKeyHeld = true;
+  isPttResultAddedForCurrentHold = false;
+  startPushToTalkVTT();
+});
+
+window.addEventListener('keyup', (e) => {
+  if (isPttShortcutKey(e) && isPttKeyHeld) {
+    e.preventDefault();
+    stopPushToTalkVTT();
+  }
+});
+
+window.addEventListener('blur', stopPushToTalkVTT);
+
+// Pasang listener otomatis untuk input rak di Tab 2
+document.getElementById('wf-rack-input')?.addEventListener('input', saveWorkflowDraft);
+
   </script>
 </body>
 </html>
