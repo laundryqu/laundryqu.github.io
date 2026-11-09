@@ -339,6 +339,30 @@
 
     <!-- Quick Action Footer Sidebar -->
     <div class="p-3 border-t border-slate-800 space-y-2">
+      <button
+        type="button"
+        id="internal-chat-toggle"
+        onclick="toggleInternalChat()"
+        aria-controls="internal-chat-panel"
+        aria-expanded="false"
+        class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition"
+      >
+        <i class="fa-solid fa-comments" aria-hidden="true"></i>
+        <span>Chat Admin</span>
+        <span id="internal-chat-badge" class="hidden min-w-5 rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] leading-none">0</span>
+      </button>
+      <button
+        type="button"
+        id="admin-inbox-toggle"
+        onclick="toggleAdminChatInbox()"
+        aria-controls="admin-chat-inbox-panel"
+        aria-expanded="false"
+        class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition"
+      >
+        <i class="fa-solid fa-inbox" aria-hidden="true"></i>
+        <span>Inbox Admin</span>
+        <span id="admin-chat-badge" class="hidden min-w-5 rounded-full bg-rose-700 px-1.5 py-0.5 text-[10px] leading-none">0</span>
+      </button>
       <button type="button" onclick="openQrScanner('global')" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
         <i class="fa-solid fa-camera"></i> Scan QR Nota / Member
       </button>
@@ -349,53 +373,70 @@
   </aside>
 
   <!-- =========================================================================
-       KONTEN UTAMA & 4 KARTU RINGKASAN STATISTIK ATAS
+       KONTEN UTAMA & RINGKASAN STATISTIK ATAS
   ========================================================================== -->
   <main class="flex-1 min-w-0 p-3 sm:p-5 lg:p-6 pb-28 space-y-5 no-print">
 
-    <!-- 4 KARTU RINGKASAN STATISTIK ATAS -->
-    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      <div onclick="switchTab('progres')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
+    <!-- KARTU RINGKASAN STATISTIK & KASIR AKTIF -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+      <div onclick="switchTab('progres')" class="cursor-pointer min-w-0 bg-white rounded-2xl p-3 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between gap-2 group">
         <div>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sedang Diproses</p>
-          <h3 id="stat-processing" class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono mt-1">0</h3>
-          <p class="text-[11px] text-sky-600 font-medium mt-1">Nota dalam pengerjaan</p>
+          <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Sedang Diproses</p>
+          <h3 id="stat-processing" class="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono mt-1">0</h3>
+          <p class="text-[10px] text-sky-600 font-medium mt-1">Nota dalam pengerjaan</p>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl group-hover:scale-110 transition">
+        <div class="w-9 h-9 shrink-0 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-lg group-hover:scale-110 transition">
           <i class="fa-solid fa-soap"></i>
         </div>
       </div>
 
-      <div onclick="switchTab('progres')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
+      <div onclick="switchTab('progres')" class="cursor-pointer min-w-0 bg-white rounded-2xl p-3 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between gap-2 group">
         <div>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Siap Ambil / Antar</p>
-          <h3 id="stat-ready" class="text-2xl sm:text-3xl font-extrabold text-blue-600 font-mono mt-1">0</h3>
-          <p class="text-[11px] text-blue-600 font-medium mt-1">Selesai Packing & QC</p>
+          <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Siap Ambil / Antar</p>
+          <h3 id="stat-ready" class="text-xl sm:text-2xl font-extrabold text-blue-600 font-mono mt-1">0</h3>
+          <p class="text-[10px] text-blue-600 font-medium mt-1">Selesai Packing & QC</p>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:scale-110 transition">
+        <div class="w-9 h-9 shrink-0 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg group-hover:scale-110 transition">
           <i class="fa-solid fa-box-open"></i>
         </div>
       </div>
 
-      <div onclick="switchTab('pelunasan')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
+      <div onclick="switchTab('pelunasan')" class="cursor-pointer min-w-0 bg-white rounded-2xl p-3 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between gap-2 group">
         <div>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Piutang</p>
-          <h3 id="stat-receivables" class="text-lg sm:text-2xl font-extrabold text-rose-600 font-mono mt-1">Rp 0</h3>
-          <p id="stat-receivables-count" class="text-[11px] text-rose-500 font-medium mt-1">0 Nota DP / Belum Bayar</p>
+          <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Piutang</p>
+          <h3 id="stat-receivables" class="text-base sm:text-xl font-extrabold text-rose-600 font-mono mt-1 truncate">Rp 0</h3>
+          <p id="stat-receivables-count" class="text-[10px] text-rose-500 font-medium mt-1">0 Nota DP / Belum Bayar</p>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl group-hover:scale-110 transition">
+        <div class="w-9 h-9 shrink-0 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg group-hover:scale-110 transition">
           <i class="fa-solid fa-file-invoice-dollar"></i>
         </div>
       </div>
 
-      <div onclick="switchTab('stok')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between group">
+      <div onclick="switchTab('stok')" class="cursor-pointer min-w-0 bg-white rounded-2xl p-3 border border-slate-200 shadow-xs hover:shadow-md transition flex items-center justify-between gap-2 group">
         <div>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Stok Menipis</p>
-          <h3 id="stat-low-stock" class="text-2xl sm:text-3xl font-extrabold text-amber-600 font-mono mt-1">0</h3>
-          <p id="stat-low-stock-label" class="text-[11px] text-amber-600 font-medium mt-1">Belum ada Data</p>
+          <p class="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Stok Menipis</p>
+          <h3 id="stat-low-stock" class="text-xl sm:text-2xl font-extrabold text-amber-600 font-mono mt-1">0</h3>
+          <p id="stat-low-stock-label" class="text-[10px] text-amber-600 font-medium mt-1">Belum ada Data</p>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl group-hover:scale-110 transition">
+        <div class="w-9 h-9 shrink-0 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg group-hover:scale-110 transition">
           <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+      </div>
+
+      <div id="kasir-selected-banner" class="hidden min-w-0 bg-white rounded-2xl p-3 border border-blue-200 shadow-xs">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Kasir Penerima Nota</span>
+        <div class="flex items-center justify-between gap-2 mt-1">
+          <h2 id="active-cashier-large-name" class="min-w-0 truncate text-sm font-extrabold text-blue-600">-</h2>
+          <button type="button" onclick="changeCashierSelection()" class="shrink-0 text-[10px] font-extrabold text-sky-600 hover:text-sky-800 underline">Ganti</button>
+        </div>
+        <div class="flex items-center gap-1.5 mt-2">
+          <button type="button" onclick="scrollToReprintSection()" class="flex-1 min-w-0 px-1.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-[9px] font-extrabold transition">
+            <i class="fa-solid fa-clock-rotate-left mr-0.5"></i>Cetak Ulang Nota
+          </button>
+          <div class="shrink-0 bg-slate-900 text-white px-2 py-1 rounded-lg text-right">
+            <span class="block text-[7px] uppercase tracking-wider text-slate-400">No. Nota Otomatis</span>
+            <span id="kasir-nota-preview" class="font-mono text-sm font-extrabold text-sky-400 tracking-wider">000001</span>
+          </div>
         </div>
       </div>
     </section>
@@ -419,40 +460,15 @@
         <div id="online-pickup-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
       </div>
 
-      <!-- HEADER PEMILIHAN KASIR / TAMPILAN KASIR AKTIF BESAR BERWARNA BIRU -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 sm:p-6 space-y-4">
+      <!-- PEMILIHAN KASIR -->
+      <div id="kasir-selection-panel" class="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 sm:p-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
-          <!-- State 1: Belum Pilih Kasir -->
           <div id="kasir-gate-header-info">
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-700">
               <i class="fa-solid fa-user-check"></i> Pilih Karyawan Kasir
             </span>
             <h2 class="text-xl font-extrabold text-slate-900 mt-1">Pilih Nama Karyawan untuk Membuka Form Buat Nota</h2>
             <p class="text-xs text-slate-500">Klik nama karyawan yang bertugas di bawah ini agar form pembuatan nota terbuka.</p>
-          </div>
-
-          <!-- State 2: Sudah Pilih Kasir (Nama Besar & Berwarna Biru + Ganti Kasir) -->
-          <div id="kasir-selected-banner" class="hidden flex flex-wrap items-center gap-4">
-            <div>
-              <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Kasir Penerima Nota:</span>
-              <div class="flex flex-wrap items-baseline gap-3 mt-0.5">
-                <h2 id="active-cashier-large-name" class="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tight">-</h2>
-                <button type="button" onclick="changeCashierSelection()" class="text-xs font-extrabold text-sky-600 hover:text-sky-800 underline cursor-pointer">
-                  Ganti Kasir
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Preview Nomor Nota (Tanpa #) & Pintasan Cetak Ulang -->
-          <div class="flex items-center gap-2.5 ml-auto">
-            <button type="button" onclick="scrollToReprintSection()" class="px-3.5 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-extrabold transition flex items-center gap-1.5">
-              <i class="fa-solid fa-clock-rotate-left"></i> Cetak Ulang Nota
-            </button>
-            <div class="bg-slate-900 text-white px-4 py-2 rounded-xl text-right">
-              <span class="block text-[10px] uppercase tracking-wider text-slate-400">No. Nota Otomatis</span>
-              <span id="kasir-nota-preview" class="font-mono text-xl font-extrabold text-sky-400 tracking-widest">000001</span>
-            </div>
           </div>
         </div>
 
@@ -561,8 +577,9 @@
                 <input type="tel" id="kasir-cust-phone" required oninput="calculateKasirTotal()" placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
               </div>
 
-              <!-- KOLOM ALAMAT PELANGGAN + SIMBOL STAMP DI SEBELAHNYA -->
-              <div class="sm:col-span-2">
+              <!-- Alamat Pelanggan, Stamp Loyalitas & Pilihan Parfum -->
+              <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   <i class="fa-solid fa-location-dot text-sky-600 mr-1"></i> Alamat Pelanggan &amp; Stamp Loyalitas
                 </label>
@@ -583,6 +600,15 @@
                       <span id="kasir-stamp-free-val-label" class="hidden">Rp 18.000</span>
                     </label>
                   </div>
+                </div>
+              </div>
+                <div>
+                  <label for="kasir-perfume" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                    <i class="fa-solid fa-spray-can-sparkles text-sky-600 mr-1"></i> Pilihan Aroma Parfum
+                  </label>
+                  <select id="kasir-perfume" onchange="updateReceiptPreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    <option value="">Memuat pilihan parfum...</option>
+                  </select>
                 </div>
               </div>
 
@@ -644,34 +670,35 @@
               </div>
             </div>
 
-            <!-- 4. Opsi Layanan Antar / Jemput & Peta Leaflet -->
-            <div class="space-y-3 pt-2 border-t border-slate-100">
+            <!-- 4. Opsi Antar/Jemput dan Kode Voucher -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 pt-2 border-t border-slate-100 items-start">
+              <div class="lg:col-span-7 min-w-0 space-y-3">
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">
                 <i class="fa-solid fa-motorcycle text-sky-600 mr-1"></i> Opsi Layanan Antar / Jemput <span class="text-rose-500">*</span>
               </label>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                 <label class="cursor-pointer">
                   <input type="radio" name="delivery_type" value="Datang Sendiri" checked onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
-                    <i class="fa-solid fa-store block text-base mb-1"></i> Datang Sendiri
+                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                    <i class="fa-solid fa-store mr-1"></i>Datang Sendiri
                   </div>
                 </label>
                 <label class="cursor-pointer">
                   <input type="radio" name="delivery_type" value="Jemput Saja" onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
-                    <i class="fa-solid fa-truck-pickup block text-base mb-1"></i> Jemput Saja
+                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                    <i class="fa-solid fa-truck-pickup mr-1"></i>Jemput Saja
                   </div>
                 </label>
                 <label class="cursor-pointer">
                   <input type="radio" name="delivery_type" value="Antar Saja" onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
-                    <i class="fa-solid fa-paper-plane block text-base mb-1"></i> Antar Saja
+                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                    <i class="fa-solid fa-paper-plane mr-1"></i>Antar Saja
                   </div>
                 </label>
                 <label class="cursor-pointer">
                   <input type="radio" name="delivery_type" value="Jemput & Antar" onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-2.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
-                    <i class="fa-solid fa-route block text-base mb-1"></i> Jemput & Antar
+                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                    <i class="fa-solid fa-route mr-1"></i>Jemput & Antar
                   </div>
                 </label>
               </div>
@@ -718,6 +745,15 @@
                   <strong>Aturan Ongkir Radius 3 Km:</strong> Gratis s/d 3 km jika cucian &ge; 5 Kg atau &ge; 20 Pcs. Di bawah syarat: Rp 2.000/km (3 km pertama). Kelebihan jarak di atas 3 km: Rp 3.000/km.
                 </div>
               </div>
+              </div>
+
+              <div class="lg:col-span-5 min-w-0 p-3.5 rounded-2xl bg-amber-500/20 border-2 border-amber-400/70 backdrop-blur-xs">
+                <label for="kasir-voucher-code" class="block text-xs font-extrabold uppercase tracking-wider text-amber-950 mb-2">
+                  <i class="fa-solid fa-ticket text-amber-600 mr-1"></i> Kode Voucher Promo
+                </label>
+                <input type="text" id="kasir-voucher-code" oninput="applyVoucherOnKasir(this.value)" placeholder="Ketik kode promo..." class="w-full px-3 py-2 rounded-xl border border-amber-400 bg-white/90 text-xs font-extrabold uppercase font-mono text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-500" />
+                <p id="kasir-voucher-status" class="text-[11px] text-amber-900 font-medium mt-1">Kosongkan jika tidak memakai voucher.</p>
+              </div>
             </div>
 
             <div id="kasir-prayer-promo-dialog" class="hidden fixed inset-0 z-[100] bg-slate-950/60 p-4 items-center justify-center" onclick="if(event.target === this) closePrayerPromoDialog()" onkeydown="if(event.key === 'Escape') closePrayerPromoDialog()">
@@ -738,27 +774,6 @@
                 <div class="flex justify-end">
                   <button type="button" onclick="closePrayerPromoDialog()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold">Selesai</button>
                 </div>
-              </div>
-            </div>
-
-            <!-- 6. Pilihan Aroma Parfum (Radio Button) & Kode Voucher (EMAS TRANSPARAN) -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-2 border-t border-slate-100">
-              <div class="sm:col-span-7">
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  <i class="fa-solid fa-spray-can-sparkles text-sky-600 mr-1"></i> Pilihan Aroma Parfum
-                </label>
-                <div id="radio-perfume-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
-              </div>
-
-              <!-- BLOK KODE VOUCHER WARNA EMAS TRANSPARAN -->
-              <div class="sm:col-span-5 p-3.5 rounded-2xl bg-amber-500/20 border-2 border-amber-400/70 backdrop-blur-xs">
-                <label class="block text-xs font-extrabold uppercase tracking-wider text-amber-950 mb-2">
-                  <i class="fa-solid fa-ticket text-amber-600 mr-1"></i> Kode Voucher Promo
-                </label>
-                <div class="flex gap-2">
-                  <input type="text" id="kasir-voucher-code" oninput="applyVoucherOnKasir(this.value)" placeholder="Ketik kode promo..." class="w-full px-3 py-2 rounded-xl border border-amber-400 bg-white/90 text-xs font-extrabold uppercase font-mono text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-500" />
-                </div>
-                <p id="kasir-voucher-status" class="text-[11px] text-amber-900 font-medium mt-1">Kosongkan jika tidak memakai voucher.</p>
               </div>
             </div>
 
@@ -3049,11 +3064,15 @@
     let activeProcessingPickupOrderNumber = null;
 
     let dbRef = null;
+    let chatRef = null;
+    let chatReadRef = null;
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
       dbRef = firebase.database().ref('laundry_qu_pos');
+      chatRef = firebase.database().ref('laundry_qu_pos_chat');
+      chatReadRef = firebase.database().ref('laundry_qu_pos_chat_reads');
     } catch (err) {
       console.warn("Firebase berjalan dalam mode fallback LocalStorage:", err);
     }
@@ -3181,6 +3200,40 @@
     let financeUnlocked = false;
     let settingUnlocked = false;
     let currentLoggedInAdminLabel = "Admin";
+    let currentChatAdmin = null;
+    let adminChatReadAt = 0;
+    let lastChatAdminId = null;
+    let staffChatReadAt = 0;
+    let chatMessages = [];
+    let chatAudioContext = null;
+    let chatHasInitialSnapshot = false;
+    let currentAdminReadRef = null;
+    let currentAdminReadHandler = null;
+    let adminReplyClientId = null;
+    let adminReplyName = '';
+    const CHAT_CLIENT_ID = (() => {
+      try {
+        let clientId = localStorage.getItem('laundry_qu_pos_chat_client_id');
+        if (!clientId) {
+          clientId = window.crypto?.randomUUID
+            ? window.crypto.randomUUID()
+            : `chat-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+          localStorage.setItem('laundry_qu_pos_chat_client_id', clientId);
+        }
+        return clientId;
+      } catch (error) {
+        console.warn('ID sesi chat tidak dapat disimpan:', error);
+        return `chat-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      }
+    })();
+    try {
+      lastChatAdminId = localStorage.getItem('laundry_qu_pos_chat_last_admin_id') || null;
+      if (lastChatAdminId) {
+        adminChatReadAt = Number(localStorage.getItem(`laundry_qu_pos_chat_admin_read_${lastChatAdminId}`)) || 0;
+      }
+    } catch (error) {
+      console.warn('Status inbox admin tidak dapat dimuat:', error);
+    }
     let isFloatingCalcMinimized = false;
 
     // State Peta Leaflet & QR Scanner
@@ -3199,6 +3252,7 @@
       const matchedUser = (appData.adminUsers || []).find(u => String(u.password) === pass);
       if (matchedUser) {
         return {
+          id: String(matchedUser.id),
           name: matchedUser.name,
           role: matchedUser.role,
           label: `${matchedUser.name} (${matchedUser.role})`
@@ -3207,6 +3261,7 @@
 
       if (pass === String(appData.settings.adminPassword || '1234')) {
         return {
+          id: 'master-admin',
           name: 'Master Admin',
           role: 'Direktur / Owner',
           label: 'Master Admin'
@@ -3890,11 +3945,14 @@
     function selectCashierToOpenForm(empName) {
       selectedCashierOnKasir = empName;
       updateCashierHeaderDisplay();
+      updateInternalChatSender();
       calculateKasirTotal();
     }
 
     function changeCashierSelection() {
+      switchTab('kasir');
       selectedCashierOnKasir = null;
+      updateInternalChatSender();
       document.querySelectorAll('input[name="kasir_staff"]').forEach(r => r.checked = false);
       updateCashierHeaderDisplay();
     }
@@ -3906,9 +3964,11 @@
       const staffWrapper = document.getElementById('radio-kasir-staff-wrapper');
       const workspace = document.getElementById('kasir-workspace-container');
       const floatingPopup = document.getElementById('floating-calc-popup');
+      const selectionPanel = document.getElementById('kasir-selection-panel');
 
       if (selectedCashierOnKasir) {
         if (gateInfo) gateInfo.classList.add('hidden');
+        if (selectionPanel) selectionPanel.classList.add('hidden');
         if (selectedBanner) selectedBanner.classList.remove('hidden');
         if (largeNameEl) largeNameEl.textContent = selectedCashierOnKasir;
         if (staffWrapper) staffWrapper.classList.add('hidden');
@@ -3916,6 +3976,7 @@
         if (floatingPopup) floatingPopup.classList.remove('hidden');
       } else {
         if (gateInfo) gateInfo.classList.remove('hidden');
+        if (selectionPanel) selectionPanel.classList.remove('hidden');
         if (selectedBanner) selectedBanner.classList.add('hidden');
         if (staffWrapper) staffWrapper.classList.remove('hidden');
         if (workspace) workspace.classList.add('hidden');
@@ -4118,34 +4179,26 @@
       renderKasirServiceRadios();
       updateWeightFieldLabelByService();
 
-      const perfContainer = document.getElementById('radio-perfume-list');
+      const perfSelect = document.getElementById('kasir-perfume');
       const perfumes = appData.perfumes || [];
-      if (perfContainer) {
+      if (perfSelect) {
         if (perfumes.length === 0) {
-          perfContainer.innerHTML = `
-            <div class="col-span-full p-3 rounded-xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs font-bold text-slate-500">
-              Belum ada Data
-            </div>
-          `;
+          perfSelect.replaceChildren(new Option('Belum ada Data', ''));
+          perfSelect.disabled = true;
         } else {
-          const currentPerf = document.querySelector('input[name="kasir_perfume"]:checked')?.value;
+          const currentPerf = perfSelect.value;
           const defaultPerf = (appData.settings.defaultPerfume && perfumes.includes(appData.settings.defaultPerfume))
             ? appData.settings.defaultPerfume
             : perfumes[0];
           const activePerf = (currentPerf && perfumes.includes(currentPerf)) ? currentPerf : defaultPerf;
 
-          perfContainer.innerHTML = perfumes.map((p) => {
-            const checked = p === activePerf;
-            const isDef = p === appData.settings.defaultPerfume;
-            return `
-              <label class="cursor-pointer">
-                <input type="radio" name="kasir_perfume" value="${p}" ${checked ? 'checked' : ''} onchange="updateReceiptPreview()" class="peer sr-only" />
-                <div class="p-2 rounded-xl border-2 border-slate-200 bg-slate-50 text-center text-xs font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition truncate">
-                  ${isDef ? '<i class="fa-solid fa-star text-amber-500 mr-1"></i>' : ''}${p}
-                </div>
-              </label>
-            `;
-          }).join('');
+          perfSelect.disabled = false;
+          perfSelect.replaceChildren(...perfumes.map((perfume) => {
+            const option = new Option(perfume, perfume);
+            if (perfume === appData.settings.defaultPerfume) option.text = `★ ${perfume}`;
+            return option;
+          }));
+          perfSelect.value = activePerf;
         }
       }
 
@@ -5072,7 +5125,7 @@
       const weightOrSetVal = parseFormattedNumber(document.getElementById('kasir-weight')?.value);
       const pcsCount = parseFormattedNumber(document.getElementById('kasir-pcs')?.value);
       const unitLabel = getActiveWeightUnitLabel();
-      const perfume = document.querySelector('input[name="kasir_perfume"]:checked')?.value || '-';
+      const perfume = document.getElementById('kasir-perfume')?.value || '-';
       const rack = document.getElementById('kasir-rack-location')?.value || '-';
       const clothDetails = document.getElementById('kasir-cloth-details')?.value || '';
 
@@ -5606,7 +5659,7 @@
       const unitLabel = getActiveWeightUnitLabel();
       const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value || 'Datang Sendiri';
       const distKm = parseFormattedNumber(document.getElementById('delivery-distance-km')?.value);
-      const perfume = document.querySelector('input[name="kasir_perfume"]:checked')?.value || '-';
+      const perfume = document.getElementById('kasir-perfume')?.value || '-';
       const rackLocation = document.getElementById('kasir-rack-location')?.value.trim() || '';
       const rawClothDetails = document.getElementById('kasir-cloth-details')?.value.trim() || '';
       const payMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'Tunai';
@@ -5768,6 +5821,8 @@
       const datangRadio = document.querySelector('input[name="delivery_type"][value="Datang Sendiri"]');
       if (datangRadio) datangRadio.checked = true;
       handleDeliveryTypeChange('Datang Sendiri');
+      const perfumeSelect = document.getElementById('kasir-perfume');
+      if (perfumeSelect) perfumeSelect.value = '';
 
       if (resetCashier) {
         selectedCashierOnKasir = null;
@@ -9234,7 +9289,7 @@ function saveKasirDraft() {
     prayMukena: document.getElementById('pray-mukena')?.value || '0',
     prayLobe: document.getElementById('pray-lobe')?.value || '0',
     praySarung: document.getElementById('pray-sarung')?.value || '0',
-    perfume: document.querySelector('input[name="kasir_perfume"]:checked')?.value || '',
+    perfume: document.getElementById('kasir-perfume')?.value || '',
     voucherCode: document.getElementById('kasir-voucher-code')?.value || '',
     autoThousand: Boolean(document.getElementById('kasir-auto-thousand')?.checked),
     paidAmount: document.getElementById('kasir-paid-amount')?.value || '',
@@ -9301,9 +9356,8 @@ function restoreKasirDraft() {
     if (document.getElementById('pray-lobe')) document.getElementById('pray-lobe').value = d.prayLobe || '0';
     if (document.getElementById('pray-sarung')) document.getElementById('pray-sarung').value = d.praySarung || '0';
 
-    if (d.perfume) {
-      const perfRadio = document.querySelector(`input[name="kasir_perfume"][value="${CSS.escape(d.perfume)}"]`);
-      if (perfRadio) perfRadio.checked = true;
+    if (d.perfume && Array.from(document.getElementById('kasir-perfume')?.options || []).some(option => option.value === d.perfume)) {
+      document.getElementById('kasir-perfume').value = d.perfume;
     }
 
     if (document.getElementById('kasir-voucher-code')) {
@@ -9482,6 +9536,791 @@ window.addEventListener('blur', stopPushToTalkVTT);
 // Pasang listener otomatis untuk input rak di Tab 2
 document.getElementById('wf-rack-input')?.addEventListener('input', saveWorkflowDraft);
 
+function setInternalChatStatus(message, isError = false) {
+  const status = document.getElementById('internal-chat-status');
+  if (!status) return;
+  status.textContent = message;
+  status.className = isError ? 'text-xs text-rose-600' : 'text-xs text-slate-500';
+}
+
+function getChatMessageRole(message) {
+  return message.senderRole === 'admin' ? 'admin' : 'staff';
+}
+
+function updateChatNotificationBadges() {
+  const staffBadge = document.getElementById('internal-chat-badge');
+  const adminBadge = document.getElementById('admin-chat-badge');
+  const unreadStaffReplies = chatMessages.filter((message) => {
+    const sentAt = Number(message.createdAt) || 0;
+    return getChatMessageRole(message) === 'admin'
+      && (!message.recipientClientId || message.recipientClientId === CHAT_CLIENT_ID)
+      && sentAt > staffChatReadAt;
+  }).length;
+  const unreadAdminMessages = chatMessages.filter((message) => {
+    const sentAt = Number(message.createdAt) || 0;
+    const recipientIds = Array.isArray(message.recipientIds) ? message.recipientIds.map(String) : [];
+    const badgeAdminId = currentChatAdmin?.id || lastChatAdminId;
+    return getChatMessageRole(message) === 'staff'
+      && recipientIds.length > 0
+      && sentAt > adminChatReadAt
+      && (!badgeAdminId || recipientIds.includes(badgeAdminId));
+  }).length;
+
+  if (staffBadge) {
+    staffBadge.textContent = unreadStaffReplies > 99 ? '99+' : String(unreadStaffReplies);
+    staffBadge.classList.toggle('hidden', unreadStaffReplies === 0);
+  }
+  if (adminBadge) {
+    adminBadge.textContent = unreadAdminMessages > 99 ? '99+' : String(unreadAdminMessages);
+    adminBadge.classList.toggle('hidden', unreadAdminMessages === 0);
+  }
+}
+
+function markStaffChatRead() {
+  staffChatReadAt = Math.max(
+    staffChatReadAt,
+    ...chatMessages
+      .filter(message => getChatMessageRole(message) === 'admin'
+        && (!message.recipientClientId || message.recipientClientId === CHAT_CLIENT_ID))
+      .map(message => Number(message.createdAt) || 0)
+  );
+  try {
+    localStorage.setItem(`laundry_qu_pos_chat_staff_read_${CHAT_CLIENT_ID}`, String(staffChatReadAt));
+  } catch (error) {
+    console.warn('Status baca chat staf tidak dapat disimpan:', error);
+  }
+  updateChatNotificationBadges();
+}
+
+function markAdminChatRead() {
+  if (!currentChatAdmin || !chatReadRef) return;
+  const adminId = currentChatAdmin.id;
+  const latestMessageAt = chatMessages
+    .filter((message) => {
+      const recipients = Array.isArray(message.recipientIds) ? message.recipientIds.map(String) : [];
+      return getChatMessageRole(message) === 'staff' && recipients.includes(adminId);
+    })
+    .reduce((latest, message) => Math.max(latest, Number(message.createdAt) || 0), adminChatReadAt);
+  if (latestMessageAt <= adminChatReadAt) return;
+
+  adminChatReadAt = latestMessageAt;
+  try {
+    localStorage.setItem(`laundry_qu_pos_chat_admin_read_${adminId}`, String(latestMessageAt));
+  } catch (error) {
+    console.warn('Status baca inbox admin tidak dapat disimpan di perangkat:', error);
+  }
+  updateChatNotificationBadges();
+  chatReadRef.child(adminId).set({ lastReadAt: latestMessageAt }).catch((error) => {
+    console.error('Gagal menyimpan status baca inbox admin:', error);
+    setAdminChatStatus('Gagal menyimpan status baca. Periksa izin Firebase.', true);
+  });
+}
+
+function armChatNotificationSound() {
+  const AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextConstructor) return;
+  if (!chatAudioContext) chatAudioContext = new AudioContextConstructor();
+  if (chatAudioContext.state === 'suspended') {
+    chatAudioContext.resume().catch((error) => console.warn('Suara notifikasi tidak dapat diaktifkan:', error));
+  }
+}
+
+function updateBrowserNotificationButtons() {
+  const permission = 'Notification' in window ? Notification.permission : 'unsupported';
+  document.querySelectorAll('[data-chat-notification-button]').forEach((button) => {
+    if (permission === 'granted') {
+      button.innerHTML = '<i class="fa-solid fa-bell" aria-hidden="true"></i> Notifikasi Aktif';
+      button.disabled = true;
+      button.classList.add('opacity-70', 'cursor-default');
+    } else if (permission === 'denied') {
+      button.innerHTML = '<i class="fa-solid fa-bell-slash" aria-hidden="true"></i> Izin Ditolak';
+      button.disabled = true;
+      button.title = 'Izinkan notifikasi untuk situs ini melalui pengaturan browser.';
+    } else if (permission === 'unsupported') {
+      button.innerHTML = '<i class="fa-solid fa-bell-slash" aria-hidden="true"></i> Tidak Didukung';
+      button.disabled = true;
+    } else {
+      button.innerHTML = '<i class="fa-solid fa-bell" aria-hidden="true"></i> Aktifkan Notifikasi';
+      button.disabled = false;
+      button.classList.remove('opacity-70', 'cursor-default');
+      button.removeAttribute('title');
+    }
+  });
+}
+
+async function enableBrowserChatNotifications(role) {
+  armChatNotificationSound();
+  if (!('Notification' in window)) {
+    const message = 'Browser ini tidak mendukung notifikasi pop-up.';
+    if (role === 'admin') setAdminChatStatus(message, true);
+    else setInternalChatStatus(message, true);
+    updateBrowserNotificationButtons();
+    return;
+  }
+
+  try {
+    const permission = Notification.permission === 'default'
+      ? await Notification.requestPermission()
+      : Notification.permission;
+    updateBrowserNotificationButtons();
+    if (permission === 'granted') {
+      const message = 'Notifikasi browser aktif untuk pesan baru selama POS dibuka.';
+      if (role === 'admin') setAdminChatStatus(message);
+      else setInternalChatStatus(message);
+      return;
+    }
+    const message = permission === 'denied'
+      ? 'Izin notifikasi ditolak. Ubah izin situs ini di pengaturan browser.'
+      : 'Izin notifikasi belum diberikan.';
+    if (role === 'admin') setAdminChatStatus(message, true);
+    else setInternalChatStatus(message, true);
+  } catch (error) {
+    console.error('Gagal meminta izin notifikasi browser:', error);
+    const message = 'Gagal mengaktifkan notifikasi browser.';
+    if (role === 'admin') setAdminChatStatus(message, true);
+    else setInternalChatStatus(message, true);
+  }
+}
+
+function showBrowserChatNotification(message) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    const isStaffMessage = getChatMessageRole(message) === 'staff';
+    const notification = new Notification(
+      isStaffMessage ? 'Pesan baru untuk Inbox Admin' : 'Balasan baru di Chat Admin',
+      {
+        body: `Pesan baru dari ${message.sender}. Buka POS untuk membaca.`,
+        tag: `laundry-chat-${message.id}`,
+        renotify: true
+      }
+    );
+    notification.onclick = () => {
+      window.focus();
+      if (isStaffMessage) toggleAdminChatInbox();
+      else toggleInternalChat();
+      notification.close();
+    };
+  } catch (error) {
+    console.warn('Notifikasi pop-up chat gagal ditampilkan:', error);
+  }
+}
+
+function playChatNotificationSound() {
+  if (!chatAudioContext || chatAudioContext.state !== 'running') return;
+  try {
+    const oscillator = chatAudioContext.createOscillator();
+    const gain = chatAudioContext.createGain();
+    const now = chatAudioContext.currentTime;
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(880, now);
+    oscillator.frequency.setValueAtTime(660, now + 0.12);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+    oscillator.connect(gain);
+    gain.connect(chatAudioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.3);
+  } catch (error) {
+    console.warn('Suara notifikasi chat gagal diputar:', error);
+  }
+}
+
+function shouldPlayChatNotification(message) {
+  if (message.senderClientId === CHAT_CLIENT_ID) return false;
+  if (getChatMessageRole(message) === 'staff') {
+    const recipients = Array.isArray(message.recipientIds) ? message.recipientIds.map(String) : [];
+    const activeAdminId = currentChatAdmin?.id || lastChatAdminId;
+    return Boolean(activeAdminId && recipients.includes(activeAdminId));
+  }
+  return !message.recipientClientId || message.recipientClientId === CHAT_CLIENT_ID;
+}
+
+function setAdminChatStatus(message, isError = false) {
+  const status = document.getElementById(currentChatAdmin ? 'admin-chat-content-status' : 'admin-chat-login-status');
+  if (!status) return;
+  status.textContent = message;
+  status.className = isError ? 'px-3 pb-3 text-xs text-rose-600' : 'px-3 pb-3 text-xs text-slate-500';
+}
+
+function updateInternalChatSender() {
+  const senderInput = document.getElementById('internal-chat-sender');
+  if (senderInput) senderInput.value = selectedCashierOnKasir || '';
+}
+
+function toggleInternalChat() {
+  const panel = document.getElementById('internal-chat-panel');
+  const button = document.getElementById('internal-chat-toggle');
+  const senderInput = document.getElementById('internal-chat-sender');
+  if (!panel || !button) return;
+
+  const isOpening = panel.classList.contains('hidden');
+  if (isOpening) closeAdminChatInboxPanel();
+  panel.classList.toggle('hidden', !isOpening);
+  panel.classList.toggle('flex', isOpening);
+  button.setAttribute('aria-expanded', String(isOpening));
+
+  if (isOpening) {
+    updateInternalChatSender();
+    armChatNotificationSound();
+    markStaffChatRead();
+    document.getElementById('internal-chat-input')?.focus();
+    document.getElementById('internal-chat-messages')?.scrollTo({ top: 999999 });
+  }
+}
+
+function toggleAdminChatInbox() {
+  const panel = document.getElementById('admin-chat-inbox-panel');
+  const button = document.getElementById('admin-inbox-toggle');
+  if (!panel || !button) return;
+
+  const isOpening = panel.classList.contains('hidden');
+  if (isOpening) {
+    const staffPanel = document.getElementById('internal-chat-panel');
+    staffPanel?.classList.add('hidden');
+    staffPanel?.classList.remove('flex');
+    document.getElementById('internal-chat-toggle')?.setAttribute('aria-expanded', 'false');
+  }
+  panel.classList.toggle('hidden', !isOpening);
+  panel.classList.toggle('flex', isOpening);
+  button.setAttribute('aria-expanded', String(isOpening));
+
+  if (isOpening) {
+    armChatNotificationSound();
+    if (currentChatAdmin) {
+      showAdminChatInbox();
+      markAdminChatRead();
+      document.getElementById('admin-chat-reply-input')?.focus();
+    } else {
+      document.getElementById('admin-chat-login-password')?.focus();
+    }
+  }
+}
+
+function closeAdminChatInboxPanel() {
+  const panel = document.getElementById('admin-chat-inbox-panel');
+  panel?.classList.add('hidden');
+  panel?.classList.remove('flex');
+  document.getElementById('admin-inbox-toggle')?.setAttribute('aria-expanded', 'false');
+}
+
+function showAdminChatInbox() {
+  document.getElementById('admin-chat-login')?.classList.add('hidden');
+  document.getElementById('admin-chat-content')?.classList.remove('hidden');
+  document.getElementById('admin-chat-content')?.classList.add('flex');
+  const label = document.getElementById('admin-chat-active-user');
+  if (label) label.textContent = `Masuk sebagai ${currentChatAdmin?.label || currentChatAdmin?.name || 'Admin'}`;
+  renderAdminChatInbox();
+}
+
+function unlockAdminChatInbox(event) {
+  event.preventDefault();
+  const passwordInput = document.getElementById('admin-chat-login-password');
+  const authAdmin = verifyAdminCredentials(passwordInput?.value);
+  if (!authAdmin) {
+    setAdminChatStatus('Sandi admin tidak sesuai.', true);
+    passwordInput?.select();
+    return;
+  }
+  if (!chatReadRef) {
+    setAdminChatStatus('Inbox admin tidak tersedia: koneksi Firebase belum siap.', true);
+    return;
+  }
+
+  if (currentAdminReadRef && currentAdminReadHandler) {
+    currentAdminReadRef.off('value', currentAdminReadHandler);
+  }
+  currentChatAdmin = { ...authAdmin, id: String(authAdmin.id || 'master-admin') };
+  lastChatAdminId = currentChatAdmin.id;
+  try {
+    localStorage.setItem('laundry_qu_pos_chat_last_admin_id', lastChatAdminId);
+    adminChatReadAt = Number(localStorage.getItem(`laundry_qu_pos_chat_admin_read_${lastChatAdminId}`)) || 0;
+  } catch (error) {
+    console.warn('Status inbox admin tidak dapat disimpan di perangkat:', error);
+    adminChatReadAt = 0;
+  }
+  currentAdminReadRef = chatReadRef.child(currentChatAdmin.id);
+  currentAdminReadHandler = (snapshot) => {
+    adminChatReadAt = Number(snapshot.val()?.lastReadAt) || 0;
+    try {
+      localStorage.setItem(`laundry_qu_pos_chat_admin_read_${currentChatAdmin.id}`, String(adminChatReadAt));
+    } catch (error) {
+      console.warn('Status baca inbox admin tidak dapat disimpan di perangkat:', error);
+    }
+    updateChatNotificationBadges();
+  };
+  currentAdminReadRef.on('value', currentAdminReadHandler, (error) => {
+    console.error('Gagal memuat status baca inbox admin:', error);
+    setAdminChatStatus('Gagal memuat status inbox. Periksa izin Firebase.', true);
+  });
+
+  if (passwordInput) passwordInput.value = '';
+  armChatNotificationSound();
+  showAdminChatInbox();
+  setAdminChatStatus('Inbox admin tersinkron melalui Firebase.');
+  updateChatNotificationBadges();
+  markAdminChatRead();
+}
+
+function lockAdminChatInbox() {
+  if (currentAdminReadRef && currentAdminReadHandler) {
+    currentAdminReadRef.off('value', currentAdminReadHandler);
+  }
+  currentAdminReadRef = null;
+  currentAdminReadHandler = null;
+  currentChatAdmin = null;
+  adminReplyClientId = null;
+  adminReplyName = '';
+  updateAdminReplyTarget();
+  document.getElementById('admin-chat-content')?.classList.add('hidden');
+  document.getElementById('admin-chat-content')?.classList.remove('flex');
+  document.getElementById('admin-chat-login')?.classList.remove('hidden');
+  document.getElementById('admin-chat-login-password').value = '';
+  updateChatNotificationBadges();
+  setAdminChatStatus('Inbox terkunci.');
+}
+
+function renderInternalChat() {
+  const messageList = document.getElementById('internal-chat-messages');
+  if (!messageList) return;
+  messageList.replaceChildren();
+
+  const visibleMessages = chatMessages.filter(message =>
+    getChatMessageRole(message) === 'staff'
+    || !message.recipientClientId
+    || message.recipientClientId === CHAT_CLIENT_ID
+  );
+  if (visibleMessages.length === 0) {
+    const emptyState = document.createElement('p');
+    emptyState.className = 'my-auto text-center text-xs text-slate-500';
+    emptyState.textContent = 'Belum ada pesan. Mulai percakapan di sini.';
+    messageList.appendChild(emptyState);
+    setInternalChatStatus('Chat admin tersinkron melalui Firebase.');
+    return;
+  }
+
+  visibleMessages.forEach((message) => {
+    const row = document.createElement('div');
+    const isCurrentSender = message.senderClientId === CHAT_CLIENT_ID;
+    row.className = `flex ${isCurrentSender ? 'justify-end' : 'justify-start'}`;
+
+    const bubble = document.createElement('div');
+    const isAdminMessage = getChatMessageRole(message) === 'admin';
+    bubble.className = `max-w-[85%] rounded-2xl px-3 py-2 text-sm ${isCurrentSender ? 'bg-blue-600 text-white' : (isAdminMessage ? 'border border-violet-200 bg-violet-50 text-slate-800' : 'bg-slate-100 text-slate-800')}`;
+
+    const sender = document.createElement('p');
+    sender.className = `mb-1 text-[11px] font-bold ${isCurrentSender ? 'text-blue-100' : 'text-slate-500'}`;
+    sender.textContent = isAdminMessage ? `${message.sender} · Admin` : message.sender;
+
+    const text = document.createElement('p');
+    text.className = 'whitespace-pre-wrap break-words';
+    text.textContent = message.text;
+    bubble.append(sender, text);
+
+    const recipientNames = Array.isArray(message.recipientNames)
+      ? message.recipientNames.filter(name => typeof name === 'string' && name.trim())
+      : [];
+    if (recipientNames.length > 0) {
+      const recipients = document.createElement('p');
+      recipients.className = `mb-1 text-[10px] ${isCurrentSender ? 'text-blue-100' : 'text-slate-500'}`;
+      recipients.textContent = `Kepada admin: ${recipientNames.join(', ')}`;
+      bubble.appendChild(recipients);
+    }
+
+    const time = document.createElement('p');
+    time.className = `mt-1 text-right text-[10px] ${isCurrentSender ? 'text-blue-100' : 'text-slate-400'}`;
+    const timestamp = Number(message.createdAt);
+    time.textContent = Number.isFinite(timestamp)
+      ? new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' }).format(new Date(timestamp))
+      : '';
+
+    bubble.appendChild(time);
+    row.appendChild(bubble);
+    messageList.appendChild(row);
+  });
+
+  messageList.scrollTop = messageList.scrollHeight;
+  setInternalChatStatus('Chat admin tersinkron melalui Firebase.');
+}
+
+function renderAdminChatInbox() {
+  const messageList = document.getElementById('admin-chat-messages');
+  if (!messageList || !currentChatAdmin) return;
+  messageList.replaceChildren();
+  const relevantMessages = chatMessages.filter((message) => {
+    const recipientIds = Array.isArray(message.recipientIds) ? message.recipientIds.map(String) : [];
+    if (getChatMessageRole(message) === 'staff') return recipientIds.includes(currentChatAdmin.id);
+    return message.conversationAdminId === currentChatAdmin.id;
+  });
+  const latestStaffMessage = relevantMessages.filter(message => getChatMessageRole(message) === 'staff').at(-1);
+  adminReplyClientId = latestStaffMessage?.senderClientId || null;
+  adminReplyName = latestStaffMessage?.sender || '';
+  updateAdminReplyTarget();
+
+  if (relevantMessages.length === 0) {
+    const emptyState = document.createElement('p');
+    emptyState.className = 'my-auto text-center text-xs text-slate-500';
+    emptyState.textContent = 'Belum ada pesan untuk akun admin ini.';
+    messageList.appendChild(emptyState);
+  } else {
+    relevantMessages.forEach((message) => {
+      const isAdminMessage = getChatMessageRole(message) === 'admin';
+      const row = document.createElement('div');
+      row.className = `flex ${isAdminMessage ? 'justify-end' : 'justify-start'}`;
+      const bubble = document.createElement('div');
+      bubble.className = `max-w-[88%] rounded-2xl px-3 py-2 text-sm ${isAdminMessage ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-800'}`;
+      const sender = document.createElement('p');
+      sender.className = `mb-1 text-[11px] font-bold ${isAdminMessage ? 'text-amber-100' : 'text-slate-500'}`;
+      sender.textContent = isAdminMessage ? `${message.sender} · Admin` : message.sender;
+      const text = document.createElement('p');
+      text.className = 'whitespace-pre-wrap break-words';
+      text.textContent = message.text;
+      const time = document.createElement('p');
+      time.className = `mt-1 text-right text-[10px] ${isAdminMessage ? 'text-amber-100' : 'text-slate-400'}`;
+      const timestamp = Number(message.createdAt);
+      time.textContent = Number.isFinite(timestamp)
+        ? new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' }).format(new Date(timestamp))
+        : '';
+      bubble.append(sender, text, time);
+      if (!isAdminMessage) {
+        const replyButton = document.createElement('button');
+        replyButton.type = 'button';
+        replyButton.className = 'mt-2 rounded-lg bg-white px-2 py-1 text-[10px] font-bold text-amber-700 shadow-sm hover:bg-amber-50';
+        replyButton.textContent = `Balas ${message.sender}`;
+        replyButton.addEventListener('click', () => {
+          adminReplyClientId = message.senderClientId || null;
+          adminReplyName = message.sender;
+          updateAdminReplyTarget();
+          document.getElementById('admin-chat-reply-input')?.focus();
+        });
+        bubble.appendChild(replyButton);
+      }
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'ml-2 mt-2 rounded-lg bg-rose-50 px-2 py-1 text-[10px] font-bold text-rose-700 hover:bg-rose-100';
+      deleteButton.textContent = 'Hapus';
+      deleteButton.addEventListener('click', () => deleteAdminChatMessage(message.id));
+      bubble.appendChild(deleteButton);
+      row.appendChild(bubble);
+      messageList.appendChild(row);
+    });
+  }
+  messageList.scrollTop = messageList.scrollHeight;
+  updateChatNotificationBadges();
+}
+
+function isMessageInAdminInbox(message, adminId) {
+  const recipientIds = Array.isArray(message.recipientIds) ? message.recipientIds.map(String) : [];
+  if (getChatMessageRole(message) === 'staff') return recipientIds.includes(adminId);
+  return message.conversationAdminId === adminId;
+}
+
+async function deleteAdminChatMessage(messageId) {
+  if (!currentChatAdmin || !chatRef) {
+    setAdminChatStatus('Buka inbox menggunakan sandi admin terlebih dahulu.', true);
+    return;
+  }
+  const message = chatMessages.find(item => item.id === messageId);
+  if (!message || !isMessageInAdminInbox(message, currentChatAdmin.id)) {
+    setAdminChatStatus('Pesan tidak ditemukan di inbox admin ini.', true);
+    return;
+  }
+  const isSharedStaffMessage = getChatMessageRole(message) === 'staff'
+    && (Array.isArray(message.recipientIds) ? message.recipientIds.length : 0) > 1;
+  const impactNotice = isSharedStaffMessage
+    ? '\nPesan staf ini juga ditujukan ke admin lain; penghapusan akan menghapusnya untuk semua penerima.'
+    : '';
+  if (!confirm(`Hapus pesan dari ${message.sender}? Pesan akan dihapus permanen.${impactNotice}`)) return;
+
+  try {
+    await chatRef.child(messageId).remove();
+    setAdminChatStatus('Pesan berhasil dihapus.');
+  } catch (error) {
+    console.error('Gagal menghapus pesan chat:', error);
+    setAdminChatStatus('Pesan gagal dihapus. Periksa koneksi atau izin Firebase.', true);
+  }
+}
+
+async function clearAdminChatConversation() {
+  if (!currentChatAdmin || !chatRef) {
+    setAdminChatStatus('Buka inbox menggunakan sandi admin terlebih dahulu.', true);
+    return;
+  }
+  const messageIds = chatMessages
+    .filter(message => isMessageInAdminInbox(message, currentChatAdmin.id))
+    .map(message => message.id);
+  if (messageIds.length === 0) {
+    setAdminChatStatus('Inbox tidak memiliki pesan untuk dihapus.');
+    return;
+  }
+
+  const includesSharedStaffMessages = chatMessages.some((message) =>
+    isMessageInAdminInbox(message, currentChatAdmin.id)
+    && getChatMessageRole(message) === 'staff'
+    && (Array.isArray(message.recipientIds) ? message.recipientIds.length : 0) > 1
+  );
+  const impactNotice = includesSharedStaffMessages
+    ? '\nPesan staf yang ditujukan ke beberapa admin juga akan terhapus dari inbox admin lain.'
+    : '';
+  if (!confirm(`Hapus semua ${messageIds.length} pesan dari inbox Admin ini secara permanen?${impactNotice}`)) return;
+
+  const deletion = Object.fromEntries(messageIds.map(id => [id, null]));
+  try {
+    await chatRef.update(deletion);
+    adminReplyClientId = null;
+    adminReplyName = '';
+    updateAdminReplyTarget();
+    setAdminChatStatus('Semua pesan di inbox berhasil dihapus.');
+  } catch (error) {
+    console.error('Gagal menghapus percakapan admin:', error);
+    setAdminChatStatus('Percakapan gagal dihapus. Periksa koneksi atau izin Firebase.', true);
+  }
+}
+
+function updateAdminReplyTarget() {
+  const target = document.getElementById('admin-chat-reply-target');
+  if (target) target.textContent = adminReplyName ? `Balas ke: ${adminReplyName}` : 'Pilih pesan staf untuk dibalas';
+}
+
+async function sendAdminChatReply(event) {
+  event.preventDefault();
+  const input = document.getElementById('admin-chat-reply-input');
+  const button = document.getElementById('admin-chat-reply-send');
+  const text = input?.value.trim().slice(0, 500) || '';
+  if (!currentChatAdmin) {
+    setAdminChatStatus('Buka inbox menggunakan sandi admin terlebih dahulu.', true);
+    return;
+  }
+  if (!text) {
+    setAdminChatStatus('Tulis balasan terlebih dahulu.', true);
+    return;
+  }
+  const hasStaffMessage = chatMessages.some((message) => {
+    const recipientIds = Array.isArray(message.recipientIds) ? message.recipientIds.map(String) : [];
+    return getChatMessageRole(message) === 'staff' && recipientIds.includes(currentChatAdmin.id);
+  });
+  if (!hasStaffMessage) {
+    setAdminChatStatus('Belum ada pesan staf yang dapat dibalas.', true);
+    return;
+  }
+
+  if (button) button.disabled = true;
+  setAdminChatStatus('Mengirim balasan...');
+  try {
+    await chatRef.push().set({
+      sender: currentChatAdmin.name,
+      senderRole: 'admin',
+      senderAdminId: currentChatAdmin.id,
+      senderClientId: CHAT_CLIENT_ID,
+      recipientRole: 'staff',
+      recipientClientId: adminReplyClientId,
+      conversationAdminId: currentChatAdmin.id,
+      text,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    if (input) input.value = '';
+    setAdminChatStatus('Balasan terkirim.');
+  } catch (error) {
+    console.error('Gagal mengirim balasan admin:', error);
+    setAdminChatStatus('Balasan gagal dikirim. Periksa koneksi atau izin Firebase.', true);
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+function initializeInternalChat() {
+  const messageForm = document.getElementById('internal-chat-form');
+  const messageInput = document.getElementById('internal-chat-input');
+  const senderInput = document.getElementById('internal-chat-sender');
+  const sendButton = document.getElementById('internal-chat-send');
+  const adminReplyForm = document.getElementById('admin-chat-reply-form');
+  if (!messageForm || !messageInput || !senderInput || !sendButton || !adminReplyForm) return;
+
+  if (!chatRef || !chatReadRef) {
+    setInternalChatStatus('Chat tidak tersedia: koneksi Firebase belum siap.', true);
+    sendButton.disabled = true;
+    return;
+  }
+
+  try {
+    staffChatReadAt = Number(localStorage.getItem(`laundry_qu_pos_chat_staff_read_${CHAT_CLIENT_ID}`)) || 0;
+  } catch (error) {
+    console.warn('Status baca chat staf tidak dapat dimuat:', error);
+  }
+  document.addEventListener('pointerdown', armChatNotificationSound, { once: true });
+  document.addEventListener('keydown', armChatNotificationSound, { once: true });
+  updateBrowserNotificationButtons();
+  adminReplyForm.addEventListener('submit', sendAdminChatReply);
+
+  chatRef.limitToLast(100).on('value', (snapshot) => {
+    const previousMessageIds = new Set(chatMessages.map(message => message.id));
+    chatMessages = Object.entries(snapshot.val() || {})
+      .map(([id, message]) => ({ id, ...message }))
+      .filter(message => message && typeof message.text === 'string' && typeof message.sender === 'string')
+      .sort((a, b) => (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0));
+
+    if (chatHasInitialSnapshot) {
+      chatMessages
+        .filter(message => !previousMessageIds.has(message.id) && shouldPlayChatNotification(message))
+        .forEach((message) => {
+          playChatNotificationSound();
+          showBrowserChatNotification(message);
+        });
+    } else {
+      chatHasInitialSnapshot = true;
+    }
+    renderInternalChat();
+    renderAdminChatInbox();
+    updateChatNotificationBadges();
+    if (!document.getElementById('internal-chat-panel')?.classList.contains('hidden')) markStaffChatRead();
+    if (currentChatAdmin && !document.getElementById('admin-chat-inbox-panel')?.classList.contains('hidden')) markAdminChatRead();
+  }, (error) => {
+    console.error('Gagal memuat chat staf:', error);
+    setInternalChatStatus('Gagal memuat chat. Periksa koneksi atau izin Firebase.', true);
+  });
+
+  updateInternalChatSender();
+  messageForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const sender = String(selectedCashierOnKasir || '').trim().slice(0, 60);
+    const text = messageInput.value.trim().slice(0, 500);
+    const adminRecipients = (appData.adminUsers || [])
+      .filter(user => user && user.id && user.name)
+      .map(user => ({ id: String(user.id), name: String(user.name).trim() }))
+      .filter(user => user.name);
+    if (adminRecipients.length === 0) adminRecipients.push({ id: 'master-admin', name: 'Master Admin' });
+
+    senderInput.value = sender;
+    if (!sender) {
+      setInternalChatStatus('Pilih kasir aktif di menu Kasir sebelum mengirim pesan.', true);
+      return;
+    }
+    if (adminRecipients.length === 0) {
+      setInternalChatStatus('Belum ada user Admin terdaftar sebagai penerima chat.', true);
+      return;
+    }
+    if (!text) {
+      setInternalChatStatus('Tulis pesan terlebih dahulu.', true);
+      return;
+    }
+
+    sendButton.disabled = true;
+    setInternalChatStatus(`Mengirim pesan ke ${adminRecipients.length} user Admin...`);
+    try {
+      await chatRef.push().set({
+        sender,
+        senderRole: 'staff',
+        senderClientId: CHAT_CLIENT_ID,
+        text,
+        recipientRole: 'admin',
+        recipientIds: adminRecipients.map(user => user.id),
+        recipientNames: adminRecipients.map(user => user.name),
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      messageInput.value = '';
+      setInternalChatStatus('Pesan terkirim.');
+      messageInput.focus();
+    } catch (error) {
+      console.error('Gagal mengirim chat staf:', error);
+      setInternalChatStatus('Pesan gagal dikirim. Periksa koneksi atau izin Firebase.', true);
+    } finally {
+      sendButton.disabled = false;
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: true });
+
   </script>
+  <section
+    id="internal-chat-panel"
+    role="region"
+    aria-label="Chat staf internal"
+    class="hidden fixed bottom-4 left-4 z-[70] h-[32rem] max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl md:bottom-4 md:left-[17rem] md:max-h-[calc(100vh-2rem)] no-print"
+  >
+    <header class="flex items-center justify-between bg-slate-900 px-4 py-3 text-white">
+      <div>
+        <h2 class="text-sm font-extrabold">Chat Admin</h2>
+        <p class="text-[11px] text-slate-300">Pesan ke user Admin terdaftar</p>
+      </div>
+      <button type="button" onclick="toggleInternalChat()" aria-label="Tutup chat" class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition hover:bg-slate-700 hover:text-white">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </header>
+    <div class="space-y-2 border-b border-slate-100 px-3 py-2">
+      <label for="internal-chat-sender" class="block text-[11px] font-bold text-slate-600">Pengirim (kasir aktif)</label>
+      <input id="internal-chat-sender" type="text" readonly placeholder="Pilih kasir aktif di menu Kasir" class="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-700" />
+      <p class="text-[10px] text-slate-500">Pesan akan dikirim ke semua user Admin terdaftar.</p>
+    </div>
+    <div id="internal-chat-messages" aria-live="polite" class="flex min-h-40 flex-1 flex-col gap-2 overflow-y-auto p-3"></div>
+    <form id="internal-chat-form" class="flex gap-2 border-t border-slate-100 p-3">
+      <input id="internal-chat-input" type="text" maxlength="500" required autocomplete="off" placeholder="Tulis pesan..." class="min-w-0 flex-1 rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button id="internal-chat-send" type="submit" aria-label="Kirim pesan" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+      </button>
+    </form>
+    <div class="flex items-center justify-between gap-2 px-3 pb-3">
+      <p id="internal-chat-status" role="status" class="min-w-0 text-xs text-slate-500">Menghubungkan chat...</p>
+      <button type="button" data-chat-notification-button onclick="enableBrowserChatNotifications('staff')" class="shrink-0 rounded-lg bg-blue-50 px-2 py-1.5 text-[10px] font-bold text-blue-700 hover:bg-blue-100">
+        <i class="fa-solid fa-bell" aria-hidden="true"></i> Aktifkan Notifikasi
+      </button>
+    </div>
+  </section>
+  <section
+    id="admin-chat-inbox-panel"
+    role="region"
+    aria-label="Inbox chat admin"
+    class="hidden fixed bottom-4 left-4 z-[70] h-[34rem] max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl md:bottom-4 md:left-[17rem] md:max-h-[calc(100vh-2rem)] no-print"
+  >
+    <header class="flex items-center justify-between bg-amber-600 px-4 py-3 text-white">
+      <div>
+        <h2 class="text-sm font-extrabold">Inbox Admin</h2>
+        <p class="text-[11px] text-amber-100">Pesan dari kasir dan karyawan</p>
+      </div>
+      <button type="button" onclick="toggleAdminChatInbox()" aria-label="Tutup inbox admin" class="flex h-8 w-8 items-center justify-center rounded-lg text-amber-100 transition hover:bg-amber-700 hover:text-white">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </header>
+    <form id="admin-chat-login" onsubmit="unlockAdminChatInbox(event)" class="flex flex-1 flex-col justify-center gap-3 p-5">
+      <div class="text-center">
+        <i class="fa-solid fa-lock mb-2 text-2xl text-amber-600" aria-hidden="true"></i>
+        <h3 class="font-extrabold text-slate-900">Inbox khusus admin</h3>
+        <p class="mt-1 text-xs text-slate-500">Masukkan sandi user Admin yang terdaftar untuk membuka inbox.</p>
+      </div>
+      <label for="admin-chat-login-password" class="text-xs font-bold text-slate-600">Sandi Admin</label>
+      <input id="admin-chat-login-password" type="password" required autocomplete="current-password" placeholder="Masukkan sandi admin" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+      <button type="submit" class="w-full rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-300">
+        Buka Inbox
+      </button>
+      <p id="admin-chat-login-status" role="status" class="text-xs text-slate-500"></p>
+    </form>
+    <div id="admin-chat-content" class="hidden min-h-0 flex-1 flex-col">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2">
+        <p id="admin-chat-active-user" class="min-w-0 truncate text-[11px] font-bold text-slate-600"></p>
+        <div class="flex shrink-0 items-center gap-1">
+          <button type="button" onclick="clearAdminChatConversation()" class="rounded-lg bg-rose-50 px-2 py-1.5 text-[10px] font-bold text-rose-700 hover:bg-rose-100">
+            <i class="fa-solid fa-trash-can mr-1" aria-hidden="true"></i> Hapus semua
+          </button>
+          <button type="button" onclick="lockAdminChatInbox()" class="rounded-lg bg-slate-100 px-2 py-1.5 text-[10px] font-bold text-slate-600 hover:bg-slate-200">
+            <i class="fa-solid fa-lock mr-1" aria-hidden="true"></i> Kunci
+          </button>
+        </div>
+      </div>
+      <div id="admin-chat-messages" aria-live="polite" class="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-3"></div>
+      <p id="admin-chat-reply-target" class="px-3 pt-2 text-[10px] font-bold text-slate-500">Pilih pesan staf untuk dibalas</p>
+      <form id="admin-chat-reply-form" class="flex gap-2 border-t border-slate-100 p-3">
+        <input id="admin-chat-reply-input" type="text" maxlength="500" required autocomplete="off" placeholder="Tulis balasan ke staf..." class="min-w-0 flex-1 rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+        <button id="admin-chat-reply-send" type="submit" aria-label="Kirim balasan" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-600 text-white transition hover:bg-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-300 disabled:cursor-not-allowed disabled:opacity-50">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        </button>
+      </form>
+      <div class="flex items-center justify-between gap-2 px-3 pb-3">
+        <p id="admin-chat-content-status" role="status" class="min-w-0 text-xs text-slate-500">Inbox tersinkron melalui Firebase.</p>
+        <button type="button" data-chat-notification-button onclick="enableBrowserChatNotifications('admin')" class="shrink-0 rounded-lg bg-amber-50 px-2 py-1.5 text-[10px] font-bold text-amber-700 hover:bg-amber-100">
+          <i class="fa-solid fa-bell" aria-hidden="true"></i> Aktifkan Notifikasi
+        </button>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
