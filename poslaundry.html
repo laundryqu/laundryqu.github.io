@@ -629,13 +629,12 @@
 
             </div>
 
-            <div class="sm:col-span-2 rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4 space-y-2">
-              <label for="kasir-agent-select" class="block text-xs font-extrabold uppercase tracking-wider text-indigo-900">
+            <div id="kasir-agent-select-container" class="sm:col-span-2 rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4 space-y-2">
+              <p class="block text-xs font-extrabold uppercase tracking-wider text-indigo-900">
                 <i class="fa-solid fa-shop mr-1 text-indigo-600"></i> Nota melalui agen
-              </label>
-              <select id="kasir-agent-select" onchange="updateReceiptPreview()" class="w-full rounded-xl border border-indigo-200 bg-white/90 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="">Bukan nota agen</option>
-              </select>
+              </p>
+              <input type="hidden" id="kasir-agent-select" value="" />
+              <div id="kasir-agent-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
               <p class="text-[11px] leading-relaxed text-indigo-800">Nota agen dibuat tanpa pembayaran awal. Setelah cucian siap dan dikembalikan ke agen, catat pembayaran pelanggan serta setoran melalui menu Agen Laundry.</p>
             </div>
 
@@ -1765,6 +1764,18 @@
               <input type="text" id="emp-base-salary" required value="1.500.000" oninput="formatThousandInput(this)" placeholder="Contoh: 1.500.000" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
             </div>
 
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="emp-payroll-min-omset" class="block text-xs font-bold uppercase text-slate-600 mb-1">Target Minimal Omset Bonus (Rp)</label>
+                <input type="text" id="emp-payroll-min-omset" required oninput="formatThousandInput(this)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              </div>
+              <div>
+                <label for="emp-payroll-bonus-pool-pct" class="block text-xs font-bold uppercase text-slate-600 mb-1">Persen Pool Bonus Individu (%)</label>
+                <input type="number" id="emp-payroll-bonus-pool-pct" min="0" step="0.01" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-extrabold font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              </div>
+            </div>
+            <p class="text-[11px] leading-relaxed text-slate-500">Target dan persentase ini dipakai khusus untuk karyawan ini. Karyawan lama yang belum memiliki nilai memakai pengaturan sebelumnya sebagai nilai awal.</p>
+
             <div class="flex gap-2">
               <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow transition">
                 <i class="fa-solid fa-user-plus mr-1"></i> Simpan Karyawan
@@ -2550,22 +2561,15 @@
               </label>
             </div>
 
-            <div class="lg:col-span-3">
-              <label class="block text-[11px] font-bold uppercase text-slate-600 mb-1">Target Minimal Omset (Rp)</label>
-              <input type="text" id="payroll-min-omset" value="1.500.000" oninput="formatThousandInput(this); calculatePayrollTable()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-mono text-xs font-extrabold" />
-            </div>
-
-            <div class="lg:col-span-2">
-              <label class="block text-[11px] font-bold uppercase text-slate-600 mb-1">Total Pool Bonus (%)</label>
-              <div class="relative">
-                <input type="text" id="payroll-bonus-pool-pct" value="35" oninput="formatThousandInput(this); calculatePayrollTable()" class="w-full px-3 py-2 pr-8 rounded-xl border border-slate-300 bg-white font-mono text-xs font-extrabold" />
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%</span>
-              </div>
+            <div class="lg:col-span-5 flex items-center">
+              <p class="rounded-xl border border-indigo-200 bg-indigo-50 px-3.5 py-2.5 text-xs leading-relaxed text-indigo-900">
+                Target omzet dan persentase pool bonus sekarang diatur per karyawan melalui menu <strong>Data Karyawan</strong>.
+              </p>
             </div>
 
             <div class="lg:col-span-4">
-              <label class="block text-[11px] font-bold uppercase text-slate-600 mb-1">Pilih Bulan Gaji</label>
-              <div id="payroll-month-radios" class="flex flex-wrap gap-1.5"></div>
+              <label for="payroll-month-picker" class="block text-[11px] font-bold uppercase text-slate-600 mb-1">Pilih Bulan &amp; Tahun Gaji</label>
+              <input type="month" id="payroll-month-picker" onchange="if(this.value){selectedPayrollMonth=this.value; calculatePayrollTable()}" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold text-slate-800" />
             </div>
           </div>
 
@@ -2575,6 +2579,8 @@
                 <tr>
                   <th class="p-3 rounded-tl-xl">Nama Karyawan</th>
                   <th class="p-3 text-right">Omset Lunas (Individu)</th>
+                  <th class="p-3 text-right">Target Individu</th>
+                  <th class="p-3 text-right">Pool Bonus</th>
                   <th class="p-3 text-right">Gaji Pokok</th>
                   <th class="p-3 text-center">Rincian Alur</th>
                   <th class="p-3 text-right">Bonus Lunas</th>
@@ -2852,9 +2858,19 @@
 
         <!-- 3. Form Daftar Paket Layanan (Support Kg, Pcs, Set, Stelan, & BUNDLE KG Kelipatan 7Kg / 14Kg) -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-5">
-          <div class="border-b border-slate-100 pb-3">
+          <div class="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
             <h2 class="text-lg font-extrabold text-slate-900">Manajemen Paket Layanan (Termasuk Paket Bundle 7 Kg / 14 Kg)</h2>
             <p class="text-xs text-slate-500">Untuk membuat <strong>Paket Bundle per 7 Kg atau 14 Kg</strong>, pilih Satuan Hitung <strong>Bundle Kg</strong> lalu isi <strong>Kapasitas Bundle = 7</strong> (atau 14). Jika cucian 6 Kg otomatis dihitung 1 Bundle (7 Kg), jika 8 Kg otomatis dihitung 2 Bundle (14 Kg).</p>
+            </div>
+            <div class="flex shrink-0 flex-wrap gap-2">
+              <button type="button" onclick="printServicePackages()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-print"></i> Cetak Daftar Paket
+              </button>
+              <button type="button" onclick="downloadServicePackagesXlsx()" class="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-file-excel"></i> Simpan ke Excel
+              </button>
+            </div>
           </div>
 
           <form id="form-service-package" onsubmit="saveServicePackage(event)" class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
@@ -3327,6 +3343,7 @@
       inventory: [],
       expenses: [],
       cashflows: [],
+      agentCommissionPayouts: [],
       orders: [],
       pickupOrders: []
     };
@@ -3560,6 +3577,7 @@
       if (data.inventory) merged.inventory = Object.values(data.inventory).filter(Boolean);
       if (data.expenses) merged.expenses = Object.values(data.expenses).filter(Boolean);
       if (data.cashflows) merged.cashflows = Object.values(data.cashflows).filter(Boolean);
+      if (data.agentCommissionPayouts) merged.agentCommissionPayouts = Object.values(data.agentCommissionPayouts).filter(Boolean);
       if (data.orders) merged.orders = Object.values(data.orders).filter(Boolean);
       if (data.pickupOrders) merged.pickupOrders = Object.values(data.pickupOrders).filter(Boolean);
       return merged;
@@ -4326,9 +4344,8 @@
             return `
               <label class="cursor-pointer">
                 <input type="radio" name="kasir_staff" value="${emp.name}" ${checked ? 'checked' : ''} onchange="selectCashierToOpenForm('${emp.name.replace(/'/g, "\\'")}')" class="peer sr-only" />
-                <div class="p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-xs font-extrabold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 hover:border-sky-300 transition flex items-center justify-between gap-2 shadow-2xs">
+                <div class="p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 text-xs font-extrabold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 hover:border-sky-300 transition flex items-center gap-2 shadow-2xs">
                   <span class="truncate"><i class="fa-solid fa-user-tie mr-1.5 text-sky-600"></i> ${emp.name}</span>
-                  <span class="text-[10px] px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-500">${emp.role}</span>
                 </div>
               </label>
             `;
@@ -7447,6 +7464,23 @@ function recalculateDetailedPcsFromText() {
     // =========================================================================
     // 11. TAB 5: DATA KARYAWAN
     // =========================================================================
+    function getEmployeePayrollSettings(employee = {}) {
+      const settings = appData.settings || {};
+      const fallbackMin = parseFormattedNumber(settings.payrollMinOmset ?? defaultState.settings.payrollMinOmset);
+      const fallbackPct = parseFormattedNumber(settings.payrollBonusPoolPct ?? defaultState.settings.payrollBonusPoolPct);
+      const employeeMin = Number(employee.payrollMinOmset);
+      const employeePct = Number(employee.payrollBonusPoolPct);
+
+      return {
+        payrollMinOmset: employee.payrollMinOmset != null && Number.isFinite(employeeMin) && employeeMin >= 0
+          ? employeeMin
+          : fallbackMin,
+        payrollBonusPoolPct: employee.payrollBonusPoolPct != null && Number.isFinite(employeePct) && employeePct >= 0
+          ? employeePct
+          : fallbackPct
+      };
+    }
+
     function renderEmployeeTable() {
       const tbody = document.getElementById('employee-table-tbody');
       if (!tbody) return;
@@ -7501,11 +7535,17 @@ function recalculateDetailedPcsFromText() {
       const phone = document.getElementById('emp-phone').value.trim();
       const role = document.querySelector('input[name="emp_role"]:checked')?.value || 'All-Rounder';
       const baseSalary = parseFormattedNumber(document.getElementById('emp-base-salary').value);
+      const payrollMinOmset = parseFormattedNumber(document.getElementById('emp-payroll-min-omset').value);
+      const payrollBonusPoolPct = Number(document.getElementById('emp-payroll-bonus-pool-pct').value);
+      if (!Number.isFinite(payrollMinOmset) || payrollMinOmset < 0 || !Number.isFinite(payrollBonusPoolPct) || payrollBonusPoolPct < 0) {
+        alert('Target omzet dan persentase pool bonus harus berupa angka nol atau lebih.');
+        return;
+      }
 
       if (editId) {
         const idx = appData.employees.findIndex(emp => emp.id === editId);
         if (idx !== -1) {
-          appData.employees[idx] = { ...appData.employees[idx], name, phone, role, baseSalary };
+          appData.employees[idx] = { ...appData.employees[idx], name, phone, role, baseSalary, payrollMinOmset, payrollBonusPoolPct };
         }
       } else {
         appData.employees.push({
@@ -7513,7 +7553,9 @@ function recalculateDetailedPcsFromText() {
           name,
           phone,
           role,
-          baseSalary
+          baseSalary,
+          payrollMinOmset,
+          payrollBonusPoolPct
         });
       }
 
@@ -7528,6 +7570,9 @@ function recalculateDetailedPcsFromText() {
       document.getElementById('emp-name').value = emp.name;
       document.getElementById('emp-phone').value = emp.phone;
       document.getElementById('emp-base-salary').value = formatNumberID(emp.baseSalary);
+      const payrollSettings = getEmployeePayrollSettings(emp);
+      document.getElementById('emp-payroll-min-omset').value = formatNumberID(payrollSettings.payrollMinOmset);
+      document.getElementById('emp-payroll-bonus-pool-pct').value = payrollSettings.payrollBonusPoolPct;
       const roleRadio = document.querySelector(`input[name="emp_role"][value="${emp.role}"]`);
       if (roleRadio) roleRadio.checked = true;
     }
@@ -7543,6 +7588,18 @@ function recalculateDetailedPcsFromText() {
       document.getElementById('emp-name').value = '';
       document.getElementById('emp-phone').value = '';
       document.getElementById('emp-base-salary').value = '1.500.000';
+      const payrollSettings = getEmployeePayrollSettings();
+      document.getElementById('emp-payroll-min-omset').value = formatNumberID(payrollSettings.payrollMinOmset);
+      document.getElementById('emp-payroll-bonus-pool-pct').value = payrollSettings.payrollBonusPoolPct;
+    }
+
+    function syncEmployeePayrollDefaults() {
+      if (document.getElementById('emp-edit-id')?.value) return;
+      const payrollSettings = getEmployeePayrollSettings();
+      const minInput = document.getElementById('emp-payroll-min-omset');
+      const pctInput = document.getElementById('emp-payroll-bonus-pool-pct');
+      if (minInput && !minInput.value) minInput.value = formatNumberID(payrollSettings.payrollMinOmset);
+      if (pctInput && !pctInput.value) pctInput.value = payrollSettings.payrollBonusPoolPct;
     }
 
     function escapeAgentText(value) {
@@ -7556,14 +7613,35 @@ function recalculateDetailedPcsFromText() {
     }
 
     function renderAgentOptions() {
-      const select = document.getElementById('kasir-agent-select');
-      if (!select) return;
-      const selectedId = select.value;
+      const selectedInput = document.getElementById('kasir-agent-select');
+      const optionsContainer = document.getElementById('kasir-agent-options');
+      if (!selectedInput || !optionsContainer) return;
+      const selectedId = selectedInput.value;
       const activeAgents = (appData.agents || []).filter(agent => agent && agent.isActive !== false);
-      select.innerHTML = `<option value="">Bukan nota agen</option>${activeAgents.map(agent => `
-        <option value="${escapeAgentText(agent.id)}">${escapeAgentText(agent.name)}</option>
-      `).join('')}`;
-      if (activeAgents.some(agent => agent.id === selectedId)) select.value = selectedId;
+      const activeSelectedId = activeAgents.some(agent => String(agent.id) === String(selectedId)) ? String(selectedId) : '';
+      selectedInput.value = activeSelectedId;
+      optionsContainer.innerHTML = [
+        { id: '', name: 'Bukan nota agen' },
+        ...activeAgents.map(agent => ({ id: String(agent.id), name: agent.name }))
+      ].map(agent => `
+        <label class="cursor-pointer">
+          <input type="radio" name="kasir_agent" value="${escapeAgentText(agent.id)}" ${agent.id === activeSelectedId ? 'checked' : ''} onchange="selectAgentForOrder(this.value)" class="peer sr-only" />
+          <span class="flex min-h-10 items-center rounded-xl border-2 border-indigo-200 bg-white/90 px-3 py-2 text-xs font-bold text-indigo-950 transition peer-checked:border-indigo-600 peer-checked:bg-indigo-100">
+            ${escapeAgentText(agent.name)}
+          </span>
+        </label>
+      `).join('');
+    }
+
+    function selectAgentForOrder(agentId) {
+      const selectedInput = document.getElementById('kasir-agent-select');
+      if (!selectedInput) return;
+      const activeAgents = (appData.agents || []).filter(agent => agent && agent.isActive !== false);
+      selectedInput.value = activeAgents.some(agent => String(agent.id) === String(agentId)) ? String(agentId) : '';
+      document.querySelectorAll('input[name="kasir_agent"]').forEach(radio => {
+        radio.checked = radio.value === selectedInput.value;
+      });
+      calculateKasirTotal();
     }
 
     function calculateAgentCommission(order) {
@@ -8681,26 +8759,8 @@ function recalculateDetailedPcsFromText() {
     }
 
     function renderPayrollMonthRadios() {
-      const container = document.getElementById('payroll-month-radios');
-      if (!container) return;
-
-      const months = [];
-      const now = new Date();
-      for (let i = 0; i < 4; i++) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        const label = d.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
-        months.push({ ym, label });
-      }
-
-      container.innerHTML = months.map(m => `
-        <label class="cursor-pointer">
-          <input type="radio" name="payroll_month_radio" value="${m.ym}" ${selectedPayrollMonth === m.ym ? 'checked' : ''} onchange="selectedPayrollMonth=this.value; calculatePayrollTable()" class="peer sr-only" />
-          <span class="px-2.5 py-1.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600 inline-block transition">
-            ${m.label}
-          </span>
-        </label>
-      `).join('');
+      const input = document.getElementById('payroll-month-picker');
+      if (input) input.value = selectedPayrollMonth;
     }
 
     function getOrderPaidWorkStages(order) {
@@ -8721,22 +8781,28 @@ function recalculateDetailedPcsFromText() {
 
     function computePayrollData() {
       const enableBonus = document.getElementById('payroll-enable-bonus')?.checked ?? true;
-      const minOmsetIndividu = parseFormattedNumber(document.getElementById('payroll-min-omset')?.value || '1.500.000');
-      const commPercent = parseFormattedNumber(document.getElementById('payroll-bonus-pool-pct')?.value || '35');
 
       const ordersInMonth = (appData.orders || []).filter(o => {
         if (o.isDeleted) return false;
-        const ym = new Date(o.createdAt).toISOString().slice(0, 7);
+        const createdAt = o.createdAt == null || o.createdAt === '' ? null : new Date(o.createdAt);
+        if (!createdAt || Number.isNaN(createdAt.getTime())) {
+          console.warn('Payroll skipped an order with an invalid creation date.', o.id);
+          return false;
+        }
+        const ym = createdAt.toISOString().slice(0, 7);
         return ym === selectedPayrollMonth;
       });
 
       const empMap = {};
       (appData.employees || []).forEach(emp => {
+        const payrollSettings = getEmployeePayrollSettings(emp);
         empMap[emp.name] = {
           id: emp.id,
           name: emp.name,
           role: emp.role,
           baseSalary: Number(emp.baseSalary) || 0,
+          payrollMinOmset: payrollSettings.payrollMinOmset,
+          payrollBonusPoolPct: payrollSettings.payrollBonusPoolPct,
           paidStageCounts: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
           lunasOmsetIndividu: 0,
           rawPaidBonus: 0,
@@ -8760,7 +8826,7 @@ function recalculateDetailedPcsFromText() {
 
           const bobotEfektif = (STAGE_BASE_WEIGHTS[s] / totalBobotAktifNota) * 100;
           const nilaiOmsetAlur = (Number(order.total) || 0) * (bobotEfektif / 100);
-          const bonusAlur = nilaiOmsetAlur * (commPercent / 100);
+          const bonusAlur = nilaiOmsetAlur * (empMap[worker].payrollBonusPoolPct / 100);
 
           if (order.payStatus === 'Lunas') {
             empMap[worker].paidStageCounts[s] = (empMap[worker].paidStageCounts[s] || 0) + 1;
@@ -8775,16 +8841,18 @@ function recalculateDetailedPcsFromText() {
 
       Object.values(empMap).forEach(ep => {
         ep.lunasOmsetIndividu = Math.round(ep.lunasOmsetIndividu);
-        ep.isEligibleIndividu = enableBonus && (ep.lunasOmsetIndividu >= minOmsetIndividu);
+        ep.isEligibleIndividu = enableBonus && (ep.lunasOmsetIndividu >= ep.payrollMinOmset);
         ep.paidBonus = ep.isEligibleIndividu ? Math.round(ep.rawPaidBonus) : 0;
       });
 
       return {
         enableBonus,
-        minOmsetIndividu,
-        commPercent,
         employeesPayroll: Object.values(empMap)
       };
+    }
+
+    function roundPayrollTotal(ep) {
+      return Math.round((Number(ep.baseSalary) + Number(ep.paidBonus)) / 500) * 500;
     }
 
     function calculatePayrollTable() {
@@ -8793,12 +8861,12 @@ function recalculateDetailedPcsFromText() {
       if (!tbody) return;
 
       if (data.employeesPayroll.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 font-bold">Belum ada Data</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-400 font-bold">Belum ada Data</td></tr>`;
         return;
       }
 
       tbody.innerHTML = data.employeesPayroll.map(ep => {
-        const totalCair = ep.baseSalary + Math.round(ep.paidBonus);
+        const totalCair = roundPayrollTotal(ep);
         const stageSummary = WORKFLOW_STAGES.slice(0, 7)
           .filter(st => ep.paidStageCounts[st.id] > 0)
           .map(st => `${st.short}: ${ep.paidStageCounts[st.id]}x`)
@@ -8811,6 +8879,8 @@ function recalculateDetailedPcsFromText() {
               <p class="text-[11px] text-slate-500">${ep.role}</p>
             </td>
             <td class="p-3 text-right font-mono font-bold text-slate-700">${formatRupiah(ep.lunasOmsetIndividu)}</td>
+            <td class="p-3 text-right font-mono font-bold text-slate-700">${formatRupiah(ep.payrollMinOmset)}</td>
+            <td class="p-3 text-right font-mono font-bold text-slate-700">${ep.payrollBonusPoolPct}%</td>
             <td class="p-3 text-right font-mono font-bold text-slate-700">${formatRupiah(ep.baseSalary)}</td>
             <td class="p-3 text-center text-[11px] text-slate-600 max-w-xs">${stageSummary}</td>
             <td class="p-3 text-right font-mono font-bold text-indigo-700">+ ${formatRupiah(ep.paidBonus)}</td>
@@ -8839,7 +8909,7 @@ function recalculateDetailedPcsFromText() {
       const data = computePayrollData();
       const ep = data.employeesPayroll.find(e => e.id === empId);
       if (!ep) return;
-      const totalCair = ep.baseSalary + ep.paidBonus;
+      const totalCair = roundPayrollTotal(ep);
       if (!confirm(`Tutup Buku Gaji untuk ${ep.name} (Periode ${selectedPayrollMonth}) sebesar ${formatRupiah(totalCair)}?`)) return;
 
       const ts = Date.now();
@@ -8867,7 +8937,7 @@ function recalculateDetailedPcsFromText() {
 
     function closePayrollBook() {
       const data = computePayrollData();
-      const totalPayrollOut = data.employeesPayroll.reduce((acc, ep) => acc + ep.baseSalary + Math.round(ep.paidBonus), 0);
+      const totalPayrollOut = data.employeesPayroll.reduce((acc, ep) => acc + roundPayrollTotal(ep), 0);
       if (totalPayrollOut <= 0) {
         alert("Belum ada Data nominal gaji untuk ditutup buku.");
         return;
@@ -9034,6 +9104,116 @@ function recalculateDetailedPcsFromText() {
         box.classList.remove('hidden');
       } else {
         box.classList.add('hidden');
+      }
+    }
+
+    function getServicePackageExportData() {
+      return (appData.services || []).filter(Boolean).map(srv => {
+        const workflows = (srv.activeStages || []).map(value => {
+          const stageId = typeof value === 'number'
+            ? value
+            : (STAGE_KEY_TO_ID[String(value).toLowerCase()] ?? Number(value));
+          return WORKFLOW_STAGES.find(stage => stage.id === stageId)?.short;
+        }).filter(Boolean).join(' → ');
+        return {
+          name: String(srv.name || ''),
+          price: Number(srv.price) || 0,
+          unit: srv.unit === 'Bundle' ? 'Bundle Kg' : (srv.unit || 'Kg'),
+          bundleKg: srv.unit === 'Bundle' ? (Number(srv.bundleKg) || 7) : '',
+          duration: `${srv.estValue || 0} ${srv.estUnit === 'hours' ? 'Jam' : 'Hari'}`,
+          workflows: workflows || 'Tanpa Rinci',
+          isDefault: srv.isDefault ? 'Ya' : 'Tidak'
+        };
+      });
+    }
+
+    function printServicePackages() {
+      const packages = getServicePackageExportData();
+      if (!packages.length) {
+        alert('Belum ada paket laundry untuk dicetak.');
+        return;
+      }
+      const printWindow = window.open('', '_blank', 'width=1000,height=760');
+      if (!printWindow) {
+        alert('Jendela cetak tidak dapat dibuka. Izinkan pop-up lalu coba lagi.');
+        return;
+      }
+      const rows = packages.map(item => `
+        <tr>
+          <td>${escapeAgentText(item.name)}</td>
+          <td class="numeric">${escapeAgentText(formatRupiah(item.price))}</td>
+          <td>${escapeAgentText(item.unit)}</td>
+          <td class="numeric">${item.bundleKg === '' ? '-' : escapeAgentText(item.bundleKg)}</td>
+          <td>${escapeAgentText(item.duration)}</td>
+          <td>${escapeAgentText(item.workflows)}</td>
+          <td>${escapeAgentText(item.isDefault)}</td>
+        </tr>
+      `).join('');
+      printWindow.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Daftar Paket Laundry</title><style>
+        body{font:14px Arial,sans-serif;color:#172530;padding:24px}h1{font-size:20px;margin:0 0 5px}p{color:#526572;margin:0 0 18px}
+        table{width:100%;border-collapse:collapse}th,td{border:1px solid #bdc9d0;padding:9px;text-align:left}th{background:#173b4a;color:#fff}
+        tbody tr:nth-child(even){background:#f1f5f7}.numeric{text-align:right;white-space:nowrap}
+        @media print{body{padding:0}thead{display:table-header-group}}
+      </style></head><body><h1>Daftar Paket Laundry</h1><p>${escapeAgentText(appData.settings.storeName || 'Laundry QU')} · Dicetak ${new Date().toLocaleString('id-ID')}</p>
+        <table><thead><tr><th>Nama Paket</th><th>Harga</th><th>Satuan</th><th>Bundle (Kg)</th><th>Estimasi</th><th>Tahapan Alur</th><th>Default</th></tr></thead><tbody>${rows}</tbody></table>
+      </body></html>`);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+      }, 250);
+    }
+
+    let xlsxLibraryPromise = null;
+    function loadXlsxLibrary() {
+      if (window.XLSX) return Promise.resolve(window.XLSX);
+      if (!xlsxLibraryPromise) {
+        xlsxLibraryPromise = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+          script.dataset.xlsxExport = 'true';
+          script.onload = () => window.XLSX
+            ? resolve(window.XLSX)
+            : reject(new Error('Pustaka Excel berhasil dimuat tetapi tidak tersedia.'));
+          script.onerror = () => reject(new Error('Pustaka Excel gagal dimuat dari CDN.'));
+          document.head.append(script);
+        }).catch(error => {
+          xlsxLibraryPromise = null;
+          throw error;
+        });
+      }
+      return xlsxLibraryPromise;
+    }
+
+    async function downloadServicePackagesXlsx() {
+      const packages = getServicePackageExportData();
+      if (!packages.length) {
+        alert('Belum ada paket laundry untuk diekspor.');
+        return;
+      }
+      try {
+        const XLSX = await loadXlsxLibrary();
+        const rows = packages.map(item => [
+          item.name,
+          item.price,
+          item.unit,
+          item.bundleKg,
+          item.duration,
+          item.workflows,
+          item.isDefault
+        ]);
+        const worksheet = XLSX.utils.aoa_to_sheet([
+          ['Nama Paket', 'Harga (Rp)', 'Satuan', 'Kapasitas Bundle (Kg)', 'Estimasi', 'Tahapan Alur', 'Paket Default'],
+          ...rows
+        ]);
+        worksheet['!cols'] = [{ wch: 30 }, { wch: 16 }, { wch: 14 }, { wch: 23 }, { wch: 14 }, { wch: 42 }, { wch: 15 }];
+        worksheet['!autofilter'] = { ref: `A1:G${packages.length + 1}` };
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Paket Laundry');
+        XLSX.writeFile(workbook, 'daftar-paket-laundry.xlsx');
+      } catch (error) {
+        console.error('Gagal mengekspor daftar paket laundry ke Excel:', error);
+        alert('Ekspor Excel gagal. Periksa koneksi internet lalu coba lagi.');
       }
     }
 
@@ -9667,7 +9847,7 @@ function recalculateDetailedPcsFromText() {
       const ep = data.employeesPayroll.find(e => e.id === empId);
       if (!ep) return '';
       const s = appData.settings;
-      const totalCair = ep.baseSalary + Math.round(ep.paidBonus);
+      const totalCair = roundPayrollTotal(ep);
       const stageRows = WORKFLOW_STAGES.slice(0, 7).map(st => `
         <tr>
           <td style="padding:4px 8px;border:1px solid #cbd5e1;">${st.name}</td>
@@ -9771,6 +9951,7 @@ function recalculateDetailedPcsFromText() {
       updateTopStatistics();
       renderOnlinePickupQueue();
       renderKasirOptions();
+      syncEmployeePayrollDefaults();
       renderLaundryAgents();
       renderProgresOrderRadios();
       renderPelunasanList();
@@ -9890,13 +10071,13 @@ function restoreKasirDraft() {
         selectMemberForKasir(d.memberId);
       }
     }
-
     if (document.getElementById('kasir-cust-name')) document.getElementById('kasir-cust-name').value = d.custName || '';
     if (document.getElementById('kasir-cust-phone')) document.getElementById('kasir-cust-phone').value = d.custPhone || '';
     if (document.getElementById('kasir-cust-address')) document.getElementById('kasir-cust-address').value = d.custAddress || '';
-    const agentSelect = document.getElementById('kasir-agent-select');
-    if (agentSelect && d.agentId && Array.from(agentSelect.options).some(option => option.value === d.agentId)) {
-      agentSelect.value = d.agentId;
+    if (d.agentId) {
+      const agentRadio = Array.from(document.querySelectorAll('input[name="kasir_agent"]'))
+        .find(radio => radio.value === String(d.agentId));
+      if (agentRadio) selectAgentForOrder(agentRadio.value);
     }
     if (document.getElementById('kasir-weight')) document.getElementById('kasir-weight').value = d.weight || '';
     if (document.getElementById('kasir-pcs')) document.getElementById('kasir-pcs').value = d.pcs || '';
@@ -10904,19 +11085,18 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
     };
     let activeRole = null;
     let agentObserver = null;
-    let agentSelect = null;
+    let agentOptionsContainer = null;
 
     function syncAgentSelection() {
       const agentId = window.__laundryWorkspaceAgentId;
-      const select = document.getElementById('kasir-agent-select');
-      if (!agentId || !select) return;
-      const option = Array.from(select.options).find(item => item.value === agentId);
-      if (!option) return;
-      select.value = agentId;
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-      select.disabled = true;
-      const form = document.getElementById('kasir-agent-select-container') || select.parentElement;
-      if (form) form.classList.add('workspace-agent-select-hidden');
+      const option = Array.from(document.querySelectorAll('input[name="kasir_agent"]'))
+        .find(item => item.value === String(agentId || ''));
+      if (!agentId || !option) return;
+      selectAgentForOrder(agentId);
+      selectCashierToOpenForm(window.__laundryWorkspaceAgentName || 'Agen');
+      document.getElementById('kasir-selected-banner')?.querySelector('button')?.classList.add('hidden');
+      const container = document.getElementById('kasir-agent-select-container');
+      if (container) container.classList.add('workspace-agent-select-hidden');
     }
 
     function applyWorkspace(event) {
@@ -10969,10 +11149,10 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
         }
         badge.textContent = `Nota untuk Agen: ${window.__laundryWorkspaceAgentName}`;
         if (agentObserver) agentObserver.disconnect();
-        agentSelect = document.getElementById('kasir-agent-select');
-        if (agentSelect) {
+        agentOptionsContainer = document.getElementById('kasir-agent-options');
+        if (agentOptionsContainer) {
           agentObserver = new MutationObserver(syncAgentSelection);
-          agentObserver.observe(agentSelect, { childList: true });
+          agentObserver.observe(agentOptionsContainer, { childList: true });
         }
         if (typeof window.resetKasirForm === 'function' && !window.__laundryWorkspaceResetWrapped) {
           const resetKasirForm = window.resetKasirForm;
@@ -11028,7 +11208,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       body.workspace-embedded .tab-panel table { color: #e5eef2 !important; }
       body.workspace-embedded .tab-panel thead { background: rgba(255,255,255,.04) !important; }
       body.workspace-embedded .tab-panel tr { border-color: rgba(255,255,255,.1) !important; }
-      body.workspace-embedded #kasir-agent-select.workspace-agent-select-hidden { display: none !important; }
+      body.workspace-embedded #kasir-agent-select-container.workspace-agent-select-hidden { display: none !important; }
       body.workspace-embedded .workspace-agent-select-hidden { display: none !important; }
       body.workspace-embedded .workspace-agent-badge {
         margin: 0 0 14px; padding: 10px 13px; color: #c9fffa; background: rgba(36, 159, 151, .15);
@@ -11064,6 +11244,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
           ['karyawan', 'Data Karyawan', 'users-round'],
           ['agen', 'Agen Laundry', 'store'],
           ['keuangan', 'Keuangan & Gaji', 'wallet'],
+          ['setoran-agen', 'Setoran Komisi Agen', 'badge-dollar-sign'],
           ['setting', 'Pengaturan & Paket', 'settings-2'],
           ['laporan', 'Laporan Keuangan', 'chart-no-axes-column-increasing'],
           ['inbox', 'Inbox Admin', 'messages-square']
@@ -11127,14 +11308,14 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
     const style = document.createElement('style');
     style.id = 'workspace-shell-style';
     style.textContent = `
-      body.workspace-standalone { display:block!important; min-width:320px!important; min-height:100vh; overflow:hidden; color:#eef4fa!important; background:#07111a!important; }
-      body.workspace-standalone::before { position:fixed; z-index:0; inset:-20px; content:""; background:linear-gradient(110deg,rgba(5,12,19,.78),rgba(7,17,25,.6) 48%,rgba(7,15,21,.86)),url("https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?auto=format&fit=crop&w=2400&q=85") center/cover; filter:blur(7px) saturate(.72); transform:scale(1.02); }
-      body.workspace-standalone::after { position:fixed; z-index:0; inset:0; content:""; pointer-events:none; background:radial-gradient(ellipse at 79% 4%,rgba(45,154,164,.17),transparent 34%),linear-gradient(180deg,rgba(4,9,14,.18),rgba(4,9,14,.52)); }
+      body.workspace-standalone { --ws-ink:#172530; display:block!important; min-width:320px!important; min-height:100vh; overflow:hidden; color:var(--ws-ink)!important; background:#eaf0f3!important; }
+      body.workspace-standalone::before { position:fixed; z-index:0; inset:-20px; content:""; background:linear-gradient(110deg,rgba(248,251,252,.72),rgba(244,249,250,.56) 48%,rgba(241,247,249,.7)),url("https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?auto=format&fit=crop&w=2400&q=85") center/cover; filter:blur(8px) saturate(.86) brightness(1.12); transform:scale(1.03); }
+      body.workspace-standalone::after { position:fixed; z-index:0; inset:0; content:""; pointer-events:none; background:radial-gradient(ellipse at 79% 4%,rgba(255,255,255,.34),transparent 36%),linear-gradient(180deg,rgba(247,251,252,.12),rgba(226,236,240,.3)); }
       body.workspace-standalone > header,body.workspace-standalone #sidebar,body.workspace-standalone #sidebar-backdrop,body.workspace-standalone #internal-chat-panel,body.workspace-standalone #admin-chat-inbox { display:none!important; }
-      #workspace-shell { position:fixed; z-index:10; inset:0; display:grid; grid-template-columns:252px minmax(0,1fr); gap:20px; width:min(1640px,100%); margin:auto; padding:22px; color:#eef4fa; font-family:"DM Sans",Arial,sans-serif; }
+      #workspace-shell { position:fixed; z-index:10; inset:0; display:grid; grid-template-columns:252px minmax(0,1fr); gap:20px; width:min(1640px,100%); margin:auto; padding:22px; color:var(--ws-ink); font-family:"DM Sans",Arial,sans-serif; }
       #workspace-shell[hidden],#workspace-login[hidden] { display:none!important; }
-      .ws-glass { background:rgba(18,30,42,.66); border:1px solid rgba(230,242,255,.13); border-radius:22px; box-shadow:0 22px 65px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.045); backdrop-filter:blur(24px); }
-      .ws-sidebar { display:flex; flex-direction:column; min-height:0; padding:18px 13px 13px; background:rgba(11,20,29,.78); }
+      .ws-glass { color:var(--ws-ink); background:rgba(250,253,254,.45); border:1px solid rgba(255,255,255,.76); border-radius:22px; box-shadow:0 22px 65px rgba(20,35,48,.15),inset 0 1px rgba(255,255,255,.82); backdrop-filter:blur(24px) saturate(1.18); }
+      .ws-sidebar { display:flex; flex-direction:column; min-height:0; padding:18px 13px 13px; background:rgba(248,252,253,.45); }
       .ws-brand { display:flex; align-items:center; gap:11px; padding:5px 8px 20px; border-bottom:1px solid rgba(255,255,255,.09); font-family:Manrope,Arial,sans-serif; letter-spacing:.075em; }
       .ws-logo { display:grid; width:42px; height:42px; flex:none; place-items:center; color:#b6fffa; background:linear-gradient(145deg,rgba(69,213,203,.24),rgba(110,178,193,.08)); border:1px solid rgba(156,246,235,.22); border-radius:14px; }
       .ws-brand-text { display:grid; gap:3px; font-size:12px; font-weight:800; }
@@ -11149,13 +11330,13 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       .ws-sidebar-bottom { display:grid; gap:10px; margin-top:auto; padding:16px 8px 3px; color:#9aacb7; font-size:11px; }
       .ws-status { display:flex; align-items:center; gap:8px; }
       .ws-status i { width:7px; height:7px; background:#68d7a4; border-radius:50%; box-shadow:0 0 12px rgba(104,215,164,.6); }
-      .ws-logout { display:flex; gap:8px; align-items:center; padding:10px; color:#adbbc5; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:12px; cursor:pointer; }
+      .ws-logout { display:flex; gap:8px; align-items:center; padding:10px; color:#adbbc5; background:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.08); border-radius:12px; cursor:pointer; }
       .ws-main { display:flex; min-width:0; min-height:0; flex-direction:column; overflow:auto; padding:4px 2px 22px; }
       .ws-topbar { display:flex; min-height:77px; flex:none; align-items:center; justify-content:space-between; gap:20px; margin:1px 3px 18px; }
       .ws-overline { color:#90a5b4; font-size:11px; font-weight:600; }
       .ws-overline span { padding:0 7px; color:#627686; }
       .ws-topbar h1 { margin:5px 0 0; font:800 28px Manrope,Arial,sans-serif; letter-spacing:-.045em; }
-      .ws-user { display:flex; align-items:center; gap:10px; padding:7px 12px 7px 7px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.095); border-radius:15px; }
+      .ws-user { display:flex; align-items:center; gap:10px; padding:7px 12px 7px 7px; background:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.095); border-radius:15px; }
       .ws-avatar { display:grid; width:34px; height:34px; place-items:center; color:#c9fffb; background:rgba(77,194,187,.17); border:1px solid rgba(125,230,225,.24); border-radius:12px; font-weight:700; }
       .ws-user-name { display:grid; gap:2px; font-size:11px; font-weight:700; }
       .ws-user-name small { color:#8ea1b0; font-size:10px; font-weight:400; }
@@ -11185,13 +11366,20 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       .ws-report-stat span { color:#9eafba; font-size:10px; }
       .ws-report-stat strong { font:800 19px Manrope,Arial,sans-serif; }
       .ws-report-stat small { color:#8294a0; font-size:9px; }
+      .ws-payout-card { margin-bottom:15px; padding:18px; }
+      .ws-payout-form { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; align-items:end; }
+      .ws-payout-form label { display:grid; gap:5px; color:#526572; font-size:11px; font-weight:700; }
+      .ws-payout-form input,.ws-payout-form select { width:100%; min-height:39px; padding:0 10px; color:#172530; background:rgba(255,255,255,.82); border:1px solid rgba(25,49,62,.18); border-radius:10px; outline:0; }
+      .ws-payout-form .ws-payout-note { grid-column:span 2; }
+      .ws-payout-form .ws-button { grid-column:span 2; }
+      .ws-payout-footnote { margin:12px 0 0; color:#526572; font-size:11px; line-height:1.55; }
       .ws-table-card { overflow:hidden; }
       .ws-table-title { padding:17px 19px 13px; border-bottom:1px solid rgba(255,255,255,.08); }
       .ws-table-title h3 { margin:0 0 4px; font:700 14px Manrope,Arial,sans-serif; }
       .ws-table-title p { margin:0; color:#92a4b0; font-size:10px; }
       .ws-table-scroll { overflow:auto; }
       .ws-table { width:100%; border-collapse:collapse; white-space:nowrap; text-align:left; }
-      .ws-table th { padding:12px 15px; color:#81949f; background:rgba(255,255,255,.025); font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+      .ws-table th { padding:12px 15px; color:#f8fafc; background:#173b4a; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
       .ws-table td { padding:12px 15px; color:#d4dfe5; border-top:1px solid rgba(255,255,255,.055); font-size:10px; }
       .ws-right { text-align:right; }
       .ws-mono { font-family:ui-monospace,Consolas,monospace; }
@@ -11228,7 +11416,78 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       .ws-login-notice { padding:9px 10px; color:#f1c994!important; background:rgba(194,131,57,.12); border:1px solid rgba(238,191,131,.17); border-radius:9px; }
       .ws-login-foot { margin:15px 0 0; color:#80939f!important; font-size:9px!important; text-align:center; }
       @media(max-width:850px) { #workspace-shell { grid-template-columns:210px minmax(0,1fr); gap:12px; padding:13px; } .ws-sidebar { padding:14px 9px; } }
-      @media(max-width:680px) { #workspace-shell { display:flex; flex-direction:column; gap:9px; padding:8px; } .ws-sidebar { flex:none; padding:8px; border-radius:17px; } .ws-brand { padding:1px 3px 9px; border:0; } .ws-logo { width:34px;height:34px; } .ws-caption,.ws-sidebar-bottom { display:none; } .ws-nav { display:flex; gap:5px; overflow:auto; scrollbar-width:none; } .ws-nav button { min-height:37px; flex:none; gap:6px; padding:0 9px; border-radius:10px; } .ws-nav button span { font-size:9px; } .ws-nav button svg { width:15px;height:15px; } .ws-main { flex:1; padding:0 2px 10px; } .ws-topbar { min-height:60px; margin:0 2px 9px; } .ws-topbar h1 { font-size:21px; } .ws-overline { font-size:9px; } .ws-user { gap:6px; padding:4px; } .ws-user-name { display:none; } .ws-avatar { width:30px;height:30px; } .ws-report-stats { grid-template-columns:1fr; gap:8px; } .ws-report-stat { grid-template-columns:1fr auto; gap:7px; padding:13px; } .ws-report-stat span { grid-column:1/-1; } .ws-chat { min-height:580px; padding:14px; } .ws-controls { grid-template-columns:1fr; } body.workspace-standalone main.ws-old-main { padding:11px!important; } }
+      @media(max-width:680px) { #workspace-shell { display:flex; flex-direction:column; gap:9px; padding:8px; } .ws-sidebar { flex:none; padding:8px; border-radius:17px; } .ws-brand { padding:1px 3px 9px; border:0; } .ws-logo { width:34px;height:34px; } .ws-caption,.ws-sidebar-bottom { display:none; } .ws-nav { display:flex; gap:5px; overflow:auto; scrollbar-width:none; } .ws-nav button { min-height:37px; flex:none; gap:6px; padding:0 9px; border-radius:10px; } .ws-nav button span { font-size:12px; } .ws-nav button svg { width:15px;height:15px; } .ws-main { flex:1; padding:0 2px 10px; } .ws-topbar { min-height:60px; margin:0 2px 9px; } .ws-topbar h1 { font-size:21px; } .ws-overline { font-size:12px; } .ws-user { gap:6px; padding:4px; } .ws-user-name { display:none; } .ws-avatar { width:30px;height:30px; } .ws-report-stats { grid-template-columns:1fr; gap:8px; } .ws-report-stat { grid-template-columns:1fr auto; gap:7px; padding:13px; } .ws-report-stat span { grid-column:1/-1; } .ws-chat { min-height:580px; padding:14px; } .ws-controls,.ws-payout-form { grid-template-columns:1fr; } .ws-payout-form .ws-payout-note,.ws-payout-form .ws-button { grid-column:auto; } body.workspace-standalone main.ws-old-main { padding:11px!important; } }
+      .ws-sidebar { background:rgba(248,252,253,.45); }
+      .ws-brand { border-bottom-color:rgba(22,39,51,.12); }
+      .ws-logo { position:relative; overflow:hidden; padding:5px; color:#155f60; background:linear-gradient(145deg,rgba(56,180,171,.13),rgba(110,178,193,.08)); border-color:rgba(21,95,96,.18); }
+      .ws-logo [data-workspace-brand-logo] { width:100%; height:100%; object-fit:contain; border-radius:9px; }
+      .ws-logo [data-workspace-brand-fallback][hidden] { display:none!important; }
+      .ws-brand-text { color:#172530; font-size:13px; }
+      .ws-brand-text small { color:#526572; font-size:12px; }
+      .ws-caption { color:#566874; font-size:11px; }
+      .ws-nav button { color:#435563; }
+      .ws-nav button:hover { color:#142d39; background:rgba(18,65,73,.08); }
+      .ws-nav button.active { color:#145955; background:linear-gradient(100deg,rgba(34,178,173,.16),rgba(38,101,114,.08)); border-color:rgba(30,124,118,.2); }
+      .ws-nav button span { font-size:13px; }
+      .ws-sidebar-bottom { color:#4b5e6b; font-size:12px; }
+      .ws-logout { color:#344854; background:rgba(255,255,255,.45); border-color:rgba(25,49,62,.13); }
+      .ws-overline { color:#526674; font-size:13px; }
+      .ws-overline span { color:#71838e; }
+      .ws-user { background:rgba(255,255,255,.45); border-color:rgba(25,49,62,.12); }
+      .ws-avatar { color:#155f60; background:rgba(77,194,187,.14); border-color:rgba(35,119,115,.2); }
+      .ws-user-name { color:#172530; font-size:12px; }
+      .ws-user-name small,.ws-subtitle { color:#4b5e6b; }
+      .ws-subtitle { font-size:14px; }
+      .ws-welcome p,.ws-heading p { color:#4b5e6b; font-size:13px; }
+      .ws-eyebrow { color:#176c66; font-size:11px; }
+      .ws-stat { background:rgba(255,255,255,.45); border-color:rgba(25,49,62,.11); }
+      .ws-stat span,.ws-report-stat span { color:#526572; font-size:12px; }
+      .ws-report-stat small { color:#526572; font-size:11px; }
+      .ws-table-title { border-bottom-color:rgba(25,49,62,.12); }
+      .ws-table-title h3 { font-size:15px; }
+      .ws-table-title p { color:#526572; font-size:12px; }
+      .ws-table th { color:#f8fafc; background:#173b4a; font-size:12px; }
+      .ws-table td { color:#263944; border-top-color:rgba(25,49,62,.1); font-size:12px; }
+      .ws-empty { color:#526572!important; }
+      .ws-status-pill { color:#16633c; background:rgba(65,182,122,.14); font-size:11px; }
+      .ws-status-pill.pending { color:#80541f; background:rgba(206,144,60,.16); }
+      .ws-chat-head { border-bottom-color:rgba(25,49,62,.12); }
+      .ws-chat-icon { color:#176c66; background:rgba(69,213,203,.13); border-color:rgba(35,119,115,.18); }
+      .ws-chat-head h2 { font-size:16px; }
+      .ws-chat-head p,.ws-controls label { color:#526572; font-size:12px; }
+      .ws-controls select,.ws-compose input { color:#172530; background:rgba(255,255,255,.82); border-color:rgba(25,49,62,.18); }
+      .ws-chat-list { scrollbar-color:rgba(71,99,112,.35) transparent; }
+      .ws-chat-empty { color:#526572; font-size:13px; }
+      .ws-bubble { background:rgba(234,241,244,.9); border-color:rgba(25,49,62,.1); }
+      .ws-bubble.own { background:rgba(45,173,165,.16); border-color:rgba(35,119,115,.18); }
+      .ws-bubble strong { color:#176c66; font-size:11px; }
+      .ws-bubble p { color:#1e303b; font-size:13px; }
+      .ws-bubble time { color:#526572; font-size:11px; }
+      .ws-compose { border-top-color:rgba(25,49,62,.12); }
+      .ws-button { font-size:12px; }
+      .ws-error { color:#8c2924; background:rgba(185,67,55,.1); border-color:rgba(160,54,44,.18); font-size:12px; }
+      #workspace-login { background:rgba(35,51,60,.22); }
+      .ws-login-card p { color:#435663; font-size:13px; }
+      .ws-login-form label { color:#344956; font-size:12px; }
+      .ws-login-form input,.ws-login-form select { color:#172530; background:rgba(255,255,255,.86); border-color:rgba(25,49,62,.18); }
+      .ws-login-notice { color:#704b1c!important; }
+      .ws-login-foot { color:#526572!important; font-size:11px!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel { color:#172530!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel .bg-white[class*="rounded"],body.workspace-standalone main.ws-old-main .tab-panel .bg-slate-50[class*="rounded"],body.workspace-standalone main.ws-old-main .tab-panel .bg-slate-100[class*="rounded"] { color:#172530!important; background:rgba(250,253,254,.45)!important; border-color:rgba(25,49,62,.13)!important; box-shadow:0 12px 35px rgba(20,35,48,.11)!important; backdrop-filter:blur(20px) saturate(1.15); }
+      body.workspace-standalone main.ws-old-main .tab-panel .agent-glass-panel { background:rgba(250,253,254,.45)!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel .text-slate-900,body.workspace-standalone main.ws-old-main .tab-panel .text-slate-800,body.workspace-standalone main.ws-old-main .tab-panel .text-gray-900 { color:#172530!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel .text-slate-700,body.workspace-standalone main.ws-old-main .tab-panel .text-slate-600,body.workspace-standalone main.ws-old-main .tab-panel .text-slate-500,body.workspace-standalone main.ws-old-main .tab-panel .text-slate-400,body.workspace-standalone main.ws-old-main .tab-panel .text-slate-300,body.workspace-standalone main.ws-old-main .tab-panel .text-gray-600,body.workspace-standalone main.ws-old-main .tab-panel .text-gray-500 { color:#465965!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel input:not([type=checkbox]):not([type=radio]),body.workspace-standalone main.ws-old-main .tab-panel textarea,body.workspace-standalone main.ws-old-main .tab-panel select { color:#172530!important; background-color:rgba(255,255,255,.9)!important; border-color:rgba(25,49,62,.2)!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel input::placeholder,body.workspace-standalone main.ws-old-main .tab-panel textarea::placeholder { color:#667984!important; opacity:1; }
+      body.workspace-standalone main.ws-old-main .tab-panel .text-xs { font-size:13px!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel [class~="text-[8px]"],body.workspace-standalone main.ws-old-main .tab-panel [class~="text-[9px]"],body.workspace-standalone main.ws-old-main .tab-panel [class~="text-[10px]"],body.workspace-standalone main.ws-old-main .tab-panel [class~="text-[11px]"] { font-size:12px!important; line-height:1.35; }
+      body.workspace-standalone main.ws-old-main .tab-panel thead.bg-slate-100 { color:#f8fafc!important; background:#173b4a!important; }
+      body.workspace-standalone main.ws-old-main .tab-panel thead.bg-slate-100 th:not([class*="bg-"]) { color:#f8fafc!important; }
+      #floating-calc-popup { position:fixed!important; z-index:40!important; max-height:calc(100vh - 32px); overflow-y:auto; background:rgba(15,23,42,.45)!important; border-color:rgba(255,255,255,.28)!important; backdrop-filter:blur(24px) brightness(.55)!important; }
+      #floating-calc-popup > div:first-child { background:rgba(2,6,23,.48)!important; }
+      #floating-calc-popup #floating-calc-body > div:first-child { background:rgba(30,41,59,.52)!important; border-color:rgba(255,255,255,.2)!important; }
+      #floating-calc-popup .text-xs { font-size:13px!important; }
+      #floating-calc-popup [class~="text-[10px]"],#floating-calc-popup [class~="text-[11px]"] { font-size:12px!important; }
     `;
     document.head.append(style);
 
@@ -11237,7 +11496,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
     shell.hidden = workspaceRole !== 'pos';
     shell.innerHTML = `
       <aside class="ws-sidebar ws-glass">
-        <div class="ws-brand"><span class="ws-logo"><i data-lucide="shirt"></i></span><span class="ws-brand-text">LAUNDRY QU<small>${config.label} workspace</small></span></div>
+        <div class="ws-brand"><span class="ws-logo"><img data-workspace-brand-logo hidden alt=""><i class="ws-logo-fallback" data-workspace-brand-fallback data-lucide="shirt"></i></span><span class="ws-brand-text">LAUNDRY QU<small>${config.label} workspace</small></span></div>
         <div class="ws-caption">WORKSPACE</div>
         <nav class="ws-nav" aria-label="Navigasi workspace"></nav>
         <div class="ws-sidebar-bottom"><div class="ws-status"><i></i><span id="workspace-connection">Menghubungkan...</span></div><button class="ws-logout" id="workspace-logout"><i data-lucide="log-out"></i> Keluar</button></div>
@@ -11254,6 +11513,10 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
     legacyMain.classList.add('ws-old-main');
     legacyMain.remove();
     content.append(legacyMain);
+    if (workspaceRole === 'pos') {
+      const floatingCalcPopup = legacyMain.querySelector('#floating-calc-popup');
+      if (floatingCalcPopup) document.body.append(floatingCalcPopup);
+    }
     legacyMain.style.display = 'none';
 
     const gate = document.createElement('div');
@@ -11261,7 +11524,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
     gate.hidden = workspaceRole === 'pos';
     gate.innerHTML = `
       <section class="ws-login-card ws-glass">
-        <div class="ws-login-brand"><span class="ws-logo"><i data-lucide="shirt"></i></span> LAUNDRY QU</div>
+        <div class="ws-login-brand"><span class="ws-logo"><img data-workspace-brand-logo hidden alt=""><i class="ws-logo-fallback" data-workspace-brand-fallback data-lucide="shirt"></i></span> LAUNDRY QU</div>
         <div class="ws-eyebrow">WORKSPACE ${config.label.toUpperCase()}</div>
         <h1>${workspaceRole === 'admin' ? 'Selamat datang kembali' : 'Masuk ke portal agen'}</h1>
         <p>${workspaceRole === 'admin' ? 'Masukkan password admin yang sudah diatur di sistem.' : 'Pilih nama agen untuk membuka dasbor dan laporan Anda.'}</p>
@@ -11276,6 +11539,8 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
         <p class="ws-login-foot" id="workspace-login-status">Menghubungkan ke data Laundry QU...</p>
       </section>`;
     document.body.append(gate);
+    updateWorkspaceBranding();
+    renderIcons();
 
     function updateGate() {
       const status = document.getElementById('workspace-login-status');
@@ -11305,6 +11570,29 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
 
     function renderIcons() {
       if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+    }
+
+    function updateWorkspaceBranding() {
+      const settings = appData.settings || {};
+      const logoUrl = String(settings.logoUrl || '').trim();
+      document.querySelectorAll('[data-workspace-brand-logo]').forEach(image => {
+        const fallback = image.parentElement.querySelector('[data-workspace-brand-fallback]');
+        image.alt = `Logo ${settings.storeName || 'Laundry QU'}`;
+        image.onerror = () => {
+          image.hidden = true;
+          if (fallback) fallback.hidden = false;
+        };
+        if (logoUrl) {
+          if (image.dataset.logoSource !== logoUrl) image.src = logoUrl;
+          image.dataset.logoSource = logoUrl;
+          image.hidden = false;
+          if (fallback) fallback.hidden = true;
+        } else {
+          image.removeAttribute('src');
+          image.hidden = true;
+          if (fallback) fallback.hidden = false;
+        }
+      });
     }
 
     function createNavigation() {
@@ -11409,6 +11697,135 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       ]);
       section.append(createTable(['Waktu', 'Keterangan', 'Kategori', 'Jenis', 'Nominal'], rows, 'Belum ada transaksi keuangan yang tercatat.'));
       custom.replaceChildren(section);
+    }
+
+    function renderAgentCommissionAdminPage() {
+      const payouts = items(appData.agentCommissionPayouts);
+      const paidByOrder = new Map();
+      payouts.forEach(payout => {
+        const orderId = String(payout.orderId || '');
+        paidByOrder.set(orderId, (paidByOrder.get(orderId) || 0) + Math.max(0, Number(payout.amount) || 0));
+      });
+
+      const commissionOrders = validOrders()
+        .filter(order => order.agentId && Number(order.agentRemittedAt) > 0 && Number(order.agentCommissionPayoutAmount) > 0)
+        .map(order => {
+          const due = Math.max(0, Number(order.agentCommissionPayoutAmount) || 0);
+          const paid = Math.max(0, paidByOrder.get(String(order.id)) || 0);
+          return { ...order, payoutDue: due, payoutPaid: paid, payoutRemaining: Math.max(0, due - paid) };
+        })
+        .sort((a, b) => (Number(b.agentRemittedAt) || 0) - (Number(a.agentRemittedAt) || 0));
+      const outstandingOrders = commissionOrders.filter(order => order.payoutRemaining > 0);
+      const outstandingTotal = outstandingOrders.reduce((sum, order) => sum + order.payoutRemaining, 0);
+      const paidTotal = payouts.reduce((sum, payout) => sum + Math.max(0, Number(payout.amount) || 0), 0);
+
+      const section = document.createElement('section');
+      section.className = 'ws-custom';
+      section.innerHTML = `
+        <div class="ws-heading">
+          <div class="ws-eyebrow">ADMIN · AGEN</div>
+          <h2>Setoran Komisi Agen</h2>
+          <p>Catat pencairan manual hanya untuk kekurangan komisi yang belum dibayar pada setoran nota agen.</p>
+        </div>
+        <div class="ws-report-stats">
+          <article class="ws-report-stat ws-glass"><span>Belum disetor manual</span><strong>${rupiah(outstandingTotal)}</strong><small>${outstandingOrders.length} nota dengan saldo komisi</small></article>
+          <article class="ws-report-stat ws-glass"><span>Sudah disetor manual</span><strong>${rupiah(paidTotal)}</strong><small>${payouts.length} transaksi pencairan</small></article>
+        </div>
+      `;
+
+      const formCard = document.createElement('section');
+      formCard.className = 'ws-glass ws-payout-card';
+      formCard.innerHTML = `
+        <div class="ws-table-title"><h3>Catat penyetoran</h3><p>Komisi yang sudah dipotong dari setoran agen tidak dapat dicatat ulang di sini.</p></div>
+        <form class="ws-payout-form">
+          <label>Agen<select name="agent" required></select></label>
+          <label>Nota tertunggak<select name="order" required></select></label>
+          <label>Nominal disetor (Rp)<input name="amount" type="number" min="1" step="1" required></label>
+          <label>Tanggal setor<input name="date" type="date" required></label>
+          <label class="ws-payout-note">Catatan / bukti transfer<input name="note" type="text" maxlength="160" placeholder="Opsional"></label>
+          <button class="ws-button" type="submit"><i data-lucide="banknote"></i> Simpan setoran</button>
+        </form>
+        <p class="ws-payout-footnote">Pengeluaran komisi sudah dibukukan saat penyelesaian nota. Pencatatan ini hanya melacak pelunasan saldo, tanpa menambahkan beban komisi kedua kali.</p>
+      `;
+
+      const form = formCard.querySelector('form');
+      const agentSelect = form.elements.agent;
+      const orderSelect = form.elements.order;
+      const amountInput = form.elements.amount;
+      const dateInput = form.elements.date;
+      const noteInput = form.elements.note;
+      const agentNames = new Map(items(appData.agents).map(agent => [String(agent.id), agent.name || 'Agen']));
+      outstandingOrders.forEach(order => {
+        if (!agentNames.has(String(order.agentId))) agentNames.set(String(order.agentId), order.agentName || 'Agen');
+      });
+      agentSelect.add(new Option('Pilih agen', ''));
+      Array.from(agentNames.entries()).forEach(([id, name]) => agentSelect.add(new Option(name, id)));
+
+      const localToday = new Date();
+      dateInput.value = `${localToday.getFullYear()}-${String(localToday.getMonth() + 1).padStart(2, '0')}-${String(localToday.getDate()).padStart(2, '0')}`;
+
+      const updateOrderOptions = () => {
+        const selectedAgentId = agentSelect.value;
+        const agentOrders = outstandingOrders.filter(order => String(order.agentId) === selectedAgentId);
+        orderSelect.replaceChildren(new Option(agentOrders.length ? 'Pilih nota' : 'Tidak ada saldo komisi', ''));
+        agentOrders.forEach(order => {
+          const date = Number(order.agentRemittedAt)
+            ? new Date(Number(order.agentRemittedAt)).toLocaleDateString('id-ID')
+            : '-';
+          orderSelect.add(new Option(`${order.id} · ${date} · sisa ${rupiah(order.payoutRemaining)}`, String(order.id)));
+        });
+        orderSelect.disabled = agentOrders.length === 0;
+        amountInput.value = agentOrders[0] ? String(agentOrders[0].payoutRemaining) : '';
+        amountInput.max = agentOrders[0] ? String(agentOrders[0].payoutRemaining) : '';
+      };
+      const updateAmountForOrder = () => {
+        const order = outstandingOrders.find(item => String(item.id) === orderSelect.value);
+        amountInput.value = order ? String(order.payoutRemaining) : '';
+        amountInput.max = order ? String(order.payoutRemaining) : '';
+      };
+      agentSelect.addEventListener('change', updateOrderOptions);
+      orderSelect.addEventListener('change', updateAmountForOrder);
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const currentOrder = outstandingOrders.find(order => String(order.id) === orderSelect.value);
+        const amount = Math.round(Number(amountInput.value));
+        const paidAt = new Date(`${dateInput.value}T12:00:00`).getTime();
+        if (!currentOrder || !Number.isFinite(amount) || amount <= 0 || amount > currentOrder.payoutRemaining || !Number.isFinite(paidAt)) {
+          alert('Pilih nota dengan saldo komisi dan masukkan nominal setoran yang valid, tidak melebihi saldo tersisa.');
+          return;
+        }
+
+        appData.agentCommissionPayouts = appData.agentCommissionPayouts || [];
+        appData.agentCommissionPayouts.unshift({
+          id: `ACP-${Date.now()}-${appData.agentCommissionPayouts.length + 1}`,
+          orderId: String(currentOrder.id),
+          agentId: String(currentOrder.agentId),
+          agentName: currentOrder.agentName || agentNames.get(String(currentOrder.agentId)) || 'Agen',
+          amount,
+          paidAt,
+          note: noteInput.value.trim()
+        });
+        saveData();
+        renderAgentCommissionAdminPage();
+        alert('Penyetoran komisi agen berhasil dicatat.');
+      });
+
+      const historyRows = payouts
+        .sort((a, b) => (Number(b.paidAt) || 0) - (Number(a.paidAt) || 0))
+        .map(payout => [
+          Number(payout.paidAt) ? new Date(Number(payout.paidAt)).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '-',
+          payout.agentName || agentNames.get(String(payout.agentId)) || 'Agen',
+          payout.orderId || '-',
+          rupiah(payout.amount),
+          payout.note || '-'
+        ]);
+      section.append(formCard);
+      const historyCard = createTable(['Waktu setor', 'Agen', 'No. nota', 'Nominal', 'Catatan'], historyRows, 'Belum ada setoran komisi manual.');
+      historyCard.querySelector('.ws-table-title h3').textContent = 'Riwayat penyetoran manual';
+      historyCard.querySelector('.ws-table-title p').textContent = 'Pencatatan saldo komisi yang sudah dibayarkan ke agen.';
+      section.append(historyCard);
+      custom.replaceChildren(section);
+      renderIcons();
     }
 
     function updateWelcome() {
@@ -11634,6 +12051,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
     function renderCustomPage(id) {
       custom.hidden = false;
       if (id === 'chat' || id === 'inbox') return renderChatPage();
+      if (workspaceRole === 'admin' && id === 'setoran-agen') return renderAgentCommissionAdminPage();
       if (workspaceRole === 'admin' && id === 'laporan') return renderAdminReport();
       if (workspaceRole === 'agen' && id === 'laporan') return renderAgentReport();
       custom.replaceChildren();
@@ -11656,6 +12074,10 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       const legacyTab = getLegacyTab(id);
       const isLegacy = Boolean(legacyTab);
       legacyMain.style.display = isLegacy ? 'block' : 'none';
+      const floatingCalcPopup = document.getElementById('floating-calc-popup');
+      const cashierWorkspace = document.getElementById('kasir-workspace-container');
+      const cashierFormOpen = cashierWorkspace && !cashierWorkspace.classList.contains('hidden');
+      if (floatingCalcPopup) floatingCalcPopup.classList.toggle('hidden', workspaceRole !== 'pos' || id !== 'kasir' || !cashierFormOpen);
       if (isLegacy) {
         custom.hidden = true;
         custom.replaceChildren();
@@ -11674,14 +12096,13 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
 
     function syncAgentSelection() {
       if (workspaceRole !== 'agen' || !session) return;
-      const select = document.getElementById('kasir-agent-select');
-      if (!select) return;
-      const option = Array.from(select.options).find(item => item.value === String(session.id));
+      const option = Array.from(document.querySelectorAll('input[name="kasir_agent"]'))
+        .find(item => item.value === String(session.id));
       if (!option) return;
-      select.value = String(session.id);
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-      select.disabled = true;
-      select.parentElement?.classList.add('workspace-agent-select-hidden');
+      selectAgentForOrder(String(session.id));
+      selectCashierToOpenForm(session.name || 'Agen');
+      document.getElementById('kasir-selected-banner')?.querySelector('button')?.classList.add('hidden');
+      document.getElementById('kasir-agent-select-container')?.classList.add('hidden');
       let badge = document.getElementById('workspace-agent-badge');
       if (!badge) {
         badge = document.createElement('div');
@@ -11752,12 +12173,13 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
 
     function refreshWorkspaceData() {
       dataReady = true;
+      updateWorkspaceBranding();
       const connection = document.getElementById('workspace-connection');
       if (connection) connection.textContent = 'Terhubung';
       updateGate();
       if (!session) return;
       updateWelcome();
-      if (activeTab === 'laporan') renderCustomPage(activeTab);
+      if (activeTab === 'laporan' || activeTab === 'setoran-agen') renderCustomPage(activeTab);
       if (activeTab === 'chat' || activeTab === 'inbox') {
         if (chatMessageList) renderChatMessages();
       }
