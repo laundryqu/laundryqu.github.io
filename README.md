@@ -15,6 +15,7 @@ Fungsi transaksi lama tetap dijalankan oleh `PosLaundry.html` di dalam workspace
 ## Fitur utama
 
 - **Kasir:** buat nota, progres cucian, pelunasan dan scan, laporan harian, member/portal QR, stok/pengeluaran, dan chat admin.
+- **Arsip Nota:** cari nota berdasarkan nomor, nama, telepon, atau alamat; lihat detail dan riwayat alur tanpa mencetak ulang; telusuri nota lain yang sedang dikerjakan pada tanggal masuk yang sama.
 - **Admin:** login password, data karyawan dan agen, keuangan dan gaji, pengaturan/paket, laporan keuangan, serta inbox yang dapat memulai percakapan dengan karyawan atau agen.
 - **Agen:** login dengan memilih nama agen aktif, dasbor, pembuatan nota yang ditautkan ke agen, laporan keuangan agen, dan chat admin.
 - **Chat:** pesan baru disimpan di Firebase Realtime Database dan dibatasi ke percakapan yang dipilih. Pesan chat mendukung alur inbox lama Laundry QU.

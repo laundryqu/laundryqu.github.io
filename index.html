@@ -161,6 +161,9 @@
     .member-card-bg-vip {
       background: linear-gradient(135deg, #31104b 0%, #6d28d9 50%, #0f172a 100%);
     }
+    .member-card-bg-yayasan {
+      background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #022c22 100%);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24 md:pb-10 selection:bg-brand-600 selection:text-white">
@@ -456,18 +459,18 @@
               </button>
               <button type="button" onclick="window.switchTab('member')" class="px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all flex items-center gap-2">
                 <i class="fa-solid fa-crown text-amber-300"></i>
-                <span>Kartu Member &amp; Diskon 15%</span>
+                <span>Kartu Member &amp; Kupon 10x Gratis 1x</span>
               </button>
             </div>
 
           </div>
 
-          <!-- Quick Track Card (6 Digit Nota & Scan QR) -->
+          <!-- Quick Track Card (3-in-1: Nota / PSN / No. WA & Scan QR) -->
           <div class="lg:col-span-5">
             <div class="bg-white text-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-100 space-y-5">
               <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
-                  <span class="text-[11px] font-extrabold uppercase tracking-wider text-brand-600">Lacak Instan</span>
+                  <span class="text-[11px] font-extrabold uppercase tracking-wider text-brand-600">Lacak Instan 3-in-1</span>
                   <h3 class="text-lg font-extrabold text-slate-900">Cek Progres Cucian Anda</h3>
                 </div>
                 <div class="w-11 h-11 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl">
@@ -477,7 +480,7 @@
 
               <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-700">
-                  Masukkan 6 Angka Nomor Nota (Contoh: <code class="text-brand-600 font-extrabold">000001</code>)
+                  Ketik <span class="text-brand-600">No. Nota (000001)</span>, <span class="text-amber-600">No. Pesanan (PSN-0001)</span>, atau <span class="text-emerald-600">No. WA</span>:
                 </label>
                 <div class="flex gap-2">
                   <div class="relative flex-1">
@@ -485,19 +488,20 @@
                     <input
                       id="home-quick-track-input"
                       type="text"
-                      inputmode="numeric"
-                      maxlength="6"
-                      placeholder="000001"
-                      oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6)"
+                      maxlength="20"
+                      placeholder="000001 / PSN-0001 / 0812xxxx"
+                      oninput="this.value = this.value.toUpperCase()"
                       onkeydown="if(event.key==='Enter') window.handleQuickTrackFromHome()"
-                      class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-600 focus:outline-none font-mono text-base font-extrabold tracking-widest text-slate-900 placeholder:font-normal placeholder:tracking-normal"
+                      class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-600 focus:outline-none font-mono text-sm sm:text-base font-extrabold tracking-wider text-slate-900 placeholder:font-normal placeholder:tracking-normal"
                     />
                   </div>
                   <button type="button" onclick="window.handleQuickTrackFromHome()" class="px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm shadow-md transition-all flex items-center gap-2 shrink-0">
-                    <span>Cek Nota</span>
+                    <span>Lacak</span>
                     <i class="fa-solid fa-arrow-right"></i>
                   </button>
                 </div>
+                <!-- Banner Otomatis Pesanan/Nota Aktif di HP Pelanggan -->
+                <div id="home-my-active-order-banner" class="hidden pt-1"></div>
               </div>
 
               <div class="relative flex py-1 items-center">
@@ -523,7 +527,7 @@
         </div>
       </div>
 
-      <!-- 2. KATALOG PAKET LAYANAN & ESTIMASI SELESAI (REAL-TIME DARI POS) -->
+      <!-- 2. KATALOG PAKET LAYANAN & ESTIMASI SELESAI (FILTER LENGKAP SINKRON POS) -->
       <div class="space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
@@ -531,18 +535,30 @@
             <h3 class="text-xl sm:text-2xl font-black text-slate-900">Katalog Paket Layanan &amp; Estimasi Selesai</h3>
             <p class="text-xs sm:text-sm text-slate-500">Daftar harga paket resmi yang tersinkronisasi langsung dengan Kasir Laundry QU.</p>
           </div>
-          <div class="flex flex-wrap gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex flex-wrap gap-1 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
             <label class="cursor-pointer">
               <input type="radio" name="catalog_filter" value="ALL" checked onchange="window.renderServiceCatalog()" class="peer sr-only" />
-              <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Semua Paket</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Semua</span>
             </label>
             <label class="cursor-pointer">
               <input type="radio" name="catalog_filter" value="Kg" onchange="window.renderServiceCatalog()" class="peer sr-only" />
-              <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Kiloan / Bundle</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Kg</span>
             </label>
             <label class="cursor-pointer">
               <input type="radio" name="catalog_filter" value="Pcs" onchange="window.renderServiceCatalog()" class="peer sr-only" />
-              <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Satuan / Set / Stelan</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Pcs</span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="catalog_filter" value="Set" onchange="window.renderServiceCatalog()" class="peer sr-only" />
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Set</span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="catalog_filter" value="Stelan" onchange="window.renderServiceCatalog()" class="peer sr-only" />
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Stelan</span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="catalog_filter" value="Bundle" onchange="window.renderServiceCatalog()" class="peer sr-only" />
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 peer-checked:bg-brand-600 peer-checked:text-white transition-all inline-block">Bundle</span>
             </label>
           </div>
         </div>
@@ -585,7 +601,7 @@
         </div>
       </div>
 
-      <!-- 4. KALKULATOR SIMULASI BIAYA & ONGKIR INTERAKTIF -->
+      <!-- 4. KALKULATOR SIMULASI BIAYA & ONGKIR INTERAKTIF (BULAT 500) -->
       <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div class="flex items-center gap-3">
@@ -594,7 +610,7 @@
             </div>
             <div>
               <h3 class="text-lg sm:text-xl font-black text-slate-900">Kalkulator Simulasi Biaya &amp; Ongkir</h3>
-              <p class="text-xs sm:text-sm text-slate-500">Coba hitung perkiraan tagihan cucian Anda sebelum memesan</p>
+              <p class="text-xs sm:text-sm text-slate-500">Coba hitung perkiraan tagihan cucian Anda sebelum memesan (Digenapkan per Rp 500)</p>
             </div>
           </div>
           <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
@@ -750,7 +766,7 @@
 
               <div class="pt-4 border-t border-slate-800 space-y-4">
                 <div class="flex items-baseline justify-between">
-                  <span class="text-xs uppercase font-bold text-slate-400">Perkiraan Total</span>
+                  <span class="text-xs uppercase font-bold text-slate-400">Perkiraan Total (Bulat 500)</span>
                   <span id="sim-val-grandtotal" class="text-2xl sm:text-3xl font-mono font-black text-amber-400">Rp 0</span>
                 </div>
                 <button type="button" onclick="window.transferSimToOrder()" class="w-full py-3.5 px-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2">
@@ -812,7 +828,7 @@
           <div>
             <span class="text-xs font-extrabold uppercase tracking-wider text-brand-600">Real-Time Laundry Tracker</span>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Lacak Progres 8 Tahapan Cucian</h2>
-            <p class="text-xs sm:text-sm text-slate-500">Masukkan 6 angka Nomor Nota pada struk Anda atau scan QR Code.</p>
+            <p class="text-xs sm:text-sm text-slate-500">Masukkan 6 angka Nomor Nota (<code>000001</code>), Nomor Pesanan (<code>PSN-0001</code>), Nomor WA, atau Scan QR.</p>
           </div>
           <button type="button" onclick="window.openQrScannerModal('track')" class="px-4 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-sm transition-all">
             <i class="fa-solid fa-qrcode text-cyan-400 text-base"></i>
@@ -826,12 +842,11 @@
             <input
               id="track-nota-input"
               type="text"
-              inputmode="numeric"
-              maxlength="6"
-              placeholder="Ketik 6 Angka Nomor Nota (misal: 000001)"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6)"
+              maxlength="20"
+              placeholder="Ketik No. Nota (000001), No. Pesanan (PSN-0001), atau No. WA"
+              oninput="this.value = this.value.toUpperCase()"
               onkeydown="if(event.key==='Enter') window.searchOrderByNota()"
-              class="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-brand-600 focus:outline-none font-mono text-base sm:text-lg font-extrabold tracking-widest text-slate-900 placeholder:font-sans placeholder:font-normal placeholder:tracking-normal"
+              class="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 border-slate-200 focus:border-brand-600 focus:outline-none font-mono text-sm sm:text-base font-extrabold tracking-wider text-slate-900 placeholder:font-sans placeholder:font-normal placeholder:tracking-normal"
             />
           </div>
           <button type="button" onclick="window.searchOrderByNota()" class="px-7 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-sm sm:text-base shadow-md transition-all flex items-center justify-center gap-2">
@@ -853,7 +868,7 @@
         </div>
         <h3 class="text-base sm:text-lg font-extrabold text-slate-800">Belum Ada Nota yang Ditampilkan</h3>
         <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-          Silakan ketik 6 digit nomor nota di atas (contoh: <code class="font-bold text-brand-600">000001</code>) atau tekan tombol <strong>Scan QR Struk Nota</strong> untuk melihat tahapan pengerjaan pakaian Anda secara langsung.
+          Silakan ketik 6 digit nomor nota di atas (contoh: <code class="font-bold text-brand-600">000001</code>), nomor pesanan (<code class="font-bold text-amber-600">PSN-0001</code>), atau nomor WhatsApp Anda.
         </p>
       </div>
 
@@ -886,7 +901,7 @@
               <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Target / Estimasi Selesai</p>
                 <p id="trk-countdown-text" class="text-sm sm:text-base font-black text-amber-300">Menghitung...</p>
-                <p id="trk-deadline-date" class="text-[11px] text-slate-300">-</p>
+                <p id="trk-deadline-date" class="text-[11px] font-extrabold text-white underline">-</p>
               </div>
             </div>
           </div>
@@ -901,12 +916,32 @@
               <p id="trk-perfume" class="text-sm sm:text-base font-extrabold text-pink-600 mt-1">-</p>
             </div>
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
-              <p class="text-[11px] font-bold uppercase text-slate-400">Total Tagihan Nota</p>
+              <p id="trk-total-bill-label" class="text-[11px] font-bold uppercase text-slate-400">Total Tagihan Nota</p>
               <p id="trk-total-bill" class="text-sm sm:text-base font-mono font-extrabold text-slate-900 mt-1">Rp 0</p>
             </div>
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
-              <p class="text-[11px] font-bold uppercase text-slate-400">Sisa Belum Dibayar</p>
+              <p id="trk-remaining-bill-label" class="text-[11px] font-bold uppercase text-slate-400">Sisa Belum Dibayar</p>
               <p id="trk-remaining-bill" class="text-sm sm:text-base font-mono font-extrabold text-rose-600 mt-1">Rp 0</p>
+            </div>
+          </div>
+
+          <!-- KOTAK BESAR INFO KEMBALIAN TERSIMPAN DI NOTA (MUNCUL JIKA ADA KEMBALIAN > 0) -->
+          <div id="trk-saved-change-box" class="hidden p-4 rounded-2xl bg-amber-50 border-2 border-amber-400 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl font-black shrink-0">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+              </div>
+              <div>
+                <span id="trk-saved-change-badge" class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-200 text-amber-950">
+                  Uang Kembalian Pelanggan
+                </span>
+                <h4 id="trk-saved-change-amount" class="text-lg sm:text-xl font-mono font-black text-slate-900 mt-0.5">
+                  Kembalian 0
+                </h4>
+                <p id="trk-saved-change-desc" class="text-xs text-amber-900 font-semibold">
+                  Kembalian Anda tercatat di nota dan akan diserahkan saat pengambilan/pengantaran cucian.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -969,7 +1004,7 @@
             </div>
 
             <div class="space-y-2">
-              <p class="text-xs font-bold uppercase text-slate-400">Daftar Paket Layanan:</p>
+              <p class="text-xs font-bold uppercase text-slate-400">Daftar Paket Layanan &amp; Harga Satuan:</p>
               <div id="trk-services-list" class="space-y-2"></div>
             </div>
 
@@ -993,7 +1028,7 @@
                 <span>E-Receipt &amp; Konfirmasi Pembayaran</span>
               </h4>
               <p class="text-xs text-slate-500 leading-relaxed">
-                Unduh struk resmi dalam format PDF atau hubungi kasir kami melalui WhatsApp untuk konfirmasi cucian Anda.
+                Unduh struk resmi dalam format PDF (desain compact hemat kertas) atau hubungi kasir kami melalui WhatsApp.
               </p>
 
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-4">
@@ -1032,7 +1067,7 @@
         <span class="text-xs font-extrabold uppercase tracking-wider text-brand-600">Order Penjemputan Online Terintegrasi POS</span>
         <h2 class="text-xl sm:text-2xl font-black text-slate-900">Pesan Kurir Jemput Cucian ke Rumah</h2>
         <p class="text-xs sm:text-sm text-slate-500">
-          Pesanan Anda otomatis masuk ke halaman <strong>Alur Progres Cucian</strong> dan <strong>Pelunasan</strong> di sistem Kasir POS Laundry QU lengkap dengan identitas &amp; titik koordinat GPS penjemputan Anda.
+          Pesanan Anda otomatis masuk ke antrean <strong>Buat Nota / Kasir</strong> di sistem POS Laundry QU lengkap dengan identitas, kupon stamp, paket bulanan &amp; titik koordinat GPS rumah Anda.
         </p>
       </div>
 
@@ -1041,7 +1076,7 @@
         <!-- KOLOM KIRI: FORM PEMESANAN -->
         <div class="lg:col-span-7 space-y-6">
 
-          <!-- STEP 1: KATEGORI PELANGGAN OTOMATIS & IDENTITAS -->
+          <!-- STEP 1: KATEGORI PELANGGAN OTOMATIS, IDENTITAS & BADGE STAMP -->
           <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-5">
             <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
               <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs flex items-center justify-center font-black">1</span>
@@ -1060,7 +1095,7 @@
                     <span class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-white text-xs font-extrabold">Pelanggan Umum</span>
                   </div>
                   <p class="text-xs text-slate-500 mt-0.5">
-                    Anda belum login sebagai member. Ingin dapat diskon member otomatis hingga 15%?
+                    Punya Kartu Member / Paket Bulanan / Warga Yayasan? Login untuk diskon otomatis!
                   </p>
                 </div>
               </div>
@@ -1074,16 +1109,16 @@
               </button>
             </div>
 
-            <!-- Banner Otomatis Pelanggan Member -->
+            <!-- Banner Otomatis Pelanggan Member (Termasuk Info Paket Bulanan & Warga Yayasan) -->
             <div id="ord-member-status-banner" class="p-4 rounded-2xl bg-emerald-50/90 border-2 border-emerald-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hidden">
               <div class="flex items-start sm:items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg shrink-0">
                   <i class="fa-solid fa-crown"></i>
                 </div>
                 <div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex flex-wrap items-center gap-2">
                     <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Kategori Otomatis:</span>
-                    <span class="px-2.5 py-0.5 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">Pelanggan Member</span>
+                    <span id="ord-member-type-pill" class="px-2.5 py-0.5 rounded-lg bg-emerald-600 text-white text-xs font-extrabold">Pelanggan Member</span>
                   </div>
                   <p id="ord-member-active-info" class="text-xs font-bold text-emerald-950 mt-0.5">
                     Member Aktif • Diskon otomatis diterapkan!
@@ -1096,7 +1131,7 @@
                 class="px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs shrink-0 flex items-center justify-center gap-1.5 transition-all"
               >
                 <i class="fa-solid fa-user-gear"></i>
-                <span>Lihat Dasbor Member</span>
+                <span>Dasbor Member</span>
               </button>
             </div>
 
@@ -1117,20 +1152,40 @@
                   type="tel"
                   inputmode="numeric"
                   placeholder="Contoh: 081234567890"
-                  oninput="this.value = this.value.replace(/[^0-9+]/g, '')"
+                  oninput="this.value = this.value.replace(/[^0-9+]/g, ''); window.recalculateOrderPricing();"
                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-semibold focus:border-brand-600 focus:outline-none"
                 />
               </div>
             </div>
 
+            <!-- Kolom Alamat + Badge Stamp Loyalitas di Sebelahnya (Sama seperti POS) -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold text-slate-700">Alamat Lengkap Penjemputan / Pengantaran <span class="text-rose-500">*</span></label>
-              <textarea
-                id="ord-address"
-                rows="2"
-                placeholder="Nama jalan, dusun, nomor rumah, RT/RW, patokan rumah..."
-                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:border-brand-600 focus:outline-none"
-              ></textarea>
+              <label class="block text-xs font-bold text-slate-700">Alamat Lengkap Penjemputan &amp; Stamp Loyalitas <span class="text-rose-500">*</span></label>
+              <div class="flex flex-col sm:flex-row items-stretch gap-2.5">
+                <textarea
+                  id="ord-address"
+                  rows="2"
+                  placeholder="Nama jalan, dusun, nomor rumah, RT/RW, patokan rumah..."
+                  class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:border-brand-600 focus:outline-none"
+                ></textarea>
+
+                <!-- Badge Simbol Stamp Loyalitas 10x Gratis 1x -->
+                <div id="ord-stamp-promo-box" class="px-3.5 py-2 rounded-2xl bg-sky-500/15 border-2 border-sky-400/60 text-sky-950 flex items-center justify-between sm:justify-center gap-2.5 shrink-0">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-stamp text-xl text-brand-600"></i>
+                    <div class="leading-tight">
+                      <span class="text-[10px] font-bold uppercase text-slate-500 block">Stamp Anda</span>
+                      <span id="ord-stamp-status-text" class="font-mono text-xs font-black text-slate-900">0/10</span>
+                      <span id="ord-stamp-earned-now" class="font-mono text-[10px] font-extrabold text-brand-700 ml-1">(+0)</span>
+                    </div>
+                  </div>
+                  <label id="ord-stamp-redeem-label" class="hidden items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] cursor-pointer shadow">
+                    <input type="checkbox" id="ord-redeem-free-wash" onchange="window.recalculateOrderPricing()" class="w-3.5 h-3.5 rounded text-slate-900" />
+                    <i class="fa-solid fa-gift"></i>
+                    <span>Klaim Gratis</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1203,54 +1258,88 @@
             </div>
           </div>
 
-          <!-- STEP 3: PILIH PAKET LAYANAN, BERAT/PCS & AROMA PARFUM -->
+          <!-- STEP 3: PILIH PAKET LAYANAN (UNGU TRANSPARAN), BERAT/PCS (KUNING TRANSPARAN) & PARFUM -->
           <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-5">
             <div class="flex items-center justify-between">
               <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
                 <span class="w-7 h-7 rounded-lg bg-brand-600 text-white text-xs flex items-center justify-center font-black">3</span>
-                <span>Pilih Paket Layanan &amp; Aroma Parfum</span>
+                <span>Pilih Paket Layanan, Berat/Pcs &amp; Aroma Parfum</span>
               </h3>
               <button
                 type="button"
                 onclick="window.addOrderServiceRow()"
-                class="px-3 py-1.5 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 font-extrabold text-xs border border-brand-200 flex items-center gap-1.5"
+                class="px-3 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-xs"
               >
                 <i class="fa-solid fa-plus"></i> Tambah Paket Lain
               </button>
             </div>
 
-            <div id="ord-service-rows-container" class="space-y-3"></div>
+            <div id="ord-service-rows-container" class="space-y-3 p-3.5 rounded-2xl bg-purple-500/15 border-2 border-purple-400/50"></div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+            <!-- Blok Kuning Transparan untuk Perkiraan Berat & Jumlah Pakaian -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-yellow-400/20 border-2 border-yellow-400/60">
               <div class="space-y-1.5">
-                <label class="block text-xs font-bold text-slate-700">Perkiraan Total Berat / Set / Stelan Cucian</label>
+                <label class="block text-xs font-extrabold text-yellow-950">
+                  <i class="fa-solid fa-weight-scale text-yellow-700 mr-1"></i> Perkiraan Total Berat / Set / Stelan
+                </label>
                 <input
                   id="ord-est-weight"
                   type="text"
                   inputmode="numeric"
                   value="5"
                   oninput="window.formatThousandInput(this); window.recalculateOrderPricing();"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-extrabold text-slate-900 focus:border-brand-600 focus:outline-none"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-yellow-500/70 bg-white text-sm font-mono font-extrabold text-slate-900 focus:border-brand-600 focus:outline-none"
                 />
-                <p class="text-[11px] text-slate-500">Ditimbang &amp; diverifikasi ulang oleh petugas saat tiba</p>
+                <p class="text-[11px] text-yellow-900 font-medium">Ditimbang &amp; diverifikasi ulang oleh petugas saat tiba</p>
               </div>
               <div class="space-y-1.5">
-                <label class="block text-xs font-bold text-slate-700">Perkiraan Total Potong Pakaian (Pcs)</label>
+                <label class="block text-xs font-extrabold text-yellow-950">
+                  <i class="fa-solid fa-shirt text-yellow-700 mr-1"></i> Perkiraan Total Potong Pakaian (Pcs)
+                </label>
                 <input
                   id="ord-est-pcs"
                   type="text"
                   inputmode="numeric"
                   value="15"
                   oninput="window.formatThousandInput(this); window.recalculateOrderPricing();"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-extrabold text-slate-900 focus:border-brand-600 focus:outline-none"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-yellow-500/70 bg-white text-sm font-mono font-extrabold text-slate-900 focus:border-brand-600 focus:outline-none"
                 />
-                <p class="text-[11px] text-slate-500">Min. 5 Kg atau 20 Pcs otomatis Gratis Ongkir 3 km pertama</p>
+                <p class="text-[11px] text-yellow-900 font-medium">Min. 5 Kg atau 20 Pcs otomatis Gratis Ongkir 3 km pertama</p>
               </div>
             </div>
 
-            <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="space-y-3 pt-2 border-t border-slate-100">
               <label class="block text-xs font-bold text-slate-700">Pilih Aroma Parfum Favorit Anda</label>
               <div id="ord-perfume-radios" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+
+              <!-- Pilihan Gratis Cuci Pakaian Sholat (Dikontrol dari Pengaturan Admin) -->
+              <div id="ord-prayer-promo-section" class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-emerald-950">
+                    <i class="fa-solid fa-mosque text-emerald-600 mr-1"></i> Program Berkah: Gratis Cuci Pakaian Sholat (Rp 0)
+                  </span>
+                  <span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-extrabold">GRATIS</span>
+                </div>
+                <p class="text-[11px] text-emerald-800">Masukkan jumlah pakaian sholat yang ikut dicuci (Tidak dikenakan biaya):</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Sajadah</span>
+                    <input type="number" id="ord-pray-sajadah" min="0" value="0" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Mukena</span>
+                    <input type="number" id="ord-pray-mukena" min="0" value="0" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Lobe/Peci</span>
+                    <input type="number" id="ord-pray-lobe" min="0" value="0" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                  <div class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <span class="font-bold text-slate-700">Sarung</span>
+                    <input type="number" id="ord-pray-sarung" min="0" value="0" class="w-12 px-1 py-0.5 rounded border border-slate-300 text-center font-mono font-extrabold" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1349,7 +1438,7 @@
 
         </div>
 
-        <!-- KOLOM KANAN: RINGKASAN PESANAN, VOUCHER & SUBMIT -->
+        <!-- KOLOM KANAN: RINGKASAN PESANAN, VOUCHER (EMAS TRANSPARAN) & SUBMIT -->
         <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
           <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-5">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
@@ -1360,25 +1449,28 @@
               <i class="fa-solid fa-receipt text-2xl text-amber-400"></i>
             </div>
 
-            <div class="space-y-1.5">
-              <label class="block text-xs font-bold text-slate-300">Punya Kode Voucher Promo?</label>
+            <!-- Kotak Voucher Emas Transparan -->
+            <div class="p-3.5 rounded-2xl bg-amber-500/20 border-2 border-amber-400/60 space-y-1.5">
+              <label class="block text-xs font-extrabold text-amber-300">
+                <i class="fa-solid fa-ticket mr-1"></i> Punya Kode Voucher Promo?
+              </label>
               <div class="flex gap-2">
                 <input
                   id="ord-voucher-input"
                   type="text"
                   placeholder="Ketik Kode Voucher"
                   oninput="this.value = this.value.toUpperCase()"
-                  class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-mono text-xs font-bold uppercase focus:outline-none focus:border-cyan-400"
+                  class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900/90 border border-amber-400/60 text-white font-mono text-xs font-bold uppercase focus:outline-none focus:border-amber-300"
                 />
                 <button
                   type="button"
                   onclick="window.applyOrderVoucher()"
-                  class="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs transition-all"
+                  class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs transition-all"
                 >
                   Pakai
                 </button>
               </div>
-              <p id="ord-voucher-feedback" class="text-[11px] text-slate-400"></p>
+              <p id="ord-voucher-feedback" class="text-[11px] text-amber-200"></p>
             </div>
 
             <div class="space-y-2.5 text-sm border-t border-slate-800 pt-4">
@@ -1391,11 +1483,11 @@
                 <span id="ord-sum-subtotal" class="font-mono font-bold text-white">Rp 0</span>
               </div>
               <div class="flex justify-between text-slate-300">
-                <span>Diskon Member (<span id="ord-sum-tier-label">0%</span>)</span>
+                <span>Diskon Member / Paket (<span id="ord-sum-tier-label">0%</span>)</span>
                 <span id="ord-sum-member-disc" class="font-mono font-bold text-emerald-400">- Rp 0</span>
               </div>
               <div class="flex justify-between text-slate-300">
-                <span>Potongan Voucher Promo</span>
+                <span>Potongan Voucher / Stamp</span>
                 <span id="ord-sum-voucher-disc" class="font-mono font-bold text-emerald-400">- Rp 0</span>
               </div>
               <div class="flex justify-between text-slate-300">
@@ -1406,8 +1498,8 @@
 
             <div class="border-t border-slate-800 pt-4 flex items-baseline justify-between">
               <div>
-                <span class="text-xs font-bold uppercase text-slate-400 block">Estimasi Total Tagihan</span>
-                <span class="text-[11px] text-slate-400">Status awal: Belum Bayar</span>
+                <span id="ord-sum-grandtotal-label" class="text-xs font-bold uppercase text-slate-400 block">Estimasi Total Tagihan (Bulat 500)</span>
+                <span id="ord-sum-paystatus-hint" class="text-[11px] text-slate-400">Status awal: Belum Bayar</span>
               </div>
               <span id="ord-sum-grandtotal" class="text-2xl sm:text-3xl font-mono font-black text-amber-400">Rp 0</span>
             </div>
@@ -1432,10 +1524,55 @@
     </section>
 
     <!-- ======================================================================= -->
-    <!-- MODUL 4: DASBOR PELANGGAN MEMBER & KARTU QR DIGITAL (#view-member)       -->
+    <!-- MODUL 4: DASBOR PELANGGAN, PAKET BULANAN & KARTU ID CARD 2 SISI (#view-member) -->
     <!-- ======================================================================= -->
     <section id="view-member" class="space-y-6 hidden">
 
+      <!-- A. DASBOR PELANGGAN UMUM (BELUM LOGIN MEMBER) -->
+      <div id="guest-auto-dashboard-box" class="max-w-4xl mx-auto bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <span class="px-2.5 py-1 rounded-full bg-brand-50 text-brand-700 text-[11px] font-extrabold border border-brand-200">
+              <i class="fa-solid fa-bolt mr-1"></i> Dasbor Cucian &amp; Kupon Loyalitas Pelanggan
+            </span>
+            <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">Lacak Semua Nota &amp; Kupon Cuci 10x Gratis 1x Anda</h3>
+            <p class="text-xs text-slate-500">Masukkan Nomor WhatsApp Anda untuk melihat semua nota yang dibuat kurir/kasir beserta kupon gratis Anda.</p>
+          </div>
+          <div class="flex gap-2">
+            <input
+              id="guest-dash-phone-input"
+              type="tel"
+              placeholder="Ketik No. WA (0812xxx)"
+              class="px-3.5 py-2.5 rounded-xl border-2 border-slate-200 text-xs font-mono font-extrabold focus:border-brand-600 focus:outline-none"
+            />
+            <button type="button" onclick="window.loadGuestDashboardByPhone()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-xs shrink-0 shadow">
+              Buka Dasbor Saya
+            </button>
+          </div>
+        </div>
+
+        <!-- Visualisasi 10 Stamp untuk Pelanggan Umum (Non-Yayasan & Non-Paket Bulanan) -->
+        <div id="guest-stamp-card-box" class="hidden p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-white space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">Program Loyalitas Laundry QU</span>
+              <h4 class="text-base sm:text-lg font-black">Promo Cuci 10x Gratis 1x (Min. 3 Kg / Rp 18.000)</h4>
+              <p class="text-[11px] text-cyan-200">Berlaku kelipatan! (Misal: Cuci 6 Kg atau Rp 36.000 langsung mendapat 2 Stamp)</p>
+            </div>
+            <div class="bg-white/10 px-3.5 py-2 rounded-xl border border-white/15 text-right">
+              <span class="text-[10px] text-slate-300 block">Hak Gratis Cuci Tersedia</span>
+              <span id="guest-free-wash-badge" class="font-mono text-lg font-black text-amber-300">0x Gratis</span>
+            </div>
+          </div>
+          <div id="guest-stamp-circles-grid" class="grid grid-cols-5 sm:grid-cols-10 gap-2 pt-1"></div>
+          <p id="guest-stamp-summary-text" class="text-xs text-slate-300 font-semibold"></p>
+        </div>
+
+        <!-- Daftar Semua Pesanan & Nota Milik Pelanggan Ini -->
+        <div id="guest-auto-orders-list" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+      </div>
+
+      <!-- B. PORTAL LOGIN & PENDAFTARAN MEMBER -->
       <div id="member-auth-box" class="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
         <div class="text-center space-y-2">
           <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl mx-auto">
@@ -1443,7 +1580,7 @@
           </div>
           <h2 class="text-xl sm:text-2xl font-black text-slate-900">Portal Keanggotaan Member Laundry QU</h2>
           <p class="text-xs sm:text-sm text-slate-500">
-            Nikmati diskon otomatis hingga <strong>15% (VIP)</strong> setiap mencuci, kartu QR digital, dan riwayat cucian terintegrasi.
+            Nikmati diskon otomatis hingga <strong>15% (VIP)</strong>, pantau kuota <strong>Paket Bulanan 30 Hari</strong>, subsidi <strong>Warga Yayasan</strong>, dan unduh Kartu ID Card 2 Sisi.
           </p>
         </div>
 
@@ -1514,7 +1651,7 @@
         <div id="mem-register-form" class="space-y-4 hidden">
           <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center gap-2.5">
             <i class="fa-solid fa-gift text-emerald-600 text-base"></i>
-            <span>Pendaftaran <strong>100% Gratis!</strong> Langsung aktif di level <strong>Silver (Diskon 5%)</strong> dan mendapatkan Kartu QR Digital.</span>
+            <span>Pendaftaran <strong>100% Gratis!</strong> Langsung aktif di level <strong>Silver (Diskon 5% • Evaluasi 2 Tahun)</strong> dan mendapatkan Kartu ID Card 2 Sisi.</span>
           </div>
 
           <div class="space-y-1.5">
@@ -1560,16 +1697,17 @@
         </div>
       </div>
 
-      <!-- STATE 2: DASBOR MEMBER SETELAH LOGIN -->
-      <div id="member-dashboard-box" class="space-y-8 hidden">
+      <!-- C. DASBOR EKSLUSIF MEMBER SETELAH LOGIN (URUTAN: 1. NAMA -> 2. LEVEL TIER -> 3. PROMO CUCI 10X) -->
+      <div id="member-dashboard-box" class="space-y-6 hidden">
 
+        <!-- 1. KOTAK NAMA MEMBER (PALING ATAS) -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center text-xl font-black">
               <i class="fa-solid fa-user-check"></i>
             </div>
             <div>
-              <span class="text-xs font-extrabold uppercase tracking-wider text-brand-600">Dasbor Eksklusif Member</span>
+              <span id="mem-dash-category-tag" class="text-xs font-extrabold uppercase tracking-wider text-brand-600">Dasbor Eksklusif Member</span>
               <h2 id="mem-dash-welcome" class="text-xl font-black text-slate-900">Halo, Member!</h2>
               <p id="mem-dash-sub" class="text-xs text-slate-500">ID Member: 0001</p>
             </div>
@@ -1584,43 +1722,172 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- 2. KOTAK LEVEL TIER (TEPAT DI BAWAH KOTAK NAMA MEMBER) -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-brand-600">Loyalty Rewards (Siklus Evaluasi 2 Tahun)</span>
+              <h3 class="text-lg font-black text-slate-900">Status Level Tier &amp; Akumulasi Transaksi Rupiah</h3>
+            </div>
+            <span id="mem-tier-discount-pill" class="px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-extrabold text-xs border border-emerald-200">
+              Diskon Tier: 5% (Silver)
+            </span>
+          </div>
 
-          <div class="lg:col-span-6 flex flex-col justify-between space-y-4">
-            <div
-              id="member-card-canvas"
-              class="member-card-bg-silver relative rounded-3xl p-6 sm:p-7 text-white shadow-xl overflow-hidden border border-white/15 flex flex-col justify-between min-h-[250px]"
-            >
-              <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/5 pointer-events-none"></div>
-              <div class="absolute -left-12 -bottom-16 w-48 h-48 rounded-full bg-white/5 pointer-events-none"></div>
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <p class="text-xs font-bold text-slate-500">Total Akumulasi Transaksi (Siklus 2 Tahun Berjalan)</p>
+              <p id="mem-total-spent" class="text-2xl sm:text-3xl font-mono font-black text-slate-900 mt-0.5">Rp 0</p>
+              <p id="mem-tier-subsidy-included-note" class="text-[11px] font-bold text-emerald-700 mt-0.5 hidden"></p>
+              <p id="mem-cycle-period-text" class="text-[11px] text-slate-500 mt-0.5">Evaluasi s/d: -</p>
+            </div>
+            <div class="sm:text-right">
+              <p class="text-xs font-bold text-slate-500">Total Frekuensi Transaksi</p>
+              <p id="mem-total-orders" class="text-lg sm:text-xl font-mono font-black text-brand-600 mt-0.5">0 Transaksi</p>
+            </div>
+          </div>
 
-              <div class="relative z-10 flex items-start justify-between gap-4 border-b border-white/15 pb-3">
-                <div class="flex items-center gap-3">
-                  <img id="mem-card-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-10 h-10 rounded-xl bg-white p-1 object-contain" />
-                  <div>
-                    <h3 id="mem-card-store" class="font-black text-base tracking-tight uppercase">LAUNDRY QU</h3>
-                    <p id="mem-card-subtitle" class="text-[10px] text-cyan-300 uppercase tracking-wider font-semibold">Unit Usaha Markaz Yatim Duafa Qurani</p>
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs font-extrabold">
+              <span id="mem-progress-label-left" class="text-slate-700">Level Tier Saat Ini: Silver (5%)</span>
+              <span id="mem-progress-percent" class="font-mono text-brand-600">0%</span>
+            </div>
+            <div class="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
+              <div
+                id="mem-progress-bar"
+                class="h-full bg-gradient-to-r from-brand-600 to-cyan-500 rounded-full transition-all duration-500"
+                style="width: 5%"
+              ></div>
+            </div>
+            <p id="mem-next-tier-info" class="text-xs text-slate-600 font-medium pt-1">
+              Belanja lagi untuk naik ke level Gold (Diskon 10%).
+            </p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5 pt-2 border-t border-slate-100 text-center">
+            <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <p class="text-xs font-black text-slate-700">SILVER (5%)</p>
+              <p class="text-[10px] text-slate-500 mt-0.5">Rp 0 - 2 Juta</p>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-amber-50/70 border border-amber-200">
+              <p class="text-xs font-black text-amber-800">GOLD (10%)</p>
+              <p class="text-[10px] text-amber-700 mt-0.5">&gt; Rp 2 Juta - 5 Juta</p>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-indigo-50/70 border border-indigo-200">
+              <p class="text-xs font-black text-indigo-900">VIP (15%)</p>
+              <p class="text-[10px] text-indigo-700 mt-0.5">Di atas Rp 5 Juta</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. KOTAK PROMO CUCI 10X GRATIS 1X (TEPAT DI BAWAH LEVEL TIER) -->
+        <!-- Otomatis disembunyikan jika Paket Bulanan Aktif ATAU jika Member adalah Warga Yayasan -->
+        <div id="mem-stamp-card-box" class="p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-white shadow-lg space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">Program Loyalitas Reguler</span>
+              <h4 class="text-base sm:text-lg font-black">Promo Cuci 10x Gratis 1x (Min. 3 Kg / Rp 18.000)</h4>
+              <p class="text-[11px] text-cyan-200">Berlaku kelipatan! (Tidak berlaku selama Paket Bulanan aktif atau untuk Subsidi Yayasan)</p>
+            </div>
+            <div class="bg-white/10 px-3.5 py-2 rounded-xl border border-white/15 text-right">
+              <span class="text-[10px] text-slate-300 block">Hak Gratis Cuci Tersedia</span>
+              <span id="mem-free-wash-badge" class="font-mono text-lg font-black text-amber-300">0x Gratis</span>
+            </div>
+          </div>
+          <div id="mem-stamp-circles-grid" class="grid grid-cols-5 sm:grid-cols-10 gap-2 pt-1"></div>
+          <p id="mem-stamp-summary-text" class="text-xs text-slate-300 font-semibold"></p>
+        </div>
+
+        <!-- 4. GRID KARTU ID CARD 2 SISI (SAMA PERSIS DENGAN POS) & PAKET BULANAN / SUBSIDI YAYASAN -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+          <!-- KIRI: KARTU MEMBER ID CARD 2 SISI (WARNA SAMA PERSIS DENGAN POS) -->
+          <div class="lg:col-span-6 bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm space-y-4">
+            <div>
+              <h3 class="text-sm font-black text-slate-900 uppercase">
+                <i class="fa-solid fa-id-card text-amber-500 mr-1"></i> Kartu Member ID Card (2 Sisi Timbal Balik)
+              </h3>
+              <p class="text-[11px] text-slate-500">Ukuran Standar ID Card CR80 (85,6mm &times; 54mm) • Desain Sama Persis dengan POS Kasir</p>
+            </div>
+
+            <div id="member-card-canvas" class="flex flex-col items-center gap-4 p-4 bg-slate-100 rounded-2xl border border-slate-200 overflow-x-auto">
+              <!-- SISI DEPAN (WARNA IDENTIK POS: from-slate-900 via-sky-900 to-indigo-950) -->
+              <div id="mem-card-front-box" class="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-sky-900 to-indigo-950 text-white p-3.5 shadow-lg border border-sky-400/40 flex flex-col justify-between shrink-0" style="width: 340px; height: 214px;">
+                <div class="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-sky-400/10 blur-xl pointer-events-none"></div>
+                <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                  <div class="flex items-center gap-2">
+                    <img id="mem-card-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white p-0.5 shrink-0" />
+                    <div class="leading-tight">
+                      <p id="mem-card-store" class="font-extrabold text-xs tracking-wide uppercase">LAUNDRY QU</p>
+                      <p id="mem-card-subtitle" class="text-[8px] text-sky-300 font-semibold">Unit Usaha Markaz Yatim Duafa Qurani</p>
+                    </div>
+                  </div>
+                  <span id="mem-card-tier-badge" class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 shadow-2xs">
+                    SILVER 5%
+                  </span>
+                </div>
+
+                <div class="py-1.5 flex items-center justify-between gap-3">
+                  <div class="space-y-1 min-w-0 flex-1">
+                    <div>
+                      <p class="text-[8px] text-slate-300 uppercase tracking-wider">Nama Member</p>
+                      <p id="mem-card-holder" class="font-extrabold text-sm tracking-wide truncate">NAMA MEMBER</p>
+                    </div>
+                    <div class="flex items-baseline gap-3">
+                      <div>
+                        <p class="text-[8px] text-slate-300 uppercase tracking-wider">ID Member</p>
+                        <p id="mem-card-id" class="font-mono font-black text-base text-amber-300 tracking-widest leading-tight">0001</p>
+                      </div>
+                      <div class="truncate">
+                        <p class="text-[8px] text-slate-300 uppercase tracking-wider">No. WhatsApp</p>
+                        <p id="mem-card-phone" class="font-mono text-[10px] text-sky-200 font-bold truncate">-</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-white p-1.5 rounded-lg shadow-md shrink-0">
+                    <div id="mem-card-qr"></div>
                   </div>
                 </div>
-                <span id="mem-card-tier-badge" class="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-400 text-slate-950 shadow-sm shrink-0">
-                  SILVER • 5% OFF
-                </span>
+
+                <div class="border-t border-white/15 pt-1.5 flex items-center justify-between text-[8px] text-slate-200">
+                  <span id="mem-card-front-address" class="truncate max-w-[195px]">Jln. Protokol Dusun III Desa Sei Kamah II</span>
+                  <span class="font-mono font-extrabold text-amber-300 bg-white/10 px-1.5 py-0.5 rounded">laundryqu.github.io</span>
+                </div>
               </div>
 
-              <div class="relative z-10 flex items-end justify-between gap-4 pt-5">
-                <div class="space-y-1.5">
-                  <div>
-                    <p class="text-[10px] uppercase tracking-widest text-white/70 font-bold">Nama Member</p>
-                    <p id="mem-card-holder" class="text-lg sm:text-xl font-black tracking-wide">NAMA MEMBER</p>
-                  </div>
-                  <div>
-                    <p class="text-[10px] uppercase tracking-widest text-white/70 font-bold">ID Login (4 Angka)</p>
-                    <p id="mem-card-id" class="font-mono font-extrabold text-xl text-amber-300 tracking-widest">0001</p>
-                  </div>
-                  <p id="mem-card-phone" class="text-xs text-cyan-200 font-mono">-</p>
+              <!-- SISI BELAKANG (WARNA IDENTIK POS: from-slate-950 via-slate-900 to-sky-950) -->
+              <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-white p-3.5 shadow-lg border border-sky-400/40 flex flex-col justify-between shrink-0" style="width: 340px; height: 214px;">
+                <div class="flex items-center justify-between border-b border-white/15 pb-1.5">
+                  <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-300">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Panduan &amp; Ketentuan Member
+                  </span>
+                  <span class="font-mono text-[8.5px] font-extrabold text-sky-300">laundryqu.github.io</span>
                 </div>
-                <div class="bg-white p-2 rounded-2xl shadow-lg shrink-0">
-                  <div id="mem-card-qr"></div>
+
+                <div class="grid grid-cols-2 gap-2.5 my-auto py-1 text-[8px] leading-snug">
+                  <div class="bg-white/5 p-2 rounded-lg border border-white/10 space-y-1">
+                    <p class="font-extrabold text-sky-300 uppercase text-[8.5px]">Tata Cara Login Member:</p>
+                    <ol class="list-decimal pl-3 space-y-0.5 text-slate-200">
+                      <li>Buka web <strong class="text-amber-300 font-mono">laundryqu.github.io</strong></li>
+                      <li>Pilih menu <strong>Dasbor Member</strong>.</li>
+                      <li>Masukkan <strong>Nama</strong> &amp; <strong>4 Angka ID Member (<span id="mem-card-back-id" class="font-mono text-amber-300">0001</span>)</strong>.</li>
+                      <li>Cek status cucian, sisa kuota &amp; progres level secara <em>real-time</em>.</li>
+                    </ol>
+                  </div>
+
+                  <div class="bg-white/5 p-2 rounded-lg border border-white/10 space-y-1">
+                    <p class="font-extrabold text-amber-300 uppercase text-[8.5px]">Ketentuan Member:</p>
+                    <ol class="list-decimal pl-3 space-y-0.5 text-slate-200">
+                      <li>Tunjukkan QR Kartu ini saat transaksi di kasir.</li>
+                      <li>Level Member berlaku 2 tahun: <strong>Silver 5%</strong>, <strong>Gold 10%</strong> (&gt;2Jt), <strong>VIP 15%</strong> (&gt;5Jt).</li>
+                      <li><strong>Paket Bulanan</strong> dibayar di awal (aktif 30 hari). Sisa kuota tidak hangus &amp; bisa dipakai kembali setelah perpanjang paket baru.</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div class="border-t border-white/15 pt-1.5 flex items-center justify-between text-[8px] text-slate-300">
+                  <span>WA Layanan: <strong id="mem-card-back-phone" class="text-white">0823 6089 2828</strong></span>
+                  <span class="font-mono font-extrabold text-sky-300"><i class="fa-solid fa-globe mr-0.5"></i> laundryqu.github.io</span>
                 </div>
               </div>
             </div>
@@ -1632,7 +1899,7 @@
                 class="py-3 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all"
               >
                 <i class="fa-solid fa-download text-cyan-400"></i>
-                <span>Download Kartu (PNG)</span>
+                <span>Download ID Card (PNG)</span>
               </button>
               <button
                 type="button"
@@ -1640,70 +1907,101 @@
                 class="py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-extrabold text-xs sm:text-sm border border-slate-300 flex items-center justify-center gap-2 shadow-sm transition-all"
               >
                 <i class="fa-solid fa-print text-brand-600"></i>
-                <span>Cetak Kartu</span>
+                <span>Cetak ID Card 2 Sisi</span>
               </button>
             </div>
           </div>
 
-          <div class="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-5">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
+          <!-- KANAN: KUOTA SUBSIDI WARGA YAYASAN (2 GARIS BAR: RUPIAH & KG) & PAKET BULANAN -->
+          <div class="lg:col-span-6 space-y-5">
+
+            <!-- Box Khusus Kuota Subsidi Bulanan Warga Yayasan (2 Tampilan Progress Bar: Rupiah & Kg Bulat) -->
+            <div id="mem-yayasan-status-box" class="hidden bg-emerald-50 rounded-3xl p-6 border-2 border-emerald-400 shadow-sm space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-200 pb-3">
                 <div>
-                  <span class="text-xs font-extrabold uppercase tracking-wider text-brand-600">Loyalty Rewards</span>
-                  <h3 class="text-lg font-black text-slate-900">Status Level &amp; Akumulasi Transaksi</h3>
+                  <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-950">
+                    <i class="fa-solid fa-mosque mr-1"></i> Hak Subsidi Bulanan Warga Yayasan
+                  </span>
+                  <h4 class="text-base font-black text-emerald-950 mt-1">Pemakaian Kuota Subsidi Bulan Ini</h4>
                 </div>
-                <span id="mem-tier-discount-pill" class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-extrabold text-xs border border-emerald-200">
-                  Diskon Aktif: 5%
+                <span id="mem-yayasan-disc-badge" class="px-3 py-1 rounded-xl bg-emerald-600 text-white text-xs font-extrabold shadow-xs">
+                  Subsidi 50%
                 </span>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+              <!-- 1. Tampilan & Garis Progress Bar Kuota Nominal (Rupiah) -->
+              <div class="bg-white p-4 rounded-2xl border border-emerald-200 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-extrabold text-slate-700"><i class="fa-solid fa-wallet text-emerald-600 mr-1"></i> 1. Kuota Nominal (Rupiah)</span>
+                  <span id="mem-yayasan-rp-label" class="font-mono font-black text-emerald-900">Rp 0 / Rp 0</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
+                  <div id="mem-yayasan-rp-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                  <span id="mem-yayasan-rp-sisa">Sisa Kuota: Rp 0</span>
+                  <span id="mem-yayasan-rp-pct" class="font-mono text-emerald-700">0%</span>
+                </div>
+              </div>
+
+              <!-- 2. Tampilan & Garis Progress Bar Kuota Berat (Kg Bulat) -->
+              <div class="bg-white p-4 rounded-2xl border border-emerald-200 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-extrabold text-slate-700"><i class="fa-solid fa-weight-scale text-emerald-600 mr-1"></i> 2. Kuota Berat (Kg Digenapkan)</span>
+                  <span id="mem-yayasan-kg-label" class="font-mono font-black text-emerald-900">0 Kg / 0 Kg</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
+                  <div id="mem-yayasan-kg-bar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                  <span id="mem-yayasan-kg-sisa">Sisa Kuota: 0 Kg</span>
+                  <span id="mem-yayasan-kg-pct" class="font-mono text-emerald-700">0%</span>
+                </div>
+              </div>
+
+              <!-- Penjelasan Aturan Kuota Habis & Beralih ke Diskon Tier Member -->
+              <div id="mem-yayasan-rule-alert" class="p-3.5 rounded-2xl bg-emerald-900 text-white text-xs space-y-1 leading-relaxed">
+                <p class="font-extrabold text-amber-300">
+                  <i class="fa-solid fa-circle-info mr-1"></i> Ketentuan Kuota Subsidi Warga Yayasan:
+                </p>
+                <ul class="list-disc pl-4 space-y-1 text-[11px] text-emerald-100">
+                  <li>Kuota subsidi bulanan dinyatakan <strong>HABIS</strong> apabila <strong>salah satu</strong> di antara <strong>Kuota Nominal (Rupiah)</strong> ATAU <strong>Kuota Berat (Kg)</strong> telah mencapai batas maksimalnya.</li>
+                  <li>Apabila kuota subsidi bulan ini telah habis, maka transaksi cucian berikutnya otomatis akan menggunakan <strong>Diskon Level Tier Member Reguler (<span id="mem-yayasan-fallback-tier-text">Silver 5%</span>)</strong>.</li>
+                  <li>Kuota subsidi di-reset kembali ke 0 setiap awal bulan baru, dan seluruh nilai Rupiah transaksi Anda tetap masuk ke akumulasi <strong>Level Tier</strong> di atas.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Box Khusus Status Paket Bulanan Member (30 Hari & Sisa Kuota Digenapkan) -->
+            <div id="mem-pkg-status-box" class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-lg border border-indigo-500/30 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+                  <i class="fa-solid fa-calendar-check mr-1"></i> Langganan Paket Bulanan (30 Hari)
+                </span>
+                <span id="mem-pkg-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-700 text-slate-300">
+                  Belum Aktif
+                </span>
+              </div>
+              <div class="flex items-baseline justify-between pt-1">
                 <div>
-                  <p class="text-xs font-bold text-slate-500">Total Akumulasi Transaksi Lunas</p>
-                  <p id="mem-total-spent" class="text-2xl font-mono font-black text-slate-900 mt-0.5">Rp 0</p>
+                  <p class="text-xs text-indigo-200">Sisa Kuota Paket Bulanan Anda:</p>
+                  <h4 id="mem-pkg-remaining-val" class="text-2xl sm:text-3xl font-mono font-black text-amber-300 mt-0.5">0 Kg</h4>
                 </div>
                 <div class="text-right">
-                  <p class="text-xs font-bold text-slate-500">Total Nota Member</p>
-                  <p id="mem-total-orders" class="text-lg font-mono font-black text-brand-600 mt-0.5">0 Transaksi</p>
+                  <p class="text-[11px] text-indigo-200">Masa Berlaku Aktif:</p>
+                  <p id="mem-pkg-expiry-text" class="text-xs font-extrabold text-white mt-0.5">-</p>
                 </div>
               </div>
-
-              <div class="space-y-2">
-                <div class="flex justify-between text-xs font-extrabold">
-                  <span id="mem-progress-label-left" class="text-slate-700">Level Saat Ini: Silver</span>
-                  <span id="mem-progress-percent" class="font-mono text-brand-600">0%</span>
-                </div>
-                <div class="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5">
-                  <div
-                    id="mem-progress-bar"
-                    class="h-full bg-gradient-to-r from-brand-600 to-cyan-500 rounded-full transition-all duration-500"
-                    style="width: 5%"
-                  ></div>
-                </div>
-                <p id="mem-next-tier-info" class="text-xs text-slate-600 font-medium pt-1">
-                  Belanja lagi untuk naik ke level Gold (Diskon 10%).
-                </p>
-              </div>
+              <p id="mem-pkg-note-text" class="text-[11px] text-indigo-200/90 leading-relaxed pt-2 border-t border-white/10">
+                Hubungi kasir Laundry QU untuk mengaktifkan atau memperpanjang Paket Bulanan hemat (Sisa kuota tidak hangus!).
+              </p>
             </div>
 
-            <div class="grid grid-cols-3 gap-2.5 pt-2 border-t border-slate-100 text-center">
-              <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <p class="text-xs font-black text-slate-700">SILVER (5%)</p>
-                <p class="text-[10px] text-slate-500 mt-0.5">Rp 0 - 2 Juta</p>
-              </div>
-              <div class="p-2.5 rounded-2xl bg-amber-50/70 border border-amber-200">
-                <p class="text-xs font-black text-amber-800">GOLD (10%)</p>
-                <p class="text-[10px] text-amber-700 mt-0.5">&gt; Rp 2 Juta - 5 Juta</p>
-              </div>
-              <div class="p-2.5 rounded-2xl bg-indigo-50/70 border border-indigo-200">
-                <p class="text-xs font-black text-indigo-900">VIP (15%)</p>
-                <p class="text-[10px] text-indigo-700 mt-0.5">Di atas Rp 5 Juta</p>
-              </div>
-            </div>
           </div>
 
         </div>
 
+        <!-- 5. DAFTAR CUCIAN AKTIF & RIWAYAT TRANSAKSI MEMBER -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
           <div>
             <h3 class="text-lg font-black text-slate-900">Daftar Cucian Aktif &amp; Riwayat Transaksi Anda</h3>
@@ -1841,7 +2139,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- MODAL 3: KONFIRMASI PESANAN JEMPUT BERHASIL DIBUAT + QR NOTA              -->
+  <!-- MODAL 3: KONFIRMASI PESANAN JEMPUT BERHASIL DIBUAT + QR PESANAN           -->
   <!-- ========================================================================= -->
   <div id="modal-order-success" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5 my-8">
@@ -1856,8 +2154,8 @@
 
       <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="space-y-1 text-center sm:text-left">
-          <span class="text-[11px] font-bold uppercase text-slate-400">Nomor Nota Resmi Anda</span>
-          <p id="succ-nota-id" class="font-mono text-3xl font-black text-brand-600 tracking-widest">000001</p>
+          <span class="text-[11px] font-bold uppercase text-slate-400">Nomor Pesanan Jemput Anda</span>
+          <p id="succ-nota-id" class="font-mono text-3xl font-black text-brand-600 tracking-widest">PSN-0001</p>
           <p id="succ-cust-name" class="text-xs font-bold text-slate-700">Pelanggan</p>
           <p id="succ-est-total" class="text-xs font-extrabold text-amber-600">Estimasi: Rp 0</p>
           <p id="succ-coords-info" class="text-[10px] font-mono text-slate-500">Koordinat: -</p>
@@ -1873,7 +2171,7 @@
         <div class="grid grid-cols-2 gap-2.5">
           <button type="button" onclick="window.openTrackedOrderFromSuccessModal()" class="py-3 px-4 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs flex items-center justify-center gap-2">
             <i class="fa-solid fa-magnifying-glass-location"></i>
-            <span>Lacak Progres Nota</span>
+            <span>Lacak Status Pesanan</span>
           </button>
           <button type="button" onclick="window.closeOrderSuccessModal()" class="py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs">
             Tutup
@@ -1884,69 +2182,101 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- HIDDEN CONTAINER UNTUK CETAK E-RECEIPT / STRUK PDF (html2pdf)             -->
+  <!-- HIDDEN CONTAINER UNTUK CETAK E-RECEIPT / STRUK PDF HEMAT KERTAS (html2pdf) -->
   <!-- ========================================================================= -->
   <div class="fixed -left-[9999px] top-0 pointer-events-none">
-    <div id="pdf-receipt-template" class="w-[380px] bg-white p-6 text-slate-900 font-sans border border-slate-300 space-y-3">
-      <div class="text-center border-b border-dashed border-slate-300 pb-2.5 space-y-0.5">
-        <h2 id="pdf-store-name" class="text-base font-black uppercase">LAUNDRY QU</h2>
-        <p id="pdf-store-tagline" class="text-[10px] font-bold text-slate-700">Unit Usaha Markaz Yatim Duafa Qurani</p>
-        <p id="pdf-store-address" class="text-[10px] text-slate-600">Jln. Protokol Dusun III Desa Sei Kamah II</p>
-        <p id="pdf-store-phone" class="text-[10px] text-slate-600">HP/WA: 0823 6089 2828 dan 0822 1188 2667</p>
-      </div>
-
-      <div class="flex justify-between items-center text-xs border-b border-dashed border-slate-300 pb-2.5">
-        <div>
-          <p class="text-[10px] text-slate-500 uppercase font-bold">Nomor Nota</p>
-          <p id="pdf-nota-id" class="font-mono text-base font-black">000001</p>
-          <p id="pdf-date" class="text-[10px] text-slate-500 mt-0.5">-</p>
-        </div>
-        <div id="pdf-qr-code" class="p-1 bg-white border border-slate-200 rounded"></div>
-      </div>
-
-      <div class="space-y-1 text-xs border-b border-dashed border-slate-300 pb-2.5">
-        <div class="flex justify-between"><span class="text-slate-500">Pelanggan:</span><strong id="pdf-cust-name">-</strong></div>
-        <div class="flex justify-between"><span class="text-slate-500">No. WhatsApp:</span><span id="pdf-cust-phone">-</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Alamat:</span><span id="pdf-cust-address" class="text-right max-w-[200px] truncate">-</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Pengiriman:</span><span id="pdf-delivery">-</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Parfum:</span><span id="pdf-perfume">-</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Lokasi Rak:</span><strong id="pdf-rack">-</strong></div>
-        <div class="flex justify-between"><span class="text-slate-500">Target Selesai:</span><strong id="pdf-deadline">-</strong></div>
-      </div>
-
-      <div class="space-y-1.5 text-xs border-b border-dashed border-slate-300 pb-2.5">
-        <p class="font-bold text-[11px] uppercase text-slate-500">Rincian Layanan &amp; Pakaian</p>
-        <div id="pdf-services-items" class="space-y-1"></div>
-        <div class="pt-1 text-[11px] text-slate-600">
-          <span>Kuantitas: <strong id="pdf-weight">0 Kg</strong></span> • <span>Jumlah: <strong id="pdf-pcs">0 Pcs</strong></span>
-        </div>
-        <p id="pdf-garments" class="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded border border-slate-200"></p>
-      </div>
-
-      <div class="space-y-1 text-xs">
-        <div class="flex justify-between"><span>Subtotal Layanan</span><span id="pdf-subtotal">Rp 0</span></div>
-        <div class="flex justify-between"><span>Diskon / Promo</span><span id="pdf-discount">- Rp 0</span></div>
-        <div class="flex justify-between"><span>Ongkos Kirim</span><span id="pdf-shipping">Rp 0</span></div>
-        <div class="flex justify-between text-sm font-black border-t border-slate-300 pt-1.5 mt-1">
-          <span>TOTAL TAGIHAN</span><span id="pdf-total">Rp 0</span>
-        </div>
-        <div class="flex justify-between text-xs pt-0.5">
-          <span>Status Bayar (<span id="pdf-pay-status">Belum Bayar</span>)</span>
-          <strong id="pdf-remaining">Sisa: Rp 0</strong>
+    <div id="pdf-receipt-template" class="w-[340px] bg-white p-4 text-slate-950 font-mono border border-slate-300 space-y-2 text-[10px] leading-tight">
+      <!-- Header Hemat Kertas: Logo di Samping Nama & Alamat -->
+      <div class="flex items-center gap-2.5 border-b border-dashed border-slate-400 pb-2">
+        <img id="pdf-store-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-10 h-10 object-contain shrink-0" />
+        <div class="min-w-0 flex-1 leading-tight">
+          <h2 id="pdf-store-name" class="text-xs font-black uppercase">LAUNDRY QU</h2>
+          <p id="pdf-store-tagline" class="text-[9px] font-bold text-slate-800">Unit Usaha Markaz Yatim Duafa Qurani</p>
+          <p id="pdf-store-address" class="text-[8.5px] text-slate-600">Jln. Protokol Dusun III Desa Sei Kamah II</p>
+          <p id="pdf-store-phone" class="text-[8.5px] text-slate-600">HP: 0823 6089 2828 / 0822 1188 2667</p>
         </div>
       </div>
 
-      <div class="border-t border-dashed border-slate-300 pt-2 text-[9px] text-slate-600 space-y-0.5">
-        <p class="font-bold uppercase text-slate-800">Ketentuan Laundry QU:</p>
-        <ol class="list-decimal pl-3.5 space-y-0">
-          <li>Pengambilan cucian wajib membawa nota struk ini.</li>
-          <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
-          <li>Pelanggan wajib memberitahu jika ada pakaian yang luntur.</li>
-          <li>Kerusakan akibat sifat bahan/luntur yang tidak diberitahukan diawal di luar tanggung jawab kami.</li>
-          <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
-          <li>Cucian tidak diambil lebih dari 30 hari dikenakan biaya penitipan barang 1000 per hari.</li>
-          <li>Dengan menandatangani Nota ini, maka pelanggan dianggap setuju dengan semua ketentuan.</li>
-        </ol>
+      <!-- Banner Express -->
+      <div id="pdf-express-banner" class="hidden bg-slate-900 text-white font-black text-center py-1 rounded text-[10px]">
+        ⚡ LAYANAN EXPRESS ⚡
+      </div>
+
+      <!-- Nomor Nota, Pelanggan & Tanggal Estimasi Tebal -->
+      <div class="space-y-0.5 border-b border-dashed border-slate-400 pb-2">
+        <div class="flex justify-between items-baseline">
+          <span>NO. NOTA: <strong id="pdf-nota-id" class="text-[15px] font-black tracking-wider">000001</strong></span>
+          <span id="pdf-cust-cat" class="font-bold text-[9.5px]">Umum</span>
+        </div>
+        <div class="flex justify-between items-baseline py-0.5 border-y border-dotted border-slate-300">
+          <span>Pelanggan:</span>
+          <strong id="pdf-cust-name" class="text-[13px] font-black uppercase truncate max-w-[180px]">-</strong>
+        </div>
+        <div class="flex justify-between">
+          <span>Masuk: <span id="pdf-date">-</span></span>
+          <span>Kasir: <strong id="pdf-cashier">-</strong></span>
+        </div>
+        <div class="flex justify-between items-baseline py-0.5 border-b border-dotted border-slate-300 text-[10.5px]">
+          <strong class="font-black uppercase">Estimasi Selesai:</strong>
+          <strong id="pdf-deadline" class="font-black underline">-</strong>
+        </div>
+        <div class="flex justify-between"><span>Alamat:</span><span id="pdf-cust-address" class="text-right max-w-[180px] truncate">-</span></div>
+        <div class="flex justify-between"><span>Kurir / Rak:</span><span><span id="pdf-delivery">-</span> / <strong id="pdf-rack">-</strong></span></div>
+      </div>
+
+      <!-- Rincian Paket Layanan + Harga Satuan & Jumlah Pakaian Besar -->
+      <div class="space-y-1 border-b border-dashed border-slate-400 pb-2">
+        <div id="pdf-services-items" class="space-y-0.5 font-semibold"></div>
+        <div class="flex justify-between items-baseline pt-1 border-t border-dotted border-slate-400">
+          <span class="font-bold">Total Berat / Pakaian:</span>
+          <strong class="text-[13px] font-black"><span id="pdf-weight">0 Kg</span> / <span id="pdf-pcs">0 Pcs</span></strong>
+        </div>
+        <div class="flex justify-between"><span>Parfum:</span><span id="pdf-perfume">-</span></div>
+        <div id="pdf-row-garments" class="text-[8.5px] leading-tight">
+          <span>Ket: </span><span id="pdf-garments">-</span>
+        </div>
+      </div>
+
+      <!-- Rincian Biaya Hemat Kertas (Sembunyikan Ongkir/Diskon jika Rp 0) -->
+      <div class="space-y-0.5">
+        <div id="pdf-row-subtotal" class="hidden flex justify-between"><span>Subtotal Layanan:</span><span id="pdf-subtotal">Rp 0</span></div>
+        <div id="pdf-row-shipping" class="hidden flex justify-between"><span>Ongkos Kirim:</span><span id="pdf-shipping">Rp 0</span></div>
+        <div id="pdf-row-discount" class="hidden flex justify-between"><span>Diskon / Paket:</span><span id="pdf-discount">- Rp 0</span></div>
+        <div class="flex justify-between items-baseline text-[14px] font-black py-0.5 border-y border-solid border-slate-900 my-0.5">
+          <span id="pdf-total-label">TOTAL BIAYA:</span>
+          <span id="pdf-total">Rp 0</span>
+        </div>
+        <div class="flex justify-between items-baseline">
+          <span>Status Pembayaran:</span>
+          <strong id="pdf-pay-status" class="text-[11px] font-black">BELUM BAYAR</strong>
+        </div>
+        <div id="pdf-row-remaining" class="hidden flex justify-between">
+          <span id="pdf-remaining-label">Sisa Tagihan:</span>
+          <strong id="pdf-remaining" class="font-black">Rp 0</strong>
+        </div>
+
+        <!-- Kotak Besar Kembalian ##.### -->
+        <div id="pdf-large-change-box" class="hidden my-1.5 py-1.5 px-2 border-2 border-black rounded text-center bg-slate-100">
+          <div id="pdf-large-change-text" class="text-[15px] font-black uppercase tracking-wide leading-tight">
+            Kembalian 0
+          </div>
+          <div id="pdf-large-change-sub" class="text-[8.5px] font-bold uppercase mt-0.5">
+            DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN BARANG)
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-dashed border-slate-400 pt-1.5 flex items-center justify-between gap-2">
+        <div id="pdf-qr-code" class="p-1 bg-white border border-slate-200 rounded shrink-0"></div>
+        <div class="text-[8px] text-slate-700 space-y-0.5 leading-tight">
+          <p class="font-bold uppercase text-slate-900">Ketentuan Laundry QU:</p>
+          <ol class="list-decimal pl-3.5 space-y-0">
+            <li>Pengambilan cucian wajib membawa nota struk ini.</li>
+            <li>Komplain kekurangan/kerusakan maks. 1x24 jam sejak diambil.</li>
+            <li>Barang berharga tertinggal di saku bukan tanggung jawab kami.</li>
+            <li>Tidak diambil &gt; 30 hari dikenakan biaya penitipan Rp 1.000/hari.</li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>
@@ -2012,7 +2342,6 @@
         if (!firebase.apps.length) {
           firebase.initializeApp(firebaseConfig);
         }
-        // Menggunakan node database universal yang sama persis dengan poslaundry.html
         dbRef = firebase.database().ref('laundry_qu_pos');
       }
     } catch (err) {
@@ -2026,6 +2355,9 @@
     const DEFAULT_STORE_TAGLINE = "Unit Usaha Markaz Yatim Duafa Qurani";
     const DEFAULT_STORE_ADDRESS = "Jln. Protokol Dusun III Desa Sei Kamah II";
     const DEFAULT_STORE_PHONE = "0823 6089 2828 dan 0822 1188 2667";
+
+    const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000; // Siklus 2 Tahun (730 Hari)
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;   // Masa Aktif Paket Bulanan (30 Hari)
 
     // -------------------------------------------------------------------------
     // 2. DEFINISI 8 TAHAPAN ALUR CUCIAN (SAMA PERSIS DENGAN KASIR POS)
@@ -2063,7 +2395,12 @@
         printerPadding: "6px",
         printerShowLogo: true,
         printerPageBreak: false,
-        printerAutoPrint: false
+        printerAutoPrint: false,
+        promoStampEnabled: true,
+        promoStampMinKg: 3,
+        promoStampMinRp: 18000,
+        promoStampMaxFreeValue: 18000,
+        promoPrayerEnabled: true
       },
       adminUsers: [],
       employees: [],
@@ -2075,7 +2412,7 @@
       expenses: [],
       cashflows: [],
       orders: [],
-      pickupOrders: [] // Antrean Pesanan Online (Nomor Pesanan PSN-xxxx, berbeda dari Nomor Nota)
+      pickupOrders: []
     };
 
     function mergeWithDefaults(data) {
@@ -2093,7 +2430,8 @@
       if (data.members) {
         merged.members = Object.values(data.members).filter(Boolean).map(m => ({
           ...m,
-          id: String(m.id || m.memberId || '0001').padStart(4, '0')
+          id: String(m.id || m.memberId || '0001').padStart(4, '0'),
+          monthlyPkgHistory: m.monthlyPkgHistory ? Object.values(m.monthlyPkgHistory).filter(Boolean) : []
         }));
       }
       if (data.inventory) merged.inventory = Object.values(data.inventory).filter(Boolean);
@@ -2194,8 +2532,16 @@
     })();
 
     // -------------------------------------------------------------------------
-    // 4. GENERATOR NOMOR PESANAN (PSN-0001) != NOMOR NOTA (000001)
+    // 4. PENGGENAPAN PER 500 & GENERATOR NOMOR PESANAN (PSN-0001) != NOMOR NOTA
     // -------------------------------------------------------------------------
+    function roundToNearest500(amount) {
+      const num = Math.round(Number(amount) || 0);
+      if (num <= 0) return 0;
+      const remainder = num % 500;
+      const base = num - remainder;
+      return remainder >= 300 ? base + 500 : base;
+    }
+
     function getNextPickupOrderNumber() {
       const list = appData.pickupOrders || [];
       let maxNum = 0;
@@ -2334,84 +2680,400 @@
     }
 
     // -------------------------------------------------------------------------
-    // 6. PERHITUNGAN TIER MEMBER, PAKET BUNDLE 7KG/14KG & ONGKIR 3 KM
+    // 6. MESIN TIER 2 TAHUN (KONSEP SHOPEE), WARGA YAYASAN, PAKET BULANAN & STAMP
     // -------------------------------------------------------------------------
-    function calculateMemberStats(member) {
-      if (!member) {
+    // 1. Status Paket Bulanan Member (Kg digenapkan dengan Math.round)
+    function getMemberMonthlyPkgStatus(member) {
+      if (!member || !member.monthlyPkg) {
         return {
-          tierName: 'Silver',
-          discountPercent: 5,
-          totalPaidSpent: 0,
-          totalOrdersCount: 0,
-          progressPercent: 5,
-          nextTierName: 'Gold (Diskon 10%)',
-          remainingToNext: 2000000,
-          cardBgClass: 'member-card-bg-silver'
+          hasPkg: false,
+          isActive: false,
+          isExpiredWithQuota: false,
+          quotaType: 'KG',
+          remainingQuota: 0,
+          quotaFormatted: '0 Kg',
+          startAt: 0,
+          expiresAt: 0,
+          daysLeft: 0,
+          statusText: 'Tidak ada Paket Bulanan'
         };
       }
 
-      const mId = String(member.id || member.memberId).padStart(4, '0');
-      const mNameLower = String(member.name || '').trim().toLowerCase();
-      const orders = (appData.orders || []).filter(o => !o.isDeleted);
+      const pkg = member.monthlyPkg;
+      const quotaType = pkg.quotaType || 'KG';
+      const rawRem = Math.max(0, Number(pkg.remainingQuota) || 0);
+      const remainingQuota = quotaType === 'KG' ? Math.round(rawRem) : roundToNearest500(rawRem);
+      const startAt = Number(pkg.startAt) || 0;
+      const expiresAt = Number(pkg.expiresAt) || 0;
+      const now = Date.now();
+      const diffMs = expiresAt - now;
+      const daysLeft = diffMs > 0 ? Math.ceil(diffMs / (24 * 3600 * 1000)) : 0;
 
-      let calculatedPaidOrdersSum = 0;
-      let orderCount = 0;
+      const isWithin30Days = now <= expiresAt;
+      const isActive = isWithin30Days && remainingQuota > 0;
+      const isExpiredWithQuota = !isWithin30Days && remainingQuota > 0;
 
-      orders.forEach(o => {
+      const quotaFormatted = quotaType === 'KG'
+        ? `${remainingQuota} Kg`
+        : formatRupiah(remainingQuota);
+
+      let statusText = 'Kuota Paket Bulanan Habis (0)';
+      if (isActive) {
+        statusText = `Paket Bulanan Aktif (${daysLeft} Hari Lagi) • Sisa: ${quotaFormatted}`;
+      } else if (isExpiredWithQuota) {
+        statusText = `Masa 30 Hari Berakhir • Kuota Tersimpan: ${quotaFormatted} (Perpanjang paket di kasir untuk memakai)`;
+      }
+
+      return {
+        hasPkg: true,
+        isActive,
+        isExpiredWithQuota,
+        quotaType,
+        remainingQuota,
+        quotaFormatted,
+        startAt,
+        expiresAt,
+        daysLeft,
+        statusText
+      };
+    }
+
+    // 2. Hitung Statistik Transaksi (Termasuk Nilai Rupiah Pemakaian Subsidi Yayasan ke dalam Tier Level)
+    function getRealCustomerOrderStats(memberId, phoneRaw, memberObj = null) {
+      const cleanTargetPhone = String(phoneRaw || '').replace(/\D/g, '').replace(/^62/, '0');
+      const targetNameLower = String(memberObj?.name || '').trim().toLowerCase();
+      const now = Date.now();
+      const nowDate = new Date(now);
+      const currentMonthKey = `${nowDate.getFullYear()}-${String(nowDate.getMonth() + 1).padStart(2, '0')}`;
+      const paddedMemId = memberId ? String(memberId).padStart(4, '0') : '';
+
+      // Cari waktu transaksi paling awal milik member ini agar nota lama sebelum edit data tetap terhitung
+      let earliestTxMs = Infinity;
+      (appData.orders || []).forEach(o => {
+        if (!o || o.isDeleted) return;
+        const cleanOrderPhone = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
         const oMemId = o.memberId ? String(o.memberId).padStart(4, '0') : '';
         const oCustName = String(o.custName || o.customerName || '').trim().toLowerCase();
-        if ((oMemId && oMemId === mId) || (!oMemId && oCustName === mNameLower)) {
-          orderCount++;
-          const st = String(o.payStatus || o.paymentStatus || '').toLowerCase();
-          if (st === 'lunas') {
-            calculatedPaidOrdersSum += Number(o.total ?? o.grandTotal ?? 0);
+
+        const isSameMemberId = paddedMemId && oMemId === paddedMemId;
+        const isSamePhone = cleanTargetPhone.length >= 8 && (
+          cleanOrderPhone === cleanTargetPhone ||
+          (cleanOrderPhone.length >= 8 && cleanOrderPhone.endsWith(cleanTargetPhone.slice(-8)))
+        );
+        const isSameName = !oMemId && targetNameLower && oCustName === targetNameLower;
+
+        if (isSameMemberId || isSamePhone || isSameName) {
+          const ts = Number(o.createdAt) || 0;
+          if (ts > 0 && ts < earliestTxMs) earliestTxMs = ts;
+        }
+      });
+
+      const targetMember = memberObj || (appData.members || []).find(m => String(m.id).padStart(4, '0') === paddedMemId);
+      if (targetMember && Array.isArray(targetMember.monthlyPkgHistory)) {
+        targetMember.monthlyPkgHistory.forEach(p => {
+          if (!p || p.isDeleted) return;
+          const ts = Number(p.timestamp) || 0;
+          if (ts > 0 && ts < earliestTxMs) earliestTxMs = ts;
+        });
+      }
+
+      // Gunakan waktu paling awal antara waktu pembuatan member (createdAt) dan transaksi pertama
+      const recordedCreatedAt = Number(targetMember?.createdAt || memberObj?.createdAt) || 0;
+      let baseStartMs = recordedCreatedAt > 0
+        ? Math.min(recordedCreatedAt, earliestTxMs)
+        : (earliestTxMs < Infinity ? earliestTxMs : now);
+
+      const elapsedCycles = Math.max(0, Math.floor((now - baseStartMs) / TWO_YEARS_MS));
+      const currentCycleStartMs = baseStartMs + (elapsedCycles * TWO_YEARS_MS);
+      const currentCycleEndMs = currentCycleStartMs + TWO_YEARS_MS;
+      const prevCycleStartMs = elapsedCycles > 0 ? (currentCycleStartMs - TWO_YEARS_MS) : 0;
+
+      let realSpent = 0;
+      let realTxCount = 0;
+      let currentCycleSpent = 0;
+      let currentCycleTxCount = 0;
+      let prevCycleSpent = 0;
+      let monthlyKg = 0;
+      let monthlyNominal = 0;
+
+      (appData.orders || []).forEach(o => {
+        if (!o || o.isDeleted) return;
+        const cleanOrderPhone = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        const oMemId = o.memberId ? String(o.memberId).padStart(4, '0') : '';
+        const oCustName = String(o.custName || o.customerName || '').trim().toLowerCase();
+
+        const isSameMemberId = paddedMemId && oMemId === paddedMemId;
+        const isSamePhone = cleanTargetPhone.length >= 8 && (
+          cleanOrderPhone === cleanTargetPhone ||
+          (cleanOrderPhone.length >= 8 && cleanOrderPhone.endsWith(cleanTargetPhone.slice(-8)))
+        );
+        const isSameName = !oMemId && targetNameLower && oCustName === targetNameLower;
+
+        if (isSameMemberId || isSamePhone || isSameName) {
+          const orderTotal = Number(o.total) || 0;
+          const orderSubtotal = Number(o.subtotal) || orderTotal;
+          const txValueForTier = Math.max(orderSubtotal, orderTotal);
+          const orderKg = Math.round(Number(o.weightKg) || 0);
+          const ts = Number(o.createdAt) || 0;
+
+          realSpent += txValueForTier;
+          realTxCount += 1;
+
+          // Jika masih di siklus 2 tahun pertama (elapsedCycles === 0), hitung seluruh transaksi sejak awal
+          if ((elapsedCycles === 0 && ts <= currentCycleEndMs) || (ts >= currentCycleStartMs && ts <= currentCycleEndMs)) {
+            currentCycleSpent += txValueForTier;
+            currentCycleTxCount += 1;
+          } else if (elapsedCycles > 0 && ts >= prevCycleStartMs && ts < currentCycleStartMs) {
+            prevCycleSpent += txValueForTier;
+          }
+
+          const d = new Date(ts);
+          const orderMonthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          if (orderMonthKey === currentMonthKey) {
+            monthlyKg += orderKg;
+            monthlyNominal += orderSubtotal;
           }
         }
       });
 
-      const totalPaidSpent = Math.max(Number(member.totalSpent) || 0, calculatedPaidOrdersSum);
-      const totalOrdersCount = Math.max(Number(member.txCount) || 0, orderCount);
+      if (targetMember && Array.isArray(targetMember.monthlyPkgHistory)) {
+        targetMember.monthlyPkgHistory.forEach(pkgTx => {
+          if (!pkgTx || pkgTx.isDeleted) return;
+          const paid = Number(pkgTx.pricePaid) || 0;
+          const ts = Number(pkgTx.timestamp) || 0;
 
-      let tierName = 'Silver';
-      let discountPercent = 5;
-      let progressPercent = 5;
-      let nextTierName = 'Gold (Diskon 10%)';
-      let remainingToNext = 2000000;
-      let cardBgClass = 'member-card-bg-silver';
+          realSpent += paid;
+          realTxCount += 1;
 
-      if (totalPaidSpent > 5000000 || member.initTier === 'VIP') {
-        tierName = 'VIP';
-        discountPercent = 15;
-        progressPercent = 100;
-        nextTierName = 'MAX';
-        remainingToNext = 0;
-        cardBgClass = 'member-card-bg-vip';
-      } else if (totalPaidSpent > 2000000 || member.initTier === 'Gold') {
-        tierName = 'Gold';
-        discountPercent = 10;
-        progressPercent = Math.min(100, Math.round(((totalPaidSpent - 2000000) / 3000000) * 100));
-        nextTierName = 'VIP (Diskon 15%)';
-        remainingToNext = Math.max(0, 5000001 - totalPaidSpent);
-        cardBgClass = 'member-card-bg-gold';
-      } else {
-        tierName = 'Silver';
-        discountPercent = 5;
-        progressPercent = Math.max(5, Math.min(100, Math.round((totalPaidSpent / 2000000) * 100)));
-        nextTierName = 'Gold (Diskon 10%)';
-        remainingToNext = Math.max(0, 2000001 - totalPaidSpent);
-        cardBgClass = 'member-card-bg-silver';
+          if ((elapsedCycles === 0 && ts <= currentCycleEndMs) || (ts >= currentCycleStartMs && ts <= currentCycleEndMs)) {
+            currentCycleSpent += paid;
+            currentCycleTxCount += 1;
+          } else if (elapsedCycles > 0 && ts >= prevCycleStartMs && ts < currentCycleStartMs) {
+            prevCycleSpent += paid;
+          }
+        });
       }
 
       return {
-        tierName,
-        discountPercent,
-        totalPaidSpent,
-        totalOrdersCount,
+        totalSpent: Math.round(realSpent),
+        txCount: realTxCount,
+        currentCycleSpent: Math.round(currentCycleSpent),
+        currentCycleTxCount,
+        prevCycleSpent: Math.round(prevCycleSpent),
+        currentCycleStartMs,
+        currentCycleEndMs,
+        elapsedCycles,
+        monthlyKg: Math.round(monthlyKg),
+        monthlyNominal: Math.round(monthlyNominal)
+      };
+    }
+
+    // 2. Syarat Level Tier Genap (Gold >= Rp 2.000.000, VIP >= Rp 5.000.000)
+    function getTierFromSpentAmount(amount) {
+      const val = Number(amount) || 0;
+      if (val >= 5000000) return { tier: 'VIP', discountPct: 15, rank: 3 };
+      if (val >= 2000000) return { tier: 'Gold', discountPct: 10, rank: 2 };
+      return { tier: 'Silver', discountPct: 5, rank: 1 };
+    }
+
+    // 3. Kalkulasi Statistik & Sisa Target Bulat Tanpa Angka 1 (Rp 2.000.000 & Rp 5.000.000)
+    function calculateMemberStats(member) {
+      if (!member) {
+        return {
+          tierName: 'Silver',
+          isYayasan: false,
+          discountPercent: 5,
+          yayasanDiscountPct: 0,
+          fallbackTier: 'Silver',
+          fallbackDiscountPct: 5,
+          maxKg: 0,
+          maxNominal: 0,
+          usedMonthKg: 0,
+          usedMonthNominal: 0,
+          remainingMonthKg: Infinity,
+          remainingMonthNominal: Infinity,
+          rpPct: 0,
+          kgPct: 0,
+          isQuotaExhausted: false,
+          totalPaidSpent: 0,
+          totalOrdersCount: 0,
+          cycleEndStr: '-',
+          progressPercent: 5,
+          nextTierName: 'Gold (Diskon 10%)',
+          remainingToNext: 2000000,
+          pkgStatus: getMemberMonthlyPkgStatus(null)
+        };
+      }
+
+      const realStats = getRealCustomerOrderStats(member.id, member.phone, member);
+      const cycleSpent = realStats.currentCycleSpent;
+      const cycleTxCount = realStats.currentCycleTxCount;
+      const cycleEndStr = new Date(realStats.currentCycleEndMs).toLocaleDateString('id-ID', { dateStyle: 'medium' });
+
+      const currTierObj = getTierFromSpentAmount(cycleSpent);
+      const prevTierObj = realStats.elapsedCycles > 0
+        ? getTierFromSpentAmount(realStats.prevCycleSpent)
+        : { tier: 'Silver', discountPct: 5, rank: 1 };
+
+      const activeRegObj = currTierObj.rank >= prevTierObj.rank ? currTierObj : prevTierObj;
+      let regularTier = activeRegObj.tier;
+      let regularDiscountPct = activeRegObj.discountPct;
+
+      if (member.initTier === 'VIP' && regularTier !== 'VIP' && realStats.elapsedCycles === 0) {
+        regularTier = 'VIP';
+        regularDiscountPct = 15;
+      } else if (member.initTier === 'Gold' && regularTier === 'Silver' && realStats.elapsedCycles === 0) {
+        regularTier = 'Gold';
+        regularDiscountPct = 10;
+      }
+
+      let progressPercent = 5;
+      let nextTierName = 'Gold (Diskon 10%)';
+      let remainingToNext = Math.max(0, 2000000 - cycleSpent);
+
+      if (regularTier === 'VIP') {
+        progressPercent = 100;
+        nextTierName = 'MAX (VIP 15%)';
+        remainingToNext = 0;
+      } else if (regularTier === 'Gold') {
+        progressPercent = Math.min(100, Math.round((cycleSpent / 5000000) * 100));
+        nextTierName = 'VIP (Diskon 15%)';
+        remainingToNext = Math.max(0, 5000000 - cycleSpent);
+      } else {
+        progressPercent = Math.max(5, Math.min(100, Math.round((cycleSpent / 2000000) * 100)));
+      }
+
+      const pkgStatus = getMemberMonthlyPkgStatus(member);
+
+      if (member.memberType === 'Yayasan') {
+        const yayasanDiscPct = Number(member.yayasanDiscountPct ?? 50);
+        const maxKg = Math.round(Number(member.yayasanMaxKg ?? 0));
+        const maxNominal = Math.round(Number(member.yayasanMaxNominal ?? 0));
+
+        const usedMonthKg = Math.round(realStats.monthlyKg);
+        const usedMonthNominal = Math.round(realStats.monthlyNominal);
+        const remainingMonthKg = maxKg > 0 ? Math.max(0, Math.round(maxKg - usedMonthKg)) : Infinity;
+        const remainingMonthNominal = maxNominal > 0 ? Math.max(0, Math.round(maxNominal - usedMonthNominal)) : Infinity;
+
+        const rpPct = maxNominal > 0 ? Math.min(100, Math.round((usedMonthNominal / maxNominal) * 100)) : 0;
+        const kgPct = maxKg > 0 ? Math.min(100, Math.round((usedMonthKg / maxKg) * 100)) : 0;
+
+        const isKgExhausted = maxKg > 0 && usedMonthKg >= maxKg;
+        const isNominalExhausted = maxNominal > 0 && usedMonthNominal >= maxNominal;
+        const isQuotaExhausted = isKgExhausted || isNominalExhausted;
+        const effectiveDiscountPct = isQuotaExhausted ? regularDiscountPct : yayasanDiscPct;
+
+        return {
+          tierName: isQuotaExhausted ? `Yayasan (${regularTier})` : 'Warga Yayasan',
+          isYayasan: true,
+          discountPercent: effectiveDiscountPct,
+          yayasanDiscountPct: yayasanDiscPct,
+          fallbackTier: regularTier,
+          fallbackDiscountPct: regularDiscountPct,
+          maxKg,
+          maxNominal,
+          usedMonthKg,
+          usedMonthNominal,
+          remainingMonthKg,
+          remainingMonthNominal,
+          rpPct,
+          kgPct,
+          isKgExhausted,
+          isNominalExhausted,
+          isQuotaExhausted,
+          totalPaidSpent: cycleSpent,
+          totalOrdersCount: cycleTxCount,
+          cycleEndStr,
+          progressPercent,
+          nextTierName,
+          remainingToNext,
+          pkgStatus
+        };
+      }
+
+      return {
+        tierName: regularTier,
+        isYayasan: false,
+        discountPercent: regularDiscountPct,
+        yayasanDiscountPct: 0,
+        fallbackTier: regularTier,
+        fallbackDiscountPct: regularDiscountPct,
+        maxKg: 0,
+        maxNominal: 0,
+        usedMonthKg: Math.round(realStats.monthlyKg),
+        usedMonthNominal: Math.round(realStats.monthlyNominal),
+        remainingMonthKg: Infinity,
+        remainingMonthNominal: Infinity,
+        rpPct: 0,
+        kgPct: 0,
+        isQuotaExhausted: false,
+        totalPaidSpent: cycleSpent,
+        totalOrdersCount: cycleTxCount,
+        cycleEndStr,
         progressPercent,
         nextTierName,
         remainingToNext,
-        cardBgClass
+        pkgStatus
       };
+    }
+
+    // 3. Cek apakah pelanggan berhak atas Promo Cuci 10x Gratis 1x
+    // Jika Paket Bulanan Aktif ATAU Warga Yayasan -> Promo Cuci 10x TIDAK AKTIF
+    function isCustomerEligibleForStampPromo(memberStatsObj, phoneRaw) {
+      if (appData.settings?.promoStampEnabled === false) return false;
+      if (memberStatsObj) {
+        if (memberStatsObj.isYayasan) return false;
+        if (memberStatsObj.pkgStatus && memberStatsObj.pkgStatus.isActive) return false;
+      }
+      if (phoneRaw) {
+        const cleanPhone = String(phoneRaw).replace(/\D/g, '').replace(/^62/, '0');
+        if (cleanPhone.length >= 8) {
+          const matchedMem = (appData.members || []).find(m => {
+            const mp = String(m.phone || '').replace(/\D/g, '').replace(/^62/, '0');
+            return mp === cleanPhone || (mp.length >= 8 && mp.endsWith(cleanPhone.slice(-8)));
+          });
+          if (matchedMem) {
+            const st = calculateMemberStats(matchedMem);
+            if (st.isYayasan || (st.pkgStatus && st.pkgStatus.isActive)) return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function computeOrderStampsEarned(weightKg, subtotalRp, memberStatsObj = null, phoneRaw = '') {
+      if (!isCustomerEligibleForStampPromo(memberStatsObj, phoneRaw)) return 0;
+      const minKg = Math.max(1, Number(appData.settings?.promoStampMinKg) || 3);
+      const minRp = Math.max(1000, Number(appData.settings?.promoStampMinRp) || 18000);
+      const byWeight = Math.floor((Number(weightKg) || 0) / minKg);
+      const byPrice = Math.floor((Number(subtotalRp) || 0) / minRp);
+      return Math.max(byWeight, byPrice);
+    }
+
+    function getCustomerStampBalanceByPhone(phoneRaw) {
+      const cleanPhone = String(phoneRaw || '').replace(/\D/g, '').replace(/^62/, '0');
+      if (cleanPhone.length < 8) {
+        return { totalEarned: 0, totalRedeemed: 0, availableStamps: 0, freeWashAvailable: 0 };
+      }
+
+      let totalEarned = 0;
+      let totalRedeemed = 0;
+
+      (appData.orders || []).forEach(o => {
+        if (!o || o.isDeleted) return;
+        const p = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        if (p === cleanPhone || (p.length >= 8 && p.endsWith(cleanPhone.slice(-8)))) {
+          const earned = typeof o.stampsEarned === 'number'
+            ? o.stampsEarned
+            : computeOrderStampsEarned(o.weightKg, o.subtotal);
+          totalEarned += earned;
+          totalRedeemed += (Number(o.stampsRedeemed) || 0);
+        }
+      });
+
+      const availableStamps = Math.max(0, totalEarned - totalRedeemed);
+      const freeWashAvailable = Math.floor(availableStamps / 10);
+      return { totalEarned, totalRedeemed, availableStamps, freeWashAvailable };
     }
 
     function computeServiceItemCharge(srv, rawQty) {
@@ -2423,7 +3085,7 @@
         const cap = Math.max(1, Number(srv.bundleKg) || 7);
         const multiples = val > 0 ? Math.ceil(val / cap) : 0;
         const countedKg = multiples * cap;
-        const subtotal = Math.round(multiples * Number(srv.price || 0));
+        const subtotal = roundToNearest500(Math.round(multiples * Number(srv.price || 0)));
         return {
           serviceId: srv.id,
           name: srv.name,
@@ -2442,7 +3104,7 @@
         };
       }
 
-      const subtotal = Math.round(val * Number(srv.price || 0));
+      const subtotal = roundToNearest500(Math.round(val * Number(srv.price || 0)));
       return {
         serviceId: srv.id,
         name: srv.name,
@@ -2486,16 +3148,16 @@
           note = `🎉 GRATIS ONGKIR! Karena cucian Anda (${w} Kg / ${p} Pcs) memenuhi syarat minimal 5 Kg atau 20 Pcs untuk 3 Km pertama.`;
         } else {
           const extraKm = dist - 3;
-          fee = extraKm * 3000;
+          fee = roundToNearest500(extraKm * 3000);
           note = `Gratis 3 Km pertama (syarat ≥ 5 Kg / 20 Pcs terpenuhi). Kelebihan ${extraKm} Km × Rp 3.000/km.`;
         }
       } else {
         if (dist <= 3) {
-          fee = dist * 2000;
+          fee = roundToNearest500(dist * 2000);
           note = `Di bawah 5 Kg & 20 Pcs: 3 Km pertama dikenakan ${dist} Km × Rp 2.000/km.`;
         } else {
           const extraKm = dist - 3;
-          fee = (3 * 2000) + (extraKm * 3000);
+          fee = roundToNearest500((3 * 2000) + (extraKm * 3000));
           note = `Di bawah 5 Kg & 20 Pcs: 3 Km pertama Rp 6.000 + kelebihan ${extraKm} Km × Rp 3.000/km.`;
         }
       }
@@ -2542,6 +3204,7 @@
         }, 250);
       }
       if (tabName === 'member') {
+        renderGuestAutoDashboard();
         renderMemberView();
       }
     }
@@ -2604,41 +3267,25 @@
 
       const filtered = services.filter(s => {
         if (filterVal === 'ALL') return true;
-        const u = String(s.unit || 'Kg');
-        if (filterVal === 'Kg') return u === 'Kg' || u === 'Bundle';
-        return u === 'Pcs' || u === 'Set' || u === 'Stelan';
+        const u = String(s.unit || 'Kg').toLowerCase();
+        return u === filterVal.toLowerCase();
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full p-8 rounded-3xl bg-white border border-dashed border-slate-300 text-center text-xs font-extrabold text-slate-400">Belum ada Data</div>`;
+        grid.innerHTML = `<div class="col-span-full p-8 rounded-3xl bg-white border border-dashed border-slate-300 text-center text-xs font-extrabold text-slate-400">Belum ada Data untuk kategori "${filterVal}"</div>`;
         return;
       }
 
       grid.innerHTML = filtered.map(srv => {
         const unitLabel = (srv.estUnit === 'hours' || srv.estUnit === 'Jam') ? 'Jam' : 'Hari';
         const estVal = srv.estValue || 2;
-        const activeStg = Array.isArray(srv.activeStages) ? srv.activeStages.map(Number) : [1, 2, 3, 4, 5];
         const unitDisplay = srv.unit === 'Bundle' ? `Bundle ${srv.bundleKg || 7} Kg` : (srv.unit || 'Kg');
-
-        const stageBadges = [1, 2, 3, 4, 5].map(stIdx => {
-          const stObj = WORKFLOW_STAGES[stIdx];
-          const isIncluded = activeStg.includes(stIdx);
-          return `
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold ${
-              isIncluded
-                ? 'bg-brand-50 text-brand-700 border border-brand-200'
-                : 'bg-slate-100 text-slate-400 line-through'
-            }">
-              <i class="fa-solid ${stObj.icon}"></i> ${stObj.short}
-            </span>
-          `;
-        }).join('');
 
         return `
           <div class="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-brand-300 transition-all flex flex-col justify-between space-y-4">
             <div class="space-y-3">
               <div class="flex items-start justify-between gap-2">
-                <span class="px-2.5 py-1 rounded-xl text-[11px] font-extrabold uppercase tracking-wider bg-cyan-50 text-cyan-700 border border-cyan-200">
+                <span class="px-2.5 py-1 rounded-xl text-[11px] font-extrabold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200">
                   Layanan ${unitDisplay}
                 </span>
                 <span class="inline-flex items-center gap-1 text-xs font-extrabold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200">
@@ -2647,11 +3294,6 @@
               </div>
 
               <h4 class="text-base font-black text-slate-900">${srv.name}</h4>
-
-              <div class="space-y-1.5">
-                <p class="text-[10px] font-bold uppercase text-slate-400">Alur Tahapan Pencucian:</p>
-                <div class="flex flex-wrap gap-1">${stageBadges}</div>
-              </div>
             </div>
 
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
@@ -2811,7 +3453,7 @@
         : `Satuan paket ini: ${srv.unit || 'Kg'} (${formatRupiah(srv.price)} / ${srv.unit || 'Kg'})`;
       document.getElementById('sim-est-duration').textContent = `Estimasi Selesai ± ${estVal} ${unitLabel}`;
 
-      const subtotal = calcItem.subtotal;
+      const subtotal = roundToNearest500(calcItem.subtotal);
       const discAmount = Math.round(subtotal * (tierDiscPercent / 100));
 
       const shipObj = calculateConditionalShippingFee(
@@ -2821,7 +3463,8 @@
         delivery === 'SELF' ? 'Datang Sendiri' : 'Jemput & Antar'
       );
 
-      const grandTotal = Math.max(0, subtotal - discAmount + shipObj.fee);
+      const rawTotal = Math.max(0, subtotal - discAmount + shipObj.fee);
+      const grandTotal = roundToNearest500(rawTotal);
 
       document.getElementById('sim-breakdown-service').textContent = `${srv.name} (${calcItem.qtyDisplay})`;
       document.getElementById('sim-val-subtotal').textContent = formatRupiah(subtotal);
@@ -2881,12 +3524,12 @@
     }
 
     // -------------------------------------------------------------------------
-    // 9. MODUL 2: LACAK PROGRES (BISA CARI NOMOR NOTA MAUPUN NOMOR PESANAN PSN-)
+    // 9. MODUL 2: LACAK PROGRES 3-IN-1 (NO. NOTA / NO. PESANAN PSN- / NO. WA)
     // -------------------------------------------------------------------------
     function handleQuickTrackFromHome() {
       const val = document.getElementById('home-quick-track-input')?.value.trim();
       if (!val) {
-        showToast('Masukkan 6 angka Nomor Nota terlebih dahulu.', 'warning');
+        showToast('Masukkan Nomor Nota, Nomor Pesanan (PSN-0001), atau Nomor WA Anda.', 'warning');
         return;
       }
       document.getElementById('track-nota-input').value = val;
@@ -2924,51 +3567,91 @@
     function searchOrderByNota(overrideNota) {
       const rawInput = (overrideNota || document.getElementById('track-nota-input')?.value || '').trim().toUpperCase();
       if (!rawInput) {
-        showToast('Silakan ketik Nomor Nota atau Nomor Pesanan Anda.', 'warning');
+        showToast('Silakan ketik Nomor Nota, Nomor Pesanan (PSN-0001), atau Nomor WA Anda.', 'warning');
         return;
       }
 
-      // 1. Cek apakah yang dicari adalah Nomor Nota (6 angka) atau Nomor Pesanan yang sudah dikonversi menjadi Nota
+      document.getElementById('track-nota-input').value = rawInput;
       const digits = rawInput.replace(/\D/g, '');
-      const nota6 = digits.padStart(6, '0');
-      const psnCode = 'PSN-' + digits.padStart(4, '0');
+      const hasPsnPrefix = rawInput.includes('PSN');
 
-      let foundOrder = (appData.orders || []).find(o =>
+      // KASUS 1: Pencarian dengan Nomor WhatsApp (9 s/d 15 digit angka)
+      if (!hasPsnPrefix && digits.length >= 9) {
+        const cleanSearchPhone = digits.replace(/^62/, '0');
+        const matchOrderByPhone = (appData.orders || []).find(o => {
+          if (o.isDeleted) return false;
+          const p = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+          return p && (p === cleanSearchPhone || p.endsWith(cleanSearchPhone.slice(-8)));
+        });
+        if (matchOrderByPhone) {
+          trackedNotaId = matchOrderByPhone.id;
+          renderTrackedOrderDetails(matchOrderByPhone);
+          return;
+        }
+        const matchPickupByPhone = (appData.pickupOrders || []).find(p => {
+          const ph = String(p.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+          return ph && (ph === cleanSearchPhone || ph.endsWith(cleanSearchPhone.slice(-8)));
+        });
+        if (matchPickupByPhone) {
+          if (matchPickupByPhone.convertedNotaId) {
+            const linked = (appData.orders || []).find(o => o.id === matchPickupByPhone.convertedNotaId && !o.isDeleted);
+            if (linked) {
+              trackedNotaId = linked.id;
+              renderTrackedOrderDetails(linked);
+              return;
+            }
+          }
+          trackedNotaId = matchPickupByPhone.orderNumber;
+          renderTrackedOrderDetails({
+            ...matchPickupByPhone,
+            id: matchPickupByPhone.orderNumber,
+            isPendingPickupRequest: true
+          });
+          return;
+        }
+      }
+
+      // KASUS 2: Pencarian Nomor Pesanan Online (PSN-0001 atau 4 angka)
+      if (hasPsnPrefix || digits.length <= 4) {
+        const psnCode = 'PSN-' + digits.padStart(4, '0');
+        const foundPickup = (appData.pickupOrders || []).find(p =>
+          String(p.orderNumber).toUpperCase() === rawInput ||
+          String(p.orderNumber).toUpperCase() === psnCode
+        );
+
+        if (foundPickup) {
+          if (foundPickup.convertedNotaId) {
+            const linkedNota = (appData.orders || []).find(o => o.id === foundPickup.convertedNotaId && !o.isDeleted);
+            if (linkedNota) {
+              trackedNotaId = linkedNota.id;
+              renderTrackedOrderDetails(linkedNota);
+              return;
+            }
+          }
+          trackedNotaId = foundPickup.orderNumber;
+          renderTrackedOrderDetails({
+            ...foundPickup,
+            id: foundPickup.orderNumber,
+            isPendingPickupRequest: true
+          });
+          return;
+        }
+      }
+
+      // KASUS 3: Pencarian 6 Angka Nomor Nota (000001)
+      const nota6 = digits.padStart(6, '0');
+      const psnFallback = 'PSN-' + digits.padStart(4, '0');
+      const foundOrder = (appData.orders || []).find(o =>
         !o.isDeleted && (
           String(o.id).padStart(6, '0') === nota6 ||
           (o.orderNumber && o.orderNumber.toUpperCase() === rawInput) ||
-          (o.orderNumber && o.orderNumber.toUpperCase() === psnCode)
+          (o.orderNumber && o.orderNumber.toUpperCase() === psnFallback)
         )
       );
 
       if (foundOrder) {
         trackedNotaId = foundOrder.id;
         renderTrackedOrderDetails(foundOrder);
-        return;
-      }
-
-      // 2. Jika belum menjadi Nota resmi, cek di antrean Pesanan Penjemputan Online (appData.pickupOrders)
-      const foundPickup = (appData.pickupOrders || []).find(p =>
-        String(p.orderNumber).toUpperCase() === rawInput ||
-        String(p.orderNumber).toUpperCase() === psnCode
-      );
-
-      if (foundPickup) {
-        // Jika sudah dikonversi ke Nota, buka Nota-nya
-        if (foundPickup.convertedNotaId) {
-          const linkedNota = (appData.orders || []).find(o => o.id === foundPickup.convertedNotaId && !o.isDeleted);
-          if (linkedNota) {
-            trackedNotaId = linkedNota.id;
-            renderTrackedOrderDetails(linkedNota);
-            return;
-          }
-        }
-        // Tampilkan status Pesanan Penjemputan Online (Menunggu Dijemput & Diverifikasi Kasir)
-        renderTrackedOrderDetails({
-          ...foundPickup,
-          id: foundPickup.orderNumber,
-          isPendingPickupRequest: true
-        });
         return;
       }
 
@@ -2980,9 +3663,9 @@
         <div class="w-16 h-16 rounded-3xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl mx-auto">
           <i class="fa-solid fa-file-circle-xmark"></i>
         </div>
-        <h3 class="text-base sm:text-lg font-extrabold text-slate-800">Data ${rawInput} Tidak Ditemukan</h3>
+        <h3 class="text-base sm:text-lg font-extrabold text-slate-800">Data "${rawInput}" Tidak Ditemukan</h3>
         <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
-          Pastikan 6 digit Nomor Nota (misal: <code>000001</code>) atau Nomor Pesanan Jemput (misal: <code>PSN-0001</code>) sudah sesuai.
+          Pastikan 6 digit Nomor Nota (<code>000001</code>), Nomor Pesanan Jemput (<code>PSN-0001</code>), atau Nomor WhatsApp Anda sudah sesuai.
         </p>
       `;
       showToast(`Nomor ${rawInput} tidak ditemukan.`, 'error');
@@ -2994,8 +3677,8 @@
 
       const isPickupReq = Boolean(order.isPendingPickupRequest);
       const displayCode = isPickupReq
-        ? `${order.orderNumber} (Menunggu Verifikasi Nota Kasir)`
-        : `${String(order.id).padStart(6, '0')}${order.orderNumber ? ' • Eks Pesanan ' + order.orderNumber : ''}`;
+        ? `${order.orderNumber} (${order.status === 'DITERIMA_KURIR_OTW' ? '✓ Diterima Kasir - Kurir OTW' : '⏳ Menunggu Konfirmasi Kasir'})`
+        : `${String(order.id).padStart(6, '0')}${order.orderNumber ? ' • Eks ' + order.orderNumber : ''}`;
 
       const custName = order.custName || order.customerName || 'Pelanggan';
       const createdAt = order.createdAt || Date.now();
@@ -3004,10 +3687,11 @@
       const perfume = order.perfume || '-';
       const deliveryType = order.deliveryType || 'Datang Sendiri';
 
-      const grandTotal = Number(order.total ?? order.grandTotal ?? 0);
+      const grandTotal = roundToNearest500(Number(order.total ?? order.grandTotal ?? 0));
       const paidAmount = Number(order.paidAmount ?? (order.payStatus === 'Lunas' ? grandTotal : 0));
       const remaining = Math.max(0, grandTotal - paidAmount);
       const payStatus = order.payStatus || order.paymentStatus || 'Belum Bayar';
+      const hasPkgUsed = Number(order.pkgUsedAmount) > 0;
 
       document.getElementById('trk-nota-id').textContent = displayCode;
       document.getElementById('trk-customer-name').textContent = custName;
@@ -3015,19 +3699,48 @@
       document.getElementById('trk-delivery-badge').textContent = deliveryType;
       document.getElementById('trk-rack-location').textContent = rack;
       document.getElementById('trk-perfume').textContent = perfume;
-      document.getElementById('trk-total-bill').textContent = formatRupiah(grandTotal);
+
+      // Tampilkan SISA BERAT / SISA NOMINAL jika memakai Paket Bulanan Member
+      const totalBillLabel = document.getElementById('trk-total-bill-label');
+      const totalBillEl = document.getElementById('trk-total-bill');
+      if (hasPkgUsed) {
+        if (totalBillLabel) totalBillLabel.textContent = order.pkgUsedType === 'KG' ? 'Sisa Berat Paket Bulanan' : 'Sisa Nominal Paket Bulanan';
+        totalBillEl.textContent = order.pkgUsedType === 'KG'
+          ? `${order.pkgRemainingAfter ?? 0} Kg`
+          : formatRupiah(order.pkgRemainingAfter ?? 0);
+      } else {
+        if (totalBillLabel) totalBillLabel.textContent = 'Total Tagihan Nota';
+        totalBillEl.textContent = formatRupiah(grandTotal);
+      }
+
       document.getElementById('trk-remaining-bill').textContent = remaining > 0 ? formatRupiah(remaining) : 'Rp 0 (Lunas)';
 
+      // Tanpa tulisan (Tunai)
       const payBadge = document.getElementById('trk-payment-badge');
       if (String(payStatus).toLowerCase() === 'lunas') {
         payBadge.className = 'px-3 py-1 rounded-xl text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
-        payBadge.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> LUNAS (${order.payMethod || 'Tunai'})`;
+        payBadge.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ${hasPkgUsed && grandTotal === 0 ? 'LUNAS (PAKET BULANAN)' : 'LUNAS'}`;
       } else if (String(payStatus).toLowerCase() === 'dp') {
         payBadge.className = 'px-3 py-1 rounded-xl text-xs font-extrabold bg-amber-100 text-amber-800 border border-amber-300';
         payBadge.innerHTML = `<i class="fa-solid fa-circle-half-stroke mr-1"></i> DP (Sisa ${formatRupiah(remaining)})`;
       } else {
         payBadge.className = 'px-3 py-1 rounded-xl text-xs font-extrabold bg-rose-100 text-rose-800 border border-rose-300';
         payBadge.innerHTML = `<i class="fa-solid fa-clock mr-1"></i> ${payStatus.toUpperCase()} (${formatRupiah(remaining)})`;
+      }
+
+      // Kotak Besar Info Kembalian Tersimpan di Nota
+      const changeBox = document.getElementById('trk-saved-change-box');
+      const changeAmt = Number(order.changeAmount) || 0;
+      if (changeBox) {
+        if (changeAmt > 0) {
+          changeBox.classList.remove('hidden');
+          document.getElementById('trk-saved-change-amount').textContent = `Kembalian ${formatNum(changeAmt)}`;
+          document.getElementById('trk-saved-change-badge').textContent = order.changeSavedOnNota && !order.changeReturnedAtPickup
+            ? 'DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN)'
+            : (order.changeReturnedAtPickup ? '✓ KEMBALIAN SUDAH DISERAHKAN' : 'UANG KEMBALIAN TUNAI');
+        } else {
+          changeBox.classList.add('hidden');
+        }
       }
 
       const currentStageIdx = Number(order.currentStage ?? 0);
@@ -3044,15 +3757,18 @@
       const itemsList = order.items || [];
       const srvWrap = document.getElementById('trk-services-list');
       if (itemsList.length) {
-        srvWrap.innerHTML = itemsList.map(it => `
-          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
-            <div>
-              <p class="font-extrabold text-slate-800">${it.name || 'Paket Laundry'}</p>
-              <p class="text-slate-500">${it.qtyDisplay || (formatNum(it.qty || 1) + ' ' + (it.unit || 'Kg'))} × ${formatRupiah(it.price || 0)}</p>
+        srvWrap.innerHTML = itemsList.map(it => {
+          const unitPriceStr = `${formatRupiah(it.price || 0)}/${it.unit || 'Kg'}`;
+          return `
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
+              <div>
+                <p class="font-extrabold text-slate-800">${it.name || 'Paket Laundry'}</p>
+                <p class="text-slate-500">${it.qtyDisplay || (formatNum(it.qty || 1) + ' ' + (it.unit || 'Kg'))} @ ${unitPriceStr}</p>
+              </div>
+              <span class="font-mono font-black text-slate-900">${formatRupiah(roundToNearest500(it.subtotal || ((it.qty || 1) * (it.price || 0))))}</span>
             </div>
-            <span class="font-mono font-black text-slate-900">${formatRupiah(it.subtotal || ((it.qty || 1) * (it.price || 0)))}</span>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       } else {
         srvWrap.innerHTML = `<div class="p-3 rounded-xl bg-slate-50 text-xs text-slate-500">Belum ada Data</div>`;
       }
@@ -3286,8 +4002,8 @@
       }).join('');
     }
 
-    function downloadTrackedOrderPdf() {
-      const order = (appData.orders || []).find(o => !o.isDeleted && String(o.id).padStart(6, '0') === trackedNotaId);
+    async function downloadTrackedOrderPdf() {
+      const order = (appData.orders || []).find(o => !o.isDeleted && String(o.id).padStart(6, '0') === String(trackedNotaId).padStart(6, '0'));
       if (!order) {
         showToast('Struk Nota PDF dapat diunduh setelah pesanan diverifikasi menjadi Nota resmi oleh Kasir.', 'warning');
         return;
@@ -3295,73 +4011,171 @@
 
       const s = appData.settings || {};
       const nota = String(order.id).padStart(6, '0');
+      const logoImg = document.getElementById('pdf-store-logo');
+      if (logoImg) {
+        logoImg.src = s.logoUrl || 'https://cdn-icons-png.flaticon.com/512/2975/2975175.png';
+        logoImg.classList.toggle('hidden', s.printerShowLogo === false);
+      }
+
       document.getElementById('pdf-store-name').textContent = s.storeName || DEFAULT_STORE_NAME;
       document.getElementById('pdf-store-tagline').textContent = s.storeSlogan || DEFAULT_STORE_TAGLINE;
       document.getElementById('pdf-store-address').textContent = s.storeAddress || DEFAULT_STORE_ADDRESS;
-      document.getElementById('pdf-store-phone').textContent = `HP/WA: ${s.storePhone || DEFAULT_STORE_PHONE}`;
+      document.getElementById('pdf-store-phone').textContent = `HP: ${s.storePhone || DEFAULT_STORE_PHONE}`;
 
       document.getElementById('pdf-nota-id').textContent = nota;
-      document.getElementById('pdf-date').textContent = new Date(order.createdAt || Date.now()).toLocaleString('id-ID');
+      document.getElementById('pdf-cust-cat').textContent = `${order.custCategory || 'Umum'}${order.memberId ? ' ' + order.memberId : ''}`;
+      document.getElementById('pdf-date').textContent = new Date(order.createdAt || Date.now()).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
+      document.getElementById('pdf-cashier').textContent = order.cashierName || '-';
       document.getElementById('pdf-cust-name').textContent = order.custName || '-';
-      document.getElementById('pdf-cust-phone').textContent = order.custPhone || '-';
       document.getElementById('pdf-cust-address').textContent = order.custAddress || '-';
       document.getElementById('pdf-delivery').textContent = order.deliveryType || 'Datang Sendiri';
       document.getElementById('pdf-perfume').textContent = order.perfume || '-';
       document.getElementById('pdf-rack').textContent = order.rackLocation || '-';
-      document.getElementById('pdf-deadline').textContent = order.deadlineMs ? new Date(order.deadlineMs).toLocaleString('id-ID') : '-';
+      document.getElementById('pdf-deadline').textContent = order.deadlineMs
+        ? new Date(order.deadlineMs).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
+        : '-';
 
       safeRenderQRCode(document.getElementById('pdf-qr-code'), nota, 56);
 
       const items = order.items || [];
       const srvEl = document.getElementById('pdf-services-items');
-      srvEl.innerHTML = items.map(it => `
-        <div class="flex justify-between">
-          <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)})</span>
-          <strong>${formatRupiah(it.subtotal || (it.qty * it.price))}</strong>
-        </div>
-      `).join('');
+      srvEl.innerHTML = items.map(it => {
+        const unitPriceStr = `${formatRupiah(it.price || 0)}/${it.unit || 'Kg'}`;
+        return `
+          <div class="flex justify-between items-baseline gap-1">
+            <span>${it.name} (${it.qtyDisplay || (it.qty + ' ' + it.unit)} @ ${unitPriceStr})</span>
+            <strong>${formatRupiah(roundToNearest500(it.subtotal || (it.qty * it.price)))}</strong>
+          </div>
+        `;
+      }).join('');
 
       document.getElementById('pdf-weight').textContent = `${formatNum(order.weightKg || 0)} ${order.weightUnit || 'Kg'}`;
       document.getElementById('pdf-pcs').textContent = `${formatNum(order.pcsCount || 0)} Pcs`;
-      document.getElementById('pdf-garments').textContent = order.clothDetails || 'Rincian pakaian sesuai pengecekan petugas.';
 
-      const subtotal = Number(order.subtotal ?? order.total ?? 0);
+      const rowGarments = document.getElementById('pdf-row-garments');
+      document.getElementById('pdf-garments').textContent = order.clothDetails || '-';
+      if (rowGarments) rowGarments.classList.toggle('hidden', !order.clothDetails);
+
+      const subtotal = roundToNearest500(Number(order.subtotal ?? order.total ?? 0));
       const disc = Number(order.memberDiscount || 0) + Number(order.voucherDiscount || 0);
-      const ship = Number(order.deliveryFee || 0);
-      const grand = Number(order.total || 0);
+      const ship = roundToNearest500(Number(order.deliveryFee || 0));
+      const grand = roundToNearest500(Number(order.total || 0));
       const paid = Number(order.paidAmount || 0);
       const rem = Math.max(0, grand - paid);
+      const kembalian = Number(order.changeAmount || 0);
+      const hasPkgUsed = Number(order.pkgUsedAmount) > 0;
+      const hasExtraOrDisc = (ship > 0) || (disc > 0);
+
+      document.getElementById('pdf-row-subtotal')?.classList.toggle('hidden', !hasExtraOrDisc);
+      document.getElementById('pdf-row-shipping')?.classList.toggle('hidden', !(ship > 0));
+      document.getElementById('pdf-row-discount')?.classList.toggle('hidden', !(disc > 0));
 
       document.getElementById('pdf-subtotal').textContent = formatRupiah(subtotal);
-      document.getElementById('pdf-discount').textContent = `- ${formatRupiah(disc)}`;
       document.getElementById('pdf-shipping').textContent = formatRupiah(ship);
-      document.getElementById('pdf-total').textContent = formatRupiah(grand);
-      document.getElementById('pdf-pay-status').textContent = order.payStatus || 'Belum Bayar';
-      document.getElementById('pdf-remaining').textContent = rem > 0 ? `Sisa: ${formatRupiah(rem)}` : 'LUNAS';
+      document.getElementById('pdf-discount').textContent = hasPkgUsed
+        ? (order.pkgUsedType === 'KG' ? `Potong Paket ${order.pkgUsedAmount} Kg` : `Potong Paket ${formatRupiah(order.pkgUsedAmount)}`)
+        : `- ${formatRupiah(disc)}`;
+
+      const pdfTotalLabel = document.getElementById('pdf-total-label');
+      const pdfTotalVal = document.getElementById('pdf-total');
+      if (hasPkgUsed) {
+        if (pdfTotalLabel) pdfTotalLabel.textContent = order.pkgUsedType === 'KG' ? 'SISA BERAT:' : 'SISA NOMINAL:';
+        if (pdfTotalVal) {
+          pdfTotalVal.textContent = order.pkgUsedType === 'KG'
+            ? `${order.pkgRemainingAfter ?? 0} Kg`
+            : formatRupiah(order.pkgRemainingAfter ?? 0);
+        }
+      } else {
+        if (pdfTotalLabel) pdfTotalLabel.textContent = 'TOTAL BIAYA:';
+        if (pdfTotalVal) pdfTotalVal.textContent = formatRupiah(grand);
+      }
+
+      document.getElementById('pdf-pay-status').textContent = (hasPkgUsed && grand === 0)
+        ? 'LUNAS (PAKET BULANAN)'
+        : String(order.payStatus || 'BELUM BAYAR').toUpperCase();
+
+      const rowRem = document.getElementById('pdf-row-remaining');
+      if (rowRem) {
+        if (rem > 0) {
+          rowRem.classList.remove('hidden');
+          document.getElementById('pdf-remaining').textContent = formatRupiah(rem);
+        } else {
+          rowRem.classList.add('hidden');
+        }
+      }
+
+      const changeBox = document.getElementById('pdf-large-change-box');
+      if (changeBox) {
+        if (kembalian > 0) {
+          changeBox.classList.remove('hidden');
+          document.getElementById('pdf-large-change-text').textContent = `Kembalian ${formatNum(kembalian)}`;
+          document.getElementById('pdf-large-change-sub').textContent = order.changeSavedOnNota && !order.changeReturnedAtPickup
+            ? 'DISIMPAN DI NOTA (DISERAHKAN SAAT PENGAMBILAN BARANG)'
+            : 'KEMBALIAN TUNAI PELANGGAN';
+        } else {
+          changeBox.classList.add('hidden');
+        }
+      }
 
       const element = document.getElementById('pdf-receipt-template');
+      if (typeof html2canvas === 'undefined' || typeof html2pdf === 'undefined') {
+        console.error('Pustaka pembuat PDF tidak tersedia.');
+        showToast('Fitur PDF tidak dapat dimuat. Periksa koneksi internet lalu coba lagi.', 'error');
+        return;
+      }
+
       showToast('Menyiapkan dokumen E-Receipt PDF...', 'info');
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf()
+      try {
+        const receiptCanvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        });
+        if (!receiptCanvas.width || !receiptCanvas.height) {
+          throw new Error('Canvas struk kosong.');
+        }
+
+        const pageWidth = 105;
+        const pageHeight = 210;
+        const margin = 6;
+        const contentWidth = pageWidth - (margin * 2);
+        const contentHeight = pageHeight - (margin * 2);
+        const scale = Math.min(contentWidth / receiptCanvas.width, contentHeight / receiptCanvas.height);
+        const receiptWidth = receiptCanvas.width * scale;
+        const receiptHeight = receiptCanvas.height * scale;
+        const pdfWorker = html2pdf()
           .set({
-            margin: 8,
+            margin,
             filename: `Struk_LaundryQU_${nota}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: [110, 220], orientation: 'portrait' }
+            image: { type: 'jpeg', quality: 0.95 },
+            jsPDF: { unit: 'mm', format: [pageWidth, pageHeight], orientation: 'portrait' }
           })
-          .from(element)
-          .save()
-          .then(() => showToast('E-Receipt PDF berhasil diunduh!', 'success'));
+          .from(receiptCanvas)
+          .toPdf();
+        const pdf = await pdfWorker.get('pdf');
+        pdf.addImage(
+          receiptCanvas.toDataURL('image/jpeg', 0.95),
+          'JPEG',
+          (pageWidth - receiptWidth) / 2,
+          (pageHeight - receiptHeight) / 2,
+          receiptWidth,
+          receiptHeight
+        );
+        await pdfWorker.save();
+        showToast('E-Receipt PDF berhasil diunduh!', 'success');
+      } catch (error) {
+        console.error(`Gagal membuat E-Receipt PDF untuk nota ${nota}:`, error);
+        showToast('PDF gagal dibuat. Periksa koneksi internet lalu coba lagi.', 'error');
       }
     }
 
     // -------------------------------------------------------------------------
-    // 10. MODUL 3: PESAN ANTAR-JEMPUT (NOMOR PESANAN PSN-0001 + KOORDINAT GPS)
+    // 10. MODUL 3: PESAN ANTAR-JEMPUT (STAMP, PAKET BULANAN, YAYASAN & GPS)
     // -------------------------------------------------------------------------
     function syncOrderCustomerCategoryUI() {
       const guestBanner = document.getElementById('ord-guest-status-banner');
       const memBanner = document.getElementById('ord-member-status-banner');
+      const memTypePill = document.getElementById('ord-member-type-pill');
       const memInfoEl = document.getElementById('ord-member-active-info');
       const sumCatLabel = document.getElementById('ord-sum-category-label');
 
@@ -3374,11 +4188,25 @@
 
           if (guestBanner) guestBanner.classList.add('hidden');
           if (memBanner) memBanner.classList.remove('hidden');
-          if (memInfoEl) {
-            memInfoEl.innerHTML = `${found.name} (ID: ${padded}) • Level <strong>${stats.tierName} (Diskon Otomatis ${stats.discountPercent}%)</strong>`;
-          }
-          if (sumCatLabel) {
-            sumCatLabel.textContent = `Member ${stats.tierName} (${padded})`;
+
+          if (stats.pkgStatus && stats.pkgStatus.isActive) {
+            if (memTypePill) memTypePill.textContent = `Paket Bulanan Aktif (${padded})`;
+            if (memInfoEl) {
+              memInfoEl.innerHTML = `${found.name} • <strong>Sisa Kuota: ${stats.pkgStatus.quotaFormatted}</strong> (Aktif ${stats.pkgStatus.daysLeft} hari lagi)`;
+            }
+            if (sumCatLabel) sumCatLabel.textContent = `Paket Bulanan (${padded})`;
+          } else if (stats.isYayasan) {
+            if (memTypePill) memTypePill.textContent = `Warga Yayasan (${padded})`;
+            if (memInfoEl) {
+              memInfoEl.innerHTML = `${found.name} • Status: <strong>${stats.tierName} (Diskon Aktif ${stats.discountPercent}%)</strong>`;
+            }
+            if (sumCatLabel) sumCatLabel.textContent = `${stats.tierName} (${padded})`;
+          } else {
+            if (memTypePill) memTypePill.textContent = `Member ${stats.tierName} (${padded})`;
+            if (memInfoEl) {
+              memInfoEl.innerHTML = `${found.name} (ID: ${padded}) • Level <strong>${stats.tierName} (Diskon Otomatis ${stats.discountPercent}%)</strong>`;
+            }
+            if (sumCatLabel) sumCatLabel.textContent = `Member ${stats.tierName} (${padded})`;
           }
 
           const nameIn = document.getElementById('ord-name');
@@ -3549,7 +4377,7 @@
       const rowsContainer = document.getElementById('ord-service-rows-container');
       if (rowsContainer) {
         if (services.length === 0) {
-          rowsContainer.innerHTML = `<div class="p-4 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs font-bold text-slate-400">Belum ada Data Paket Layanan di POS</div>`;
+          rowsContainer.innerHTML = `<div class="p-4 rounded-2xl bg-white border border-dashed border-purple-300 text-center text-xs font-bold text-slate-400">Belum ada Data Paket Layanan di POS</div>`;
         } else {
           rowsContainer.innerHTML = orderServiceRows.map((row, idx) => {
             const selectedSrv = services.find(s => s.id === row.serviceId)
@@ -3568,13 +4396,13 @@
             const qtyLabel = selectedSrv.unit === 'Bundle' ? `Berat (Kg)` : (selectedSrv.unit || 'Kg');
 
             return `
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
+              <div class="p-3.5 rounded-2xl bg-white/90 border border-purple-300 space-y-2.5 shadow-2xs">
                 <div class="flex items-center justify-between">
-                  <label class="text-xs font-extrabold text-slate-700">Pilih Paket Layanan #${idx + 1}</label>
+                  <label class="text-xs font-extrabold text-purple-950">Pilih Paket Layanan #${idx + 1}</label>
                   ${
                     orderServiceRows.length > 1
                       ? `<button type="button" onclick="window.removeOrderServiceRow(${row.rowId})" class="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-600 hover:bg-rose-200 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-trash"></i> Hapus</button>`
-                      : `<span class="text-[11px] font-bold text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-md border border-brand-200">Tersinkronisasi POS</span>`
+                      : `<span class="text-[10px] font-extrabold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-md border border-purple-200">Tersinkronisasi POS</span>`
                   }
                 </div>
 
@@ -3582,7 +4410,7 @@
                   <div class="sm:col-span-8">
                     <select
                       onchange="window.updateOrderServiceRow(${row.rowId}, this.value)"
-                      class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 bg-white text-slate-900 font-bold text-xs sm:text-sm focus:border-brand-600 focus:outline-none cursor-pointer"
+                      class="w-full px-3.5 py-2.5 rounded-xl border-2 border-purple-200 bg-white text-slate-900 font-bold text-xs sm:text-sm focus:border-purple-600 focus:outline-none cursor-pointer"
                     >
                       ${selectOptions}
                     </select>
@@ -3594,7 +4422,7 @@
                       inputmode="numeric"
                       value="${formatNum(row.qty)}"
                       oninput="window.formatThousandInput(this); window.updateOrderServiceQty(${row.rowId}, this.value)"
-                      class="w-24 px-3 py-2 rounded-xl border-2 border-slate-300 bg-white text-center font-mono font-extrabold text-xs sm:text-sm text-slate-900 focus:border-brand-600 focus:outline-none"
+                      class="w-24 px-3 py-2 rounded-xl border-2 border-purple-200 bg-white text-center font-mono font-extrabold text-xs sm:text-sm text-slate-900 focus:border-purple-600 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -3683,28 +4511,117 @@
       recalculateOrderPricing();
     }
 
+    // 4. Kalkulasi Harga di Form Pesan Jemput (Sembunyikan Stamp jika Paket Bulanan / Yayasan)
     function recalculateOrderPricing() {
       const services = appData.services || [];
-      let subtotal = 0;
+      let rawSubtotal = 0;
 
       orderServiceRows.forEach(r => {
         const srv = services.find(s => s.id === r.serviceId) || services[0];
         if (srv) {
           const itemCalc = computeServiceItemCharge(srv, r.qty);
-          subtotal += itemCalc.subtotal;
+          rawSubtotal += itemCalc.subtotal;
         }
       });
 
-      const estWeight = parseFormattedNumber(document.getElementById('ord-est-weight')?.value || 0);
-      const estPcs = parseFormattedNumber(document.getElementById('ord-est-pcs')?.value || 0);
+      const subtotal = roundToNearest500(rawSubtotal);
+      const estWeight = Math.round(parseFormattedNumber(document.getElementById('ord-est-weight')?.value || 0));
+      const estPcs = Math.round(parseFormattedNumber(document.getElementById('ord-est-pcs')?.value || 0));
       const deliveryType = document.querySelector('input[name="ord_delivery_type"]:checked')?.value || 'Jemput & Antar';
 
-      const memberDiscPercent = orderAppliedMember ? orderAppliedMember.discountPercent : 0;
-      const memberDiscAmount = Math.round(subtotal * (memberDiscPercent / 100));
+      let memberDiscPercent = 0;
+      let memberDiscAmount = 0;
+      let pkgUsedType = null;
+      let pkgUsedAmount = 0;
+      let pkgRemainingAfter = 0;
+      let tierLabelStr = '0%';
+
+      if (orderAppliedMember) {
+        const pkgStatus = orderAppliedMember.pkgStatus;
+        if (pkgStatus && pkgStatus.isActive) {
+          pkgUsedType = pkgStatus.quotaType;
+          if (pkgUsedType === 'KG') {
+            pkgUsedAmount = Math.round(Math.min(pkgStatus.remainingQuota, estWeight));
+            pkgRemainingAfter = Math.max(0, Math.round(pkgStatus.remainingQuota - pkgUsedAmount));
+            const coveredRatio = estWeight > 0 ? (pkgUsedAmount / estWeight) : 1;
+            const coveredSub = Math.round(subtotal * coveredRatio);
+            const uncoveredSub = Math.max(0, subtotal - coveredSub);
+            const tierDiscExcess = Math.round(uncoveredSub * ((orderAppliedMember.fallbackDiscountPct || 5) / 100));
+            memberDiscAmount = coveredSub + tierDiscExcess;
+            tierLabelStr = `Potong Paket ${pkgUsedAmount} Kg`;
+          } else {
+            pkgUsedAmount = Math.min(pkgStatus.remainingQuota, subtotal);
+            pkgRemainingAfter = Math.max(0, Math.round(pkgStatus.remainingQuota - pkgUsedAmount));
+            const uncoveredSub = Math.max(0, subtotal - pkgUsedAmount);
+            const tierDiscExcess = Math.round(uncoveredSub * ((orderAppliedMember.fallbackDiscountPct || 5) / 100));
+            memberDiscAmount = pkgUsedAmount + tierDiscExcess;
+            tierLabelStr = `Potong Paket ${formatRupiah(pkgUsedAmount)}`;
+          }
+        } else if (orderAppliedMember.isYayasan) {
+          if (orderAppliedMember.isQuotaExhausted) {
+            memberDiscPercent = orderAppliedMember.fallbackDiscountPct || 5;
+            memberDiscAmount = Math.round(subtotal * (memberDiscPercent / 100));
+            tierLabelStr = `Kuota Habis → Tier ${orderAppliedMember.fallbackTier} ${memberDiscPercent}%`;
+          } else {
+            let ratioKg = 1;
+            if (orderAppliedMember.maxKg > 0 && estWeight > 0) {
+              ratioKg = Math.min(1, Math.max(0, orderAppliedMember.remainingMonthKg) / estWeight);
+            }
+            let ratioNom = 1;
+            if (orderAppliedMember.maxNominal > 0 && subtotal > 0) {
+              ratioNom = Math.min(1, Math.max(0, orderAppliedMember.remainingMonthNominal) / subtotal);
+            }
+            const yRatio = Math.min(ratioKg, ratioNom);
+            const yPortion = Math.round(subtotal * yRatio);
+            const exPortion = Math.max(0, subtotal - yPortion);
+            memberDiscAmount = Math.round(yPortion * (orderAppliedMember.yayasanDiscountPct / 100)) +
+                               Math.round(exPortion * (orderAppliedMember.fallbackDiscountPct / 100));
+            tierLabelStr = `Subsidi Yayasan ${orderAppliedMember.yayasanDiscountPct}%`;
+          }
+        } else {
+          memberDiscPercent = orderAppliedMember.discountPercent || 5;
+          memberDiscAmount = Math.round(subtotal * (memberDiscPercent / 100));
+          tierLabelStr = `${orderAppliedMember.tierName} ${memberDiscPercent}%`;
+        }
+      }
+
+      // Cek apakah pelanggan berhak Promo Cuci 10x Gratis 1x
+      const stampBox = document.getElementById('ord-stamp-promo-box');
+      const phoneVal = document.getElementById('ord-phone')?.value || (orderAppliedMember?.phone || '');
+      const eligibleForStamp = isCustomerEligibleForStampPromo(orderAppliedMember, phoneVal);
+      let stampFreeDiscount = 0;
+
+      if (stampBox && eligibleForStamp) {
+        stampBox.classList.remove('hidden');
+        const stampsNow = computeOrderStampsEarned(estWeight, subtotal, orderAppliedMember, phoneVal);
+        const bal = getCustomerStampBalanceByPhone(phoneVal);
+        document.getElementById('ord-stamp-status-text').textContent = `${bal.availableStamps}/10`;
+        document.getElementById('ord-stamp-earned-now').textContent = `(+${stampsNow})`;
+
+        const redeemLabel = document.getElementById('ord-stamp-redeem-label');
+        const redeemCheck = document.getElementById('ord-redeem-free-wash');
+        const freeVal = Number(appData.settings?.promoStampMaxFreeValue) || 18000;
+
+        if (bal.freeWashAvailable > 0) {
+          redeemLabel?.classList.remove('hidden');
+          redeemLabel?.classList.add('inline-flex');
+          if (redeemCheck && redeemCheck.checked) {
+            stampFreeDiscount = Math.min(Math.max(0, subtotal - memberDiscAmount), freeVal);
+          }
+        } else {
+          redeemLabel?.classList.add('hidden');
+          redeemLabel?.classList.remove('inline-flex');
+          if (redeemCheck) redeemCheck.checked = false;
+        }
+      } else if (stampBox) {
+        stampBox.classList.add('hidden');
+        const redeemCheck = document.getElementById('ord-redeem-free-wash');
+        if (redeemCheck) redeemCheck.checked = false;
+      }
 
       let voucherDiscAmount = 0;
       const fb = document.getElementById('ord-voucher-feedback');
-      const netBeforeVoucher = Math.max(0, subtotal - memberDiscAmount);
+      const netBeforeVoucher = Math.max(0, subtotal - memberDiscAmount - stampFreeDiscount);
       if (orderAppliedVoucher) {
         const minOrder = Number(orderAppliedVoucher.minOrder) || 0;
         const maxDisc = Number(orderAppliedVoucher.maxDiscount) || 0;
@@ -3723,16 +4640,31 @@
         }
       }
 
+      const totalPromoDisc = voucherDiscAmount + stampFreeDiscount;
       const shipObj = calculateConditionalShippingFee(orderOsrmDistanceKm, estWeight, estPcs, deliveryType);
-      const grandTotal = Math.max(0, subtotal - memberDiscAmount - voucherDiscAmount + shipObj.fee);
+      const rawTotal = Math.max(0, subtotal - memberDiscAmount - totalPromoDisc + shipObj.fee);
+      const grandTotal = roundToNearest500(rawTotal);
 
       document.getElementById('ord-sum-subtotal').textContent = formatRupiah(subtotal);
-      document.getElementById('ord-sum-tier-label').textContent = orderAppliedMember ? `${orderAppliedMember.tierName} ${memberDiscPercent}%` : '0%';
+      document.getElementById('ord-sum-tier-label').textContent = tierLabelStr;
       document.getElementById('ord-sum-member-disc').textContent = `- ${formatRupiah(memberDiscAmount)}`;
-      document.getElementById('ord-sum-voucher-disc').textContent = `- ${formatRupiah(voucherDiscAmount)}`;
+      document.getElementById('ord-sum-voucher-disc').textContent = `- ${formatRupiah(totalPromoDisc)}`;
       document.getElementById('ord-sum-km-label').textContent = `${orderOsrmDistanceKm.toLocaleString('id-ID')} Km`;
       document.getElementById('ord-sum-shipping').textContent = formatRupiah(shipObj.fee);
-      document.getElementById('ord-sum-grandtotal').textContent = formatRupiah(grandTotal);
+
+      const grandLabelEl = document.getElementById('ord-sum-grandtotal-label');
+      const payHintEl = document.getElementById('ord-sum-paystatus-hint');
+      const grandValEl = document.getElementById('ord-sum-grandtotal');
+
+      if (pkgUsedAmount > 0 && grandTotal === 0) {
+        if (grandLabelEl) grandLabelEl.textContent = pkgUsedType === 'KG' ? 'Estimasi Sisa Berat Paket Bulanan' : 'Estimasi Sisa Nominal Paket Bulanan';
+        if (payHintEl) payHintEl.textContent = 'Status otomatis: Lunas (Paket Bulanan)';
+        grandValEl.textContent = pkgUsedType === 'KG' ? `Sisa ${pkgRemainingAfter} Kg` : `Sisa ${formatRupiah(pkgRemainingAfter)}`;
+      } else {
+        if (grandLabelEl) grandLabelEl.textContent = 'Estimasi Total Tagihan (Bulat 500)';
+        if (payHintEl) payHintEl.textContent = 'Status awal: Belum Bayar';
+        grandValEl.textContent = formatRupiah(grandTotal);
+      }
 
       const ruleBadge = document.getElementById('ord-shipping-rule-badge');
       if (ruleBadge) {
@@ -3745,9 +4677,12 @@
         subtotal,
         memberDiscPercent,
         memberDiscAmount,
-        voucherDiscAmount,
+        voucherDiscAmount: totalPromoDisc,
         shippingFee: shipObj.fee,
-        grandTotal
+        grandTotal,
+        pkgUsedType,
+        pkgUsedAmount,
+        pkgRemainingAfter
       };
     }
 
@@ -4022,7 +4957,6 @@
 
     // -------------------------------------------------------------------------
     // 12. SUBMIT PESANAN ANTAR/JEMPUT -> MENERBITKAN NOMOR PESANAN (PSN-0001)
-    //     YANG TERPISAH DARI NOMOR NOTA & MASUK KE ANTREAN POSLAUNDRY.HTML
     // -------------------------------------------------------------------------
     async function submitCustomerPickupOrder() {
       const custName = document.getElementById('ord-name')?.value.trim();
@@ -4054,7 +4988,18 @@
         const estPcs = Math.max(1, parseFormattedNumber(document.getElementById('ord-est-pcs')?.value || 15));
         const notes = document.getElementById('ord-notes')?.value.trim() || '';
 
-        // GENERATE NOMOR PESANAN (PSN-0001) YANG BERBEDA DARI NOMOR NOTA (000001)
+        const pSajadah = parseInt(document.getElementById('ord-pray-sajadah')?.value || '0', 10);
+        const pMukena = parseInt(document.getElementById('ord-pray-mukena')?.value || '0', 10);
+        const pLobe = parseInt(document.getElementById('ord-pray-lobe')?.value || '0', 10);
+        const pSarung = parseInt(document.getElementById('ord-pray-sarung')?.value || '0', 10);
+        const prayParts = [];
+        if (pSajadah > 0) prayParts.push(`Sajadah ${pSajadah}`);
+        if (pMukena > 0) prayParts.push(`Mukena ${pMukena}`);
+        if (pLobe > 0) prayParts.push(`Lobe ${pLobe}`);
+        if (pSarung > 0) prayParts.push(`Sarung ${pSarung}`);
+        const prayNoteStr = prayParts.length > 0 ? ` [GRATIS PAKAIAN SHOLAT: ${prayParts.join(', ')}]` : '';
+        const claimStampStr = document.getElementById('ord-redeem-free-wash')?.checked ? ' [KLAIM GRATIS 1X CUCI 10 STAMP]' : '';
+
         const orderNumber = getNextPickupOrderNumber();
         const itemsPayload = [];
         const combinedStages = new Set([0]);
@@ -4081,9 +5026,8 @@
         const firstUnit = itemsPayload[0]?.unit || 'Kg';
         const weightUnitLabel = firstUnit === 'Set' ? 'Set' : (firstUnit === 'Stelan' ? 'Stelan' : 'Kg');
 
-        // Simpan ke daftar Antrean Pesanan Online (appData.pickupOrders) untuk diproses Kasir di poslaundry.html
         const pickupRequestObj = {
-          orderNumber, // Contoh: PSN-0001 (Berbeda dari Nomor Nota 000001)
+          orderNumber,
           status: 'MENUNGGU_JEMPUT',
           convertedNotaId: null,
           createdAt,
@@ -4105,7 +5049,7 @@
           items: itemsPayload,
           perfume,
           voucherCode: orderAppliedVoucher ? orderAppliedVoucher.code : '',
-          clothDetails: notes ? `Catatan Jemput Online (${orderNumber}): ${notes}` : `Pesanan Online ${orderNumber}`,
+          clothDetails: (notes ? `Catatan Jemput Online (${orderNumber}): ${notes}` : `Pesanan Online ${orderNumber}`) + prayNoteStr + claimStampStr,
           clothPhotos: orderUploadedPhotoUrl
             ? [{ id: 'IMG-' + createdAt, url: orderUploadedPhotoUrl, time: new Date(createdAt).toLocaleString('id-ID') }]
             : [],
@@ -4114,7 +5058,10 @@
           memberDiscount: pricing.memberDiscAmount,
           voucherDiscount: pricing.voucherDiscAmount,
           total: pricing.grandTotal,
-          payStatus: 'Belum Bayar',
+          pkgUsedType: pricing.pkgUsedType || null,
+          pkgUsedAmount: pricing.pkgUsedAmount || 0,
+          pkgRemainingAfter: pricing.pkgRemainingAfter ?? null,
+          payStatus: pricing.pkgUsedAmount > 0 && pricing.grandTotal === 0 ? 'Lunas' : 'Belum Bayar',
           payMethod,
           activeStages: activeStagesList,
           currentStage: 0
@@ -4125,7 +5072,8 @@
         saveAllData();
 
         lastCreatedOrder = pickupRequestObj;
-        safeSetStorage('laundry_qu_my_last_order', pickupRequestObj.orderNumber);
+        rememberCustomerPhoneOnDevice(custPhone);
+        rememberCustomerOrderOnDevice(pickupRequestObj.orderNumber);
         openOrderSuccessModal(pickupRequestObj);
         showToast(`Pesanan Jemput ${orderNumber} berhasil dikirim ke POS Laundry QU!`, 'success');
       } catch (err) {
@@ -4164,7 +5112,7 @@
         `🛵 *Pengiriman:* ${order.deliveryType} (${order.distanceKm} Km)\n` +
         `🧺 *Paket:* ${pkgText}\n` +
         `🌸 *Parfum:* ${order.perfume}\n` +
-        `💰 *Estimasi Total:* ${formatRupiah(order.total)} (${order.payMethod})\n` +
+        `💰 *Estimasi Total:* ${formatRupiah(order.total)}\n` +
         `🏠 *Alamat:* ${order.custAddress}\n` +
         `📍 *Titik Maps GPS:* ${mapsLink}\n\n` +
         `Mohon konfirmasi kurir penjemputan. Terima kasih!`;
@@ -4190,7 +5138,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // 13. MODUL 4: DASBOR MEMBER, LOGIN & PENDAFTARAN MANDIRI
+    // 13. MODUL 4: DASBOR MEMBER, PAKET BULANAN, YAYASAN & ID CARD 2 SISI
     // -------------------------------------------------------------------------
     function toggleMemberAuthMode() {
       const mode = document.querySelector('input[name="mem_auth_tab"]:checked')?.value || 'LOGIN';
@@ -4225,7 +5173,9 @@
 
       loggedInMemberId = String(found.id).padStart(4, '0');
       safeSetStorage(MEMBER_SESSION_KEY, loggedInMemberId);
+      rememberCustomerPhoneOnDevice(found.phone);
       syncOrderCustomerCategoryUI();
+      renderGuestAutoDashboard();
       renderMemberView();
       showToast(`Selamat datang kembali, ${found.name}!`, 'success');
     }
@@ -4243,6 +5193,8 @@
       const memberId4 = getNextMemberId();
       const newMemberObj = {
         id: memberId4,
+        createdAt: Date.now(),
+        memberType: 'Pelanggan',
         name,
         phone,
         address,
@@ -4254,8 +5206,10 @@
       appData.members.push(newMemberObj);
       loggedInMemberId = memberId4;
       safeSetStorage(MEMBER_SESSION_KEY, memberId4);
+      rememberCustomerPhoneOnDevice(phone);
       saveAllData();
       syncOrderCustomerCategoryUI();
+      renderGuestAutoDashboard();
       renderMemberView();
       showToast(`Pendaftaran berhasil! ID Member resmi Anda adalah ${memberId4}.`, 'success');
     }
@@ -4271,10 +5225,12 @@
     function renderMemberView() {
       const authBox = document.getElementById('member-auth-box');
       const dashBox = document.getElementById('member-dashboard-box');
+      const guestBox = document.getElementById('guest-auto-dashboard-box');
 
       if (!loggedInMemberId) {
         authBox.classList.remove('hidden');
         dashBox.classList.add('hidden');
+        if (guestBox) guestBox.classList.remove('hidden');
         return;
       }
 
@@ -4283,52 +5239,214 @@
       if (!member) {
         authBox.classList.remove('hidden');
         dashBox.classList.add('hidden');
+        if (guestBox) guestBox.classList.remove('hidden');
         return;
       }
 
       authBox.classList.add('hidden');
       dashBox.classList.remove('hidden');
+      // Sembunyikan box tamu di atas agar tampilan Dasbor Member fokus & rapi sesuai urutan
+      if (guestBox) guestBox.classList.add('hidden');
 
       const stats = calculateMemberStats(member);
       const s = appData.settings || {};
 
+      // 1. Kotak Nama Member
+      document.getElementById('mem-dash-category-tag').textContent = stats.isYayasan
+        ? 'Dasbor Member Warga Yayasan'
+        : 'Dasbor Eksklusif Member Pelanggan';
       document.getElementById('mem-dash-welcome').textContent = `Halo, ${member.name}!`;
-      document.getElementById('mem-dash-sub').textContent = `ID Member: ${padded} • Level ${stats.tierName} (Diskon Otomatis ${stats.discountPercent}%)`;
+      document.getElementById('mem-dash-sub').textContent = `ID Member: ${padded} • Level Tier: ${stats.fallbackTier} (${stats.fallbackDiscountPct}%)`;
 
-      const cardEl = document.getElementById('member-card-canvas');
-      cardEl.className = `${stats.cardBgClass} relative rounded-3xl p-6 sm:p-7 text-white shadow-xl overflow-hidden border border-white/15 flex flex-col justify-between min-h-[250px]`;
+      // 2. Kotak Level Tier (Tepat di bawah Kotak Nama) + Tampilkan Rupiah Transaksi Subsidi Yayasan
+      document.getElementById('mem-tier-discount-pill').textContent = stats.isYayasan
+        ? (stats.isQuotaExhausted
+            ? `Kuota Subsidi Habis → Aktif Tier ${stats.fallbackTier} (${stats.fallbackDiscountPct}%)`
+            : `Subsidi Yayasan ${stats.yayasanDiscountPct}% • Tier ${stats.fallbackTier} (${stats.fallbackDiscountPct}%)`)
+        : `Diskon Tier Aktif: ${stats.fallbackDiscountPct}% (${stats.fallbackTier})`;
 
+      document.getElementById('mem-total-spent').textContent = formatRupiah(stats.totalPaidSpent);
+      const subIncludedEl = document.getElementById('mem-tier-subsidy-included-note');
+      if (subIncludedEl) {
+        if (stats.isYayasan) {
+          subIncludedEl.classList.remove('hidden');
+          subIncludedEl.textContent = `✓ Termasuk nilai pemakaian kuota subsidi bulan ini: ${formatRupiah(stats.usedMonthNominal)} (${stats.usedMonthKg} Kg)`;
+        } else {
+          subIncludedEl.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('mem-cycle-period-text').textContent = `Siklus Evaluasi 2 Tahun s/d: ${stats.cycleEndStr}`;
+      document.getElementById('mem-total-orders').textContent = `${formatNum(stats.totalOrdersCount)} Transaksi`;
+      document.getElementById('mem-progress-label-left').textContent = `Level Tier Saat Ini: ${stats.fallbackTier} (Diskon Reguler ${stats.fallbackDiscountPct}%)`;
+      document.getElementById('mem-progress-percent').textContent = `${stats.progressPercent}%`;
+      document.getElementById('mem-progress-bar').style.width = `${stats.progressPercent}%`;
+
+      if (stats.fallbackTier === 'VIP') {
+        document.getElementById('mem-next-tier-info').innerHTML = `👑 Selamat! Anda berada di level tertinggi <strong>VIP (Diskon 15%)</strong> hingga evaluasi siklus 2 tahun pada <strong>${stats.cycleEndStr}</strong>.`;
+      } else {
+        document.getElementById('mem-next-tier-info').innerHTML = `Transaksi <strong>${formatRupiah(stats.remainingToNext)}</strong> lagi sebelum <strong>${stats.cycleEndStr}</strong> untuk naik ke level <strong>${stats.nextTierName}</strong>!`;
+      }
+
+      // 3. Kotak Promo Cuci 10x Gratis 1x (Tepat di bawah Level Tier)
+      // TIDAK AKTIF jika Paket Bulanan sedang aktif ATAU jika Member adalah Warga Yayasan
+      const memStampBox = document.getElementById('mem-stamp-card-box');
+      if (memStampBox) {
+        const eligibleStamp = isCustomerEligibleForStampPromo(stats, member.phone);
+        if (eligibleStamp) {
+          memStampBox.classList.remove('hidden');
+          const bal = getCustomerStampBalanceByPhone(member.phone);
+          const currentProgress = bal.availableStamps % 10;
+          document.getElementById('mem-free-wash-badge').textContent = `${bal.freeWashAvailable}x Gratis Cuci`;
+          document.getElementById('mem-stamp-summary-text').textContent =
+            `Total Stamp Aktif: ${bal.availableStamps} Stamp (${currentProgress}/10 menuju gratis berikutnya • Kurang ${10 - currentProgress} Stamp lagi)`;
+
+          const circlesHtml = [];
+          for (let i = 1; i <= 10; i++) {
+            const isFilled = i <= currentProgress || (bal.freeWashAvailable > 0 && currentProgress === 0);
+            circlesHtml.push(`
+              <div class="h-12 rounded-xl border-2 flex flex-col items-center justify-center ${
+                isFilled ? 'bg-amber-400 border-amber-300 text-slate-950 font-black shadow' : 'bg-white/5 border-white/15 text-slate-400 font-bold'
+              }">
+                <i class="fa-solid ${isFilled ? 'fa-check-circle text-sm' : 'fa-soap text-xs'}"></i>
+                <span class="text-[9px] mt-0.5">Cuci ${i}</span>
+              </div>
+            `);
+          }
+          document.getElementById('mem-stamp-circles-grid').innerHTML = circlesHtml.join('');
+        } else {
+          memStampBox.classList.add('hidden');
+        }
+      }
+
+      // 4. Render Kartu Member ID Card 2 Sisi (Warna Sama Persis dengan POS: from-slate-900 via-sky-900 to-indigo-950)
       document.getElementById('mem-card-store').textContent = (s.storeName || DEFAULT_STORE_NAME).toUpperCase();
       const memSub = document.getElementById('mem-card-subtitle');
       if (memSub) memSub.textContent = s.storeSlogan || DEFAULT_STORE_TAGLINE;
       document.getElementById('mem-card-logo').src = s.logoUrl || 'https://cdn-icons-png.flaticon.com/512/2975/2975175.png';
-      document.getElementById('mem-card-tier-badge').textContent = `${stats.tierName.toUpperCase()} • ${stats.discountPercent}% OFF`;
+      document.getElementById('mem-card-tier-badge').textContent = stats.pkgStatus.isActive
+        ? `PAKET: ${stats.pkgStatus.quotaFormatted}`
+        : `${stats.tierName.toUpperCase()} ${stats.discountPercent}%`;
       document.getElementById('mem-card-holder').textContent = String(member.name).toUpperCase();
       document.getElementById('mem-card-id').textContent = padded;
-      document.getElementById('mem-card-phone').textContent = member.address ? `${member.phone} • ${member.address}` : member.phone;
+      document.getElementById('mem-card-phone').textContent = member.phone || '-';
+      document.getElementById('mem-card-front-address').textContent = s.storeAddress || DEFAULT_STORE_ADDRESS;
+      document.getElementById('mem-card-back-id').textContent = padded;
+      document.getElementById('mem-card-back-phone').textContent = (s.storePhone || DEFAULT_STORE_PHONE).split('dan')[0].trim();
 
-      safeRenderQRCode(document.getElementById('mem-card-qr'), padded, 74);
+      safeRenderQRCode(document.getElementById('mem-card-qr'), padded, 62);
 
-      document.getElementById('mem-tier-discount-pill').textContent = `Diskon Aktif: ${stats.discountPercent}% (${stats.tierName})`;
-      document.getElementById('mem-total-spent').textContent = formatRupiah(stats.totalPaidSpent);
-      document.getElementById('mem-total-orders').textContent = `${formatNum(stats.totalOrdersCount)} Transaksi`;
-      document.getElementById('mem-progress-label-left').textContent = `Level Saat Ini: ${stats.tierName} (Diskon ${stats.discountPercent}%)`;
-      document.getElementById('mem-progress-percent').textContent = `${stats.progressPercent}%`;
-      document.getElementById('mem-progress-bar').style.width = `${stats.progressPercent}%`;
+      // 5. Render Box Kuota Subsidi Bulanan Warga Yayasan (2 Tampilan & 2 Garis Progress Bar: Rupiah & Kg Bulat)
+      const yayasanBox = document.getElementById('mem-yayasan-status-box');
+      if (yayasanBox) {
+        if (stats.isYayasan) {
+          yayasanBox.classList.remove('hidden');
+          const yBadge = document.getElementById('mem-yayasan-disc-badge');
+          if (stats.isQuotaExhausted) {
+            yBadge.textContent = `KUOTA HABIS → TIER ${stats.fallbackTier.toUpperCase()} (${stats.fallbackDiscountPct}%)`;
+            yBadge.className = 'px-3 py-1 rounded-xl bg-amber-500 text-slate-950 text-xs font-black shadow-xs';
+          } else {
+            yBadge.textContent = `Subsidi Aktif ${stats.yayasanDiscountPct}%`;
+            yBadge.className = 'px-3 py-1 rounded-xl bg-emerald-600 text-white text-xs font-extrabold shadow-xs';
+          }
 
-      if (stats.tierName === 'VIP') {
-        document.getElementById('mem-next-tier-info').innerHTML = `👑 Selamat! Anda telah mencapai level tertinggi <strong>VIP (Diskon 15% Selamanya)</strong>.`;
-      } else {
-        document.getElementById('mem-next-tier-info').innerHTML = `Transaksi lunas <strong>${formatRupiah(stats.remainingToNext)}</strong> lagi untuk naik ke level <strong>${stats.nextTierName}</strong>!`;
+          // Bar 1: Nominal Rupiah
+          const rpLabel = document.getElementById('mem-yayasan-rp-label');
+          const rpBar = document.getElementById('mem-yayasan-rp-bar');
+          const rpSisa = document.getElementById('mem-yayasan-rp-sisa');
+          const rpPct = document.getElementById('mem-yayasan-rp-pct');
+          if (stats.maxNominal > 0) {
+            rpLabel.textContent = `${formatRupiah(stats.usedMonthNominal)} / ${formatRupiah(stats.maxNominal)}`;
+            rpBar.style.width = `${stats.rpPct}%`;
+            rpBar.className = stats.isNominalExhausted
+              ? 'h-full bg-rose-600 rounded-full transition-all duration-500'
+              : 'h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500';
+            rpSisa.textContent = stats.isNominalExhausted
+              ? '⚠️ Batas Nominal Rupiah Tercapai (Habis)'
+              : `Sisa Kuota Nominal: ${formatRupiah(stats.remainingMonthNominal)}`;
+            rpPct.textContent = `${stats.rpPct}%`;
+          } else {
+            rpLabel.textContent = `Terpakai: ${formatRupiah(stats.usedMonthNominal)} (Tanpa Batas Rp)`;
+            rpBar.style.width = '100%';
+            rpSisa.textContent = 'Mengikuti batas kuota Berat (Kg)';
+            rpPct.textContent = '-';
+          }
+
+          // Bar 2: Berat Kg (Digenapkan)
+          const kgLabel = document.getElementById('mem-yayasan-kg-label');
+          const kgBar = document.getElementById('mem-yayasan-kg-bar');
+          const kgSisa = document.getElementById('mem-yayasan-kg-sisa');
+          const kgPct = document.getElementById('mem-yayasan-kg-pct');
+          if (stats.maxKg > 0) {
+            kgLabel.textContent = `${stats.usedMonthKg} Kg / ${stats.maxKg} Kg`;
+            kgBar.style.width = `${stats.kgPct}%`;
+            kgBar.className = stats.isKgExhausted
+              ? 'h-full bg-rose-600 rounded-full transition-all duration-500'
+              : 'h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all duration-500';
+            kgSisa.textContent = stats.isKgExhausted
+              ? '⚠️ Batas Kuota Berat (Kg) Tercapai (Habis)'
+              : `Sisa Kuota Berat: ${stats.remainingMonthKg} Kg`;
+            kgPct.textContent = `${stats.kgPct}%`;
+          } else {
+            kgLabel.textContent = `Terpakai: ${stats.usedMonthKg} Kg (Tanpa Batas Kg)`;
+            kgBar.style.width = '100%';
+            kgSisa.textContent = 'Mengikuti batas kuota Nominal (Rp)';
+            kgPct.textContent = '-';
+          }
+
+          const fbText = document.getElementById('mem-yayasan-fallback-tier-text');
+          if (fbText) fbText.textContent = `${stats.fallbackTier} (${stats.fallbackDiscountPct}%)`;
+        } else {
+          yayasanBox.classList.add('hidden');
+        }
       }
 
+      // 6. Render Box Paket Bulanan 30 Hari
+      const pkgBadge = document.getElementById('mem-pkg-badge');
+      const pkgRemVal = document.getElementById('mem-pkg-remaining-val');
+      const pkgExpText = document.getElementById('mem-pkg-expiry-text');
+      const pkgNoteText = document.getElementById('mem-pkg-note-text');
+
+      if (stats.pkgStatus && stats.pkgStatus.hasPkg) {
+        pkgRemVal.textContent = stats.pkgStatus.quotaFormatted;
+        const expDateStr = stats.pkgStatus.expiresAt
+          ? new Date(stats.pkgStatus.expiresAt).toLocaleDateString('id-ID', { dateStyle: 'medium' })
+          : '-';
+        if (stats.pkgStatus.isActive) {
+          pkgBadge.textContent = `AKTIF (${stats.pkgStatus.daysLeft} HARI LAGI)`;
+          pkgBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-400 text-slate-950';
+          pkgExpText.textContent = `s/d ${expDateStr}`;
+          pkgNoteText.innerHTML = `✅ Paket Bulanan Anda sedang aktif! Selama Paket Bulanan aktif, tagihan otomatis memotong kuota paket dan promo cuci 10x dinonaktifkan.`;
+        } else if (stats.pkgStatus.isExpiredWithQuota) {
+          pkgBadge.textContent = 'MASA AKTIF BERAKHIR (KUOTA TERSIMPAN)';
+          pkgBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-400 text-slate-950';
+          pkgExpText.textContent = `Berakhir ${expDateStr}`;
+          pkgNoteText.innerHTML = `💡 Kuota <strong>${stats.pkgStatus.quotaFormatted}</strong> Anda <strong>tidak hangus</strong>! Silakan perpanjang Paket Bulanan di kasir untuk mengaktifkan kembali sisa kuota ini.`;
+        } else {
+          pkgBadge.textContent = 'KUOTA HABIS';
+          pkgBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-500 text-white';
+          pkgExpText.textContent = expDateStr;
+          pkgNoteText.textContent = 'Kuota Paket Bulanan Anda telah habis terpakai. Saat ini berlaku diskon Level Tier Member reguler Anda.';
+        }
+      } else {
+        pkgBadge.textContent = 'BELUM BERLANGGANAN';
+        pkgBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-700 text-slate-300';
+        pkgRemVal.textContent = '0 Kg';
+        pkgExpText.textContent = '-';
+        pkgNoteText.textContent = 'Hubungi kasir Laundry QU untuk mengaktifkan Paket Bulanan 30 Hari (Sisa kuota tidak hangus & otomatis menambah level Tier 2 Tahun!).';
+      }
+
+      // 7. Render Daftar Riwayat Nota Member
       const mNameLower = String(member.name || '').trim().toLowerCase();
+      const cleanMemPhone = String(member.phone || '').replace(/\D/g, '').replace(/^62/, '0');
       const memberOrders = (appData.orders || [])
         .filter(o => {
           if (o.isDeleted) return false;
           const oMemId = o.memberId ? String(o.memberId).padStart(4, '0') : '';
           const oName = String(o.custName || o.customerName || '').trim().toLowerCase();
-          return oMemId === padded || (!oMemId && oName === mNameLower);
+          const oPhone = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+          const matchPhone = cleanMemPhone.length >= 8 && oPhone && (oPhone === cleanMemPhone || oPhone.endsWith(cleanMemPhone.slice(-8)));
+          return oMemId === padded || matchPhone || (!oMemId && oName === mNameLower);
         })
         .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
 
@@ -4347,7 +5465,12 @@
           const stMeta = WORKFLOW_STAGES[stIdx] || WORKFLOW_STAGES[0];
           const isDone = stIdx >= 7;
           const hasFound = Array.isArray(ord.foundItems) && ord.foundItems.length > 0;
+          const hasSavedChange = ord.changeSavedOnNota && !ord.changeReturnedAtPickup && Number(ord.changeAmount) > 0;
           const pkgSummary = (ord.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
+          const hasPkgUsed = Number(ord.pkgUsedAmount) > 0;
+          const rightPriceLabel = hasPkgUsed && Number(ord.total) === 0
+            ? (ord.pkgUsedType === 'KG' ? `Sisa ${Math.round(ord.pkgRemainingAfter)} Kg` : `Sisa ${formatRupiah(ord.pkgRemainingAfter)}`)
+            : formatRupiah(roundToNearest500(ord.total || 0));
 
           return `
             <div
@@ -4356,22 +5479,27 @@
             >
               <div class="flex items-start justify-between gap-2">
                 <div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex flex-wrap items-center gap-1.5">
                     <span class="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg bg-slate-900 text-white">Nota ${nota}</span>
                     <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg ${
                       String(ord.payStatus).toLowerCase() === 'lunas'
                         ? 'bg-emerald-100 text-emerald-800'
                         : 'bg-amber-100 text-amber-800'
-                    }">${ord.payStatus || 'Belum Bayar'}</span>
+                    }">${hasPkgUsed && Number(ord.total) === 0 ? 'LUNAS (PAKET)' : (ord.payStatus || 'Belum Bayar')}</span>
                     ${
                       hasFound
                         ? `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-lg bg-amber-400 text-slate-950"><i class="fa-solid fa-gem"></i> Barang Saku</span>`
                         : ''
                     }
+                    ${
+                      hasSavedChange
+                        ? `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-lg bg-sky-100 text-sky-900 border border-sky-300">Kembalian ${formatNum(ord.changeAmount)}</span>`
+                        : ''
+                    }
                   </div>
                   <p class="text-xs font-bold text-slate-800 mt-1.5 line-clamp-1">${pkgSummary}</p>
                 </div>
-                <span class="text-sm font-mono font-black text-brand-700">${formatRupiah(ord.total || 0)}</span>
+                <span class="text-sm font-mono font-black text-brand-700 shrink-0">${rightPriceLabel}</span>
               </div>
 
               <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between text-xs">
@@ -4403,13 +5531,13 @@
     function downloadMemberCardPng() {
       const cardEl = document.getElementById('member-card-canvas');
       if (!cardEl || typeof html2canvas === 'undefined') return;
-      showToast('Memproses gambar Kartu Member Digital (PNG)...', 'info');
+      showToast('Memproses gambar Kartu ID Card 2 Sisi (PNG)...', 'info');
       html2canvas(cardEl, { scale: 2, useCORS: true }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Kartu_Member_LaundryQU_${loggedInMemberId || '0001'}.png`;
+        link.download = `ID_Card_Member_LaundryQU_${loggedInMemberId || '0001'}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        showToast('Kartu Member (PNG) berhasil diunduh!', 'success');
+        showToast('Kartu ID Card 2 Sisi (PNG) berhasil diunduh!', 'success');
       });
     }
 
@@ -4423,11 +5551,11 @@
           showToast('Izinkan pop-up browser untuk mencetak kartu.', 'warning');
           return;
         }
-        win.document.title = 'Cetak Kartu Member Laundry QU ' + (loggedInMemberId || '0001');
-        win.document.body.style.cssText = 'display:flex;align-items:center;justify-content:center;padding:40px;margin:0;font-family:sans-serif;';
+        win.document.title = 'Cetak ID Card 2 Sisi Laundry QU ' + (loggedInMemberId || '0001');
+        win.document.body.style.cssText = 'display:flex;align-items:center;justify-content:center;padding:24px;margin:0;font-family:sans-serif;';
         const img = win.document.createElement('img');
         img.src = dataUrl;
-        img.style.cssText = 'width:360px;border-radius:18px;box-shadow:0 4px 16px rgba(0,0,0,0.2);';
+        img.style.cssText = 'width:340px;border-radius:16px;';
         img.onload = function () {
           win.print();
           win.close();
@@ -4437,26 +5565,8 @@
     }
 
     // -------------------------------------------------------------------------
-    // 14. REFRESH UI & SINKRONISASI REAL-TIME FIREBASE (`laundry_qu_pos`)
+    // 14. REFRESH UI, DASBOR TAMU OTOMATIS & NOTIFIKASI REAL-TIME FIREBASE
     // -------------------------------------------------------------------------
-    function refreshCustomerUI() {
-      checkMyOrderRealtimeNotification();
-      renderStoreIdentity();
-      renderServiceCatalog();
-      renderPerfumesAndVouchers();
-      renderSimulationCalculator();
-      renderRecentOrderChips();
-      renderOrderFormDynamicOptions();
-
-      if (trackedNotaId) {
-        searchOrderByNota(trackedNotaId);
-      }
-
-      if (loggedInMemberId) {
-        renderMemberView();
-      }
-    }
-
     let lastNotifiedOrderState = {};
 
     function playNotificationSound() {
@@ -4476,33 +5586,251 @@
       } catch (e) {}
     }
 
+    function rememberCustomerOrderOnDevice(orderNumber) {
+      if (!orderNumber) return;
+      safeSetStorage('laundry_qu_my_last_order', orderNumber);
+    }
+
+    function rememberCustomerPhoneOnDevice(phoneStr) {
+      const clean = String(phoneStr || '').replace(/\D/g, '').replace(/^62/, '0');
+      if (clean.length >= 8) {
+        safeSetStorage('laundry_qu_my_phone', clean);
+      }
+    }
+
     function checkMyOrderRealtimeNotification() {
       const myOrderNum = safeGetStorage('laundry_qu_my_last_order');
-      if (!myOrderNum) return;
+      const homeBanner = document.getElementById('home-my-active-order-banner');
+      if (!myOrderNum) {
+        if (homeBanner) homeBanner.classList.add('hidden');
+        return;
+      }
 
       const pickupObj = (appData.pickupOrders || []).find(p => p.orderNumber === myOrderNum);
-      if (!pickupObj) return;
+      if (!pickupObj) {
+        if (homeBanner) homeBanner.classList.add('hidden');
+        return;
+      }
 
       const prevState = lastNotifiedOrderState[myOrderNum] || 'MENUNGGU_JEMPUT';
 
-      // 1. Notifikasi saat Kasir mengklik "Terima Pesanan"
       if (pickupObj.status === 'DITERIMA_KURIR_OTW' && prevState === 'MENUNGGU_JEMPUT') {
         lastNotifiedOrderState[myOrderNum] = 'DITERIMA_KURIR_OTW';
         playNotificationSound();
         showToast(`✅ Pesanan ${myOrderNum} telah DITERIMA oleh ${pickupObj.acceptedBy || 'Kasir'}! Kurir kami segera menuju lokasi penjemputan Anda.`, 'success');
       }
 
-      // 2. Notifikasi saat Kasir selesai menimbang & menerbitkan Nomor Nota Resmi (000001)
       if (pickupObj.convertedNotaId && prevState !== 'DIPROSES_NOTA') {
         lastNotifiedOrderState[myOrderNum] = 'DIPROSES_NOTA';
         playNotificationSound();
-        showToast(`🧾 Pesanan ${myOrderNum} telah resmi menjadi Nota ${pickupObj.convertedNotaId}! Membuka progres cucian Anda...`, 'success');
+        showToast(`🧾 Pesanan ${myOrderNum} telah resmi menjadi Nota ${pickupObj.convertedNotaId}!`, 'success');
         trackedNotaId = pickupObj.convertedNotaId;
         document.getElementById('track-nota-input').value = pickupObj.convertedNotaId;
         if (currentTab === 'track' || currentTab === 'order') {
           switchTab('track');
           searchOrderByNota(pickupObj.convertedNotaId);
         }
+      }
+
+      if (homeBanner) {
+        homeBanner.classList.remove('hidden');
+        if (pickupObj.convertedNotaId) {
+          homeBanner.innerHTML = `
+            <div onclick="document.getElementById('track-nota-input').value='${pickupObj.convertedNotaId}'; window.switchTab('track'); window.searchOrderByNota('${pickupObj.convertedNotaId}')" class="cursor-pointer p-3 rounded-xl bg-emerald-50 border-2 border-emerald-400 flex items-center justify-between gap-2 text-xs">
+              <div>
+                <span class="font-extrabold text-emerald-900"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Pesanan ${myOrderNum} &rarr; Nota ${pickupObj.convertedNotaId}</span>
+                <p class="text-[11px] text-emerald-700">Cucian Anda sudah dibuatkan Nota resmi. Klik untuk lacak 8 tahapan!</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-extrabold shrink-0">Lacak</span>
+            </div>
+          `;
+        } else if (pickupObj.status === 'DITERIMA_KURIR_OTW') {
+          homeBanner.innerHTML = `
+            <div onclick="document.getElementById('track-nota-input').value='${myOrderNum}'; window.switchTab('track'); window.searchOrderByNota('${myOrderNum}')" class="cursor-pointer p-3 rounded-xl bg-sky-50 border-2 border-sky-400 flex items-center justify-between gap-2 text-xs">
+              <div>
+                <span class="font-extrabold text-sky-900"><i class="fa-solid fa-motorcycle text-sky-600 mr-1"></i> Pesanan ${myOrderNum} Diterima (${pickupObj.acceptedBy || 'Kasir'})</span>
+                <p class="text-[11px] text-sky-700">Kurir sedang menuju lokasi penjemputan Anda.</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-extrabold shrink-0">Detail</span>
+            </div>
+          `;
+        } else {
+          homeBanner.innerHTML = `
+            <div onclick="document.getElementById('track-nota-input').value='${myOrderNum}'; window.switchTab('track'); window.searchOrderByNota('${myOrderNum}')" class="cursor-pointer p-3 rounded-xl bg-amber-50 border border-amber-300 flex items-center justify-between gap-2 text-xs">
+              <div>
+                <span class="font-extrabold text-amber-900"><i class="fa-solid fa-clock text-amber-600 mr-1"></i> Pesanan Aktif Anda: ${myOrderNum}</span>
+                <p class="text-[11px] text-amber-800">Menunggu konfirmasi penjemputan dari Kasir Laundry QU.</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-extrabold shrink-0">Cek</span>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function loadGuestDashboardByPhone() {
+      const val = document.getElementById('guest-dash-phone-input')?.value || '';
+      const clean = val.replace(/\D/g, '').replace(/^62/, '0');
+      if (clean.length < 8) {
+        showToast('Masukkan Nomor WhatsApp yang valid (minimal 8 angka).', 'warning');
+        return;
+      }
+      rememberCustomerPhoneOnDevice(clean);
+      renderGuestAutoDashboard();
+      showToast('Dasbor pelanggan & kupon 10x berhasil dimuat!', 'success');
+    }
+
+    function renderGuestAutoDashboard() {
+      const praySec = document.getElementById('ord-prayer-promo-section');
+      if (praySec) {
+        praySec.classList.toggle('hidden', appData.settings.promoPrayerEnabled === false);
+      }
+
+      const savedPhone = safeGetStorage('laundry_qu_my_phone') || '';
+      const myLastOrderNum = safeGetStorage('laundry_qu_my_last_order') || '';
+      const phoneInput = document.getElementById('guest-dash-phone-input');
+      if (phoneInput && savedPhone && !phoneInput.value) {
+        phoneInput.value = savedPhone;
+      }
+
+      const listEl = document.getElementById('guest-auto-orders-list');
+      const stampCard = document.getElementById('guest-stamp-card-box');
+      if (!listEl) return;
+
+      const matchedNotas = (appData.orders || []).filter(o => {
+        if (o.isDeleted) return false;
+        const p = String(o.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        const matchPhone = savedPhone.length >= 8 && p && (p === savedPhone || p.endsWith(savedPhone.slice(-8)));
+        const matchOrderNum = myLastOrderNum && o.orderNumber === myLastOrderNum;
+        return matchPhone || matchOrderNum;
+      });
+
+      const matchedPickups = (appData.pickupOrders || []).filter(po => {
+        if (po.convertedNotaId) return false;
+        const p = String(po.custPhone || '').replace(/\D/g, '').replace(/^62/, '0');
+        const matchPhone = savedPhone.length >= 8 && p && (p === savedPhone || p.endsWith(savedPhone.slice(-8)));
+        const matchOrderNum = myLastOrderNum && po.orderNumber === myLastOrderNum;
+        return matchPhone || matchOrderNum;
+      });
+
+      const eligibleForStamp = isCustomerEligibleForStampPromo(null, savedPhone);
+
+      if (stampCard && eligibleForStamp && (savedPhone.length >= 8 || matchedNotas.length > 0)) {
+        stampCard.classList.remove('hidden');
+        const minKg = Math.max(1, Number(appData.settings.promoStampMinKg) || 3);
+        const minRp = Math.max(1000, Number(appData.settings.promoStampMinRp) || 18000);
+
+        let totalEarned = 0;
+        let totalRedeemed = 0;
+        matchedNotas.forEach(o => {
+          const earned = typeof o.stampsEarned === 'number'
+            ? o.stampsEarned
+            : Math.max(Math.floor((Number(o.weightKg) || 0) / minKg), Math.floor((Number(o.subtotal) || 0) / minRp));
+          totalEarned += earned;
+          totalRedeemed += (Number(o.stampsRedeemed) || 0);
+        });
+
+        const available = Math.max(0, totalEarned - totalRedeemed);
+        const freeWashes = Math.floor(available / 10);
+        const currentProgress = available % 10;
+
+        document.getElementById('guest-free-wash-badge').textContent = `${freeWashes}x Gratis Cuci`;
+        document.getElementById('guest-stamp-summary-text').textContent =
+          `Total Stamp Aktif: ${available} Stamp (${currentProgress}/10 menuju gratis berikutnya • Kurang ${10 - currentProgress} Stamp lagi)`;
+
+        const circlesHtml = [];
+        for (let i = 1; i <= 10; i++) {
+          const isFilled = i <= currentProgress || (freeWashes > 0 && currentProgress === 0);
+          circlesHtml.push(`
+            <div class="h-12 rounded-xl border-2 flex flex-col items-center justify-center ${
+              isFilled ? 'bg-amber-400 border-amber-300 text-slate-950 font-black shadow' : 'bg-white/5 border-white/15 text-slate-400 font-bold'
+            }">
+              <i class="fa-solid ${isFilled ? 'fa-check-circle text-sm' : 'fa-soap text-xs'}"></i>
+              <span class="text-[9px] mt-0.5">Cuci ${i}</span>
+            </div>
+          `);
+        }
+        document.getElementById('guest-stamp-circles-grid').innerHTML = circlesHtml.join('');
+      } else if (stampCard) {
+        stampCard.classList.add('hidden');
+      }
+
+      if (matchedNotas.length === 0 && matchedPickups.length === 0) {
+        listEl.innerHTML = `
+          <div class="col-span-full p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs text-slate-500 font-bold">
+            Belum ada pesanan/nota aktif pada perangkat ini. Ketik Nomor WhatsApp Anda di atas lalu klik "Buka Dasbor Saya".
+          </div>
+        `;
+        return;
+      }
+
+      const cardsHtml = [];
+
+      matchedNotas.forEach(ord => {
+        const nota = String(ord.id).padStart(6, '0');
+        const stIdx = Number(ord.currentStage ?? 0);
+        const stMeta = WORKFLOW_STAGES[stIdx] || WORKFLOW_STAGES[0];
+        const pkgSummary = (ord.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
+        const hasSavedChange = ord.changeSavedOnNota && !ord.changeReturnedAtPickup && Number(ord.changeAmount) > 0;
+        const hasPkgUsed = Number(ord.pkgUsedAmount) > 0;
+        const priceDisplay = hasPkgUsed && Number(ord.total) === 0
+          ? (ord.pkgUsedType === 'KG' ? `Sisa ${Math.round(ord.pkgRemainingAfter)} Kg` : `Sisa ${formatRupiah(ord.pkgRemainingAfter)}`)
+          : formatRupiah(roundToNearest500(ord.total || 0));
+
+        cardsHtml.push(`
+          <div onclick="window.openMemberOrderInTracker('${nota}')" class="cursor-pointer p-4 rounded-2xl bg-emerald-50/70 hover:bg-emerald-100/70 border-2 border-emerald-400 transition flex flex-col justify-between gap-2">
+            <div class="flex flex-wrap items-center justify-between gap-1">
+              <span class="px-2.5 py-0.5 rounded-lg bg-slate-900 text-white font-mono text-xs font-black">NOTA ${nota}</span>
+              <div class="flex items-center gap-1">
+                ${hasSavedChange ? `<span class="px-2 py-0.5 rounded-lg bg-amber-300 text-slate-950 text-[10px] font-black">Kembalian ${formatNum(ord.changeAmount)}</span>` : ''}
+                <span class="px-2 py-0.5 rounded-lg bg-emerald-600 text-white text-[10px] font-extrabold">${hasPkgUsed && Number(ord.total) === 0 ? 'LUNAS (PAKET)' : ord.payStatus}</span>
+              </div>
+            </div>
+            <p class="text-xs font-extrabold text-slate-900">${ord.custName} ${ord.orderNumber ? `<span class="text-emerald-700">(Eks ${ord.orderNumber})</span>` : ''}</p>
+            <p class="text-[11px] text-slate-600 line-clamp-1">${pkgSummary}</p>
+            <div class="pt-2 border-t border-emerald-200 flex items-center justify-between text-xs font-bold text-emerald-900">
+              <span><i class="fa-solid ${stMeta.icon} mr-1"></i> Tahap ${stIdx + 1}/8: ${stMeta.name}</span>
+              <span class="font-mono font-black">${priceDisplay} &rarr;</span>
+            </div>
+          </div>
+        `);
+      });
+
+      matchedPickups.forEach(po => {
+        const isAccepted = po.status === 'DITERIMA_KURIR_OTW';
+        cardsHtml.push(`
+          <div onclick="window.openMemberOrderInTracker('${po.orderNumber}')" class="cursor-pointer p-4 rounded-2xl bg-amber-50/70 border-2 border-amber-300 transition flex flex-col justify-between gap-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-lg bg-amber-500 text-slate-950 font-mono text-xs font-black">${po.orderNumber}</span>
+              <span class="px-2 py-0.5 rounded-lg ${isAccepted ? 'bg-sky-600 text-white' : 'bg-amber-200 text-amber-900'} text-[10px] font-extrabold">
+                ${isAccepted ? '✓ DITERIMA - KURIR OTW' : '⏳ MENUNGGU KONFIRMASI'}
+              </span>
+            </div>
+            <p class="text-xs font-extrabold text-slate-900">${po.custName}</p>
+            <p class="text-[11px] text-slate-600">Otomatis berubah menjadi Nomor Nota setelah ditimbang kurir/kasir.</p>
+          </div>
+        `);
+      });
+
+      listEl.innerHTML = cardsHtml.join('');
+    }
+
+    function refreshCustomerUI() {
+      checkMyOrderRealtimeNotification();
+      renderGuestAutoDashboard();
+      renderStoreIdentity();
+      renderServiceCatalog();
+      renderPerfumesAndVouchers();
+      renderSimulationCalculator();
+      renderRecentOrderChips();
+      renderOrderFormDynamicOptions();
+
+      if (trackedNotaId) {
+        searchOrderByNota(trackedNotaId);
+      }
+
+      if (loggedInMemberId) {
+        renderMemberView();
       }
     }
 
@@ -4573,7 +5901,8 @@
       openMemberOrderInTracker,
       orderWithActiveMember,
       downloadMemberCardPng,
-      printMemberCard
+      printMemberCard,
+      loadGuestDashboardByPhone
     });
 
     function bootstrapCustomerApp() {
