@@ -1256,9 +1256,10 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div>
             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-800">
-              <i class="fa-solid fa-print"></i> Arsip Semua Nomor Nota &amp; Cetak Ulang
+              <i class="fa-solid fa-print"></i> Arsip Nota &amp; Cetak Ulang
             </span>
-            <h3 class="text-base font-extrabold text-slate-900 mt-1">Riwayat Seluruh Nomor Nota (Termasuk Nota Lunas &amp; Jejak Hapus Admin)</h3>
+            <h3 class="text-base font-extrabold text-slate-900 mt-1">Seluruh Nota Aktif (Semua Tahap &amp; Status Pembayaran)</h3>
+            <p class="mt-1 text-[10px] text-slate-500">Daftar memuat semua nota dari backend; nota yang dihapus tersedia di Sampah Admin.</p>
           </div>
           <div class="relative w-full sm:w-64">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -3365,6 +3366,7 @@
   </div>
 
   <script src="./offline-sync.js"></script>
+  <script src="./order-lists.js"></script>
   <script>
     // =========================================================================
     // 1. KONFIGURASI FIREBASE UNIVERSAL, CLOUDINARY & KOORDINAT LAUNDRY QU
@@ -6738,14 +6740,18 @@
       if (!listEl) return;
 
       const query = (document.getElementById('archive-search-input')?.value || '').trim().toLowerCase();
-      const orders = (appData.orders || [])
-        .filter(order => order && (
-          !query ||
-          [order.id, order.custName, order.custPhone, order.custAddress].some(value =>
-            String(value || '').toLowerCase().includes(query)
-          )
-        ))
-        .sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+      const orders = LaundryOrderLists.getActiveSorted(appData.orders)
+        .filter(order => LaundryOrderLists.matchesSearch(
+          order,
+          query,
+          ['id', 'custName', 'custPhone', 'custAddress']
+        ));
+
+      if (selectedArchiveOrderId && !orders.some(order => order.id === selectedArchiveOrderId)) {
+        selectedArchiveOrderId = null;
+        document.getElementById('archive-detail')?.classList.add('hidden');
+        document.getElementById('archive-detail-empty')?.classList.remove('hidden');
+      }
 
       if (countEl) countEl.textContent = `${orders.length} nota`;
       if (!orders.length) {
@@ -6753,14 +6759,13 @@
         return;
       }
 
-      listEl.innerHTML = orders.slice(0, 100).map(order => {
+      listEl.innerHTML = orders.map(order => {
         const stage = Number(order.currentStage) || 0;
         const stageInfo = stage >= 7
           ? { label: 'Selesai / Diambil', className: 'bg-emerald-100 text-emerald-700' }
           : stage >= 6
             ? { label: 'Siap Ambil', className: 'bg-sky-100 text-sky-700' }
             : { label: 'Sedang Dikerjakan', className: 'bg-amber-100 text-amber-800' };
-        if (order.isDeleted) stageInfo.label = 'Dihapus Admin';
         const activeClass = selectedArchiveOrderId === order.id ? 'bg-indigo-50 border-l-4 border-indigo-600' : 'hover:bg-slate-100';
 
         return `
@@ -6892,41 +6897,17 @@
       if (!tbody) return;
 
       const query = (document.getElementById('reprint-search-input')?.value || '').trim().toLowerCase();
-      const orders = (appData.orders || []).filter(o => {
-        if (!query) return true;
-        return o.id.toLowerCase().includes(query) || o.custName.toLowerCase().includes(query);
-      });
+      const orders = LaundryOrderLists.getActiveSorted(appData.orders)
+        .filter(order => LaundryOrderLists.matchesSearch(order, query, ['id', 'custName']));
 
       if (orders.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 font-bold">Belum ada Data</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = orders.slice(0, 50).map(o => {
+      tbody.innerHTML = orders.map(o => {
         const srvNames = (o.items || []).map(i => `${i.name} (${i.qtyDisplay || (i.qty + i.unit)})`).join(', ');
         const isExpress = getExpressHighlightText(o.items || []) !== null;
-
-        if (o.isDeleted) {
-          return `
-            <tr class="bg-rose-50/60 text-slate-500">
-              <td class="p-2.5 font-mono font-extrabold text-rose-700 line-through">${o.id}</td>
-              <td class="p-2.5 font-mono text-[11px]">${new Date(o.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}</td>
-              <td class="p-2.5">
-                <span class="font-bold line-through">${o.custName}</span>
-                <span class="block text-[10px] text-slate-400">${o.custAddress || '-'}</span>
-              </td>
-              <td class="p-2.5 truncate max-w-[180px] line-through">${srvNames}</td>
-              <td class="p-2.5 text-right font-mono">
-                <span class="line-through">${formatRupiah(o.total)}</span>
-                <span class="block text-[10px] font-extrabold text-rose-700">DIHAPUS ADMIN</span>
-              </td>
-              <td class="p-2.5 text-center text-[10px] font-bold text-rose-700">
-                Dihapus oleh: ${o.deletedBy || 'Admin'}<br/>
-                <span class="text-slate-500">${o.deleteReason ? `"${o.deleteReason}"` : ''}</span>
-              </td>
-            </tr>
-          `;
-        }
 
         return `
           <tr>
@@ -7758,10 +7739,7 @@ function recalculateDetailedPcsFromText() {
       const orderId = targetOrderId || selectedWorkflowOrderId;
       const order = (appData.orders || []).find(o => o.id === orderId);
       if (!order) return;
-      if (order.isDeleted) {
-        alert(`Nota ${order.id} sudah berstatus DIHAPUS ADMIN oleh ${order.deletedBy}.`);
-        return;
-      }
+      if (order.isDeleted) return;
 
       const pass = prompt(`Masukkan Password Supervisor / Manajer / Direktur untuk menghapus Nota ${order.id} (${order.custName} - Status: ${order.payStatus}):`);
       if (pass === null) return;
@@ -7780,13 +7758,28 @@ function recalculateDetailedPcsFromText() {
       order.deletedBy = authAdmin.label;
       order.deleteReason = reason.trim() || "Dihapus oleh Admin";
 
-      (appData.cashflows || []).forEach(cf => {
+      const deletedCashflowSnapshots = [];
+      (appData.cashflows || []).forEach((cf, index) => {
         if (cf.orderId === order.id) {
+          deletedCashflowSnapshots.push({
+            id: cf.id,
+            index,
+            timestamp: cf.timestamp,
+            amount: cf.amount,
+            type: cf.type,
+            category: cf.category,
+            description: cf.description,
+            hasDescription: Object.prototype.hasOwnProperty.call(cf, 'description'),
+            isDeleted: Boolean(cf.isDeleted),
+            deletedBy: cf.deletedBy,
+            hasDeletedBy: Object.prototype.hasOwnProperty.call(cf, 'deletedBy')
+          });
           cf.isDeleted = true;
           cf.deletedBy = authAdmin.label;
           cf.description = `[DIHAPUS ADMIN: ${authAdmin.label}] ${cf.description}`;
         }
       });
+      order.deletedCashflowSnapshots = deletedCashflowSnapshots;
 
       if (selectedWorkflowOrderId === order.id) selectedWorkflowOrderId = null;
       if (selectedSettlementOrderId === order.id) selectedSettlementOrderId = null;
@@ -7795,6 +7788,11 @@ function recalculateDetailedPcsFromText() {
       if (order.memberId && Number(order.pkgUsedAmount) > 0) {
         const m = (appData.members || []).find(item => item.id === order.memberId);
         if (m && m.monthlyPkg) {
+          order.deletedMemberPackageSnapshot = {
+            quotaType: m.monthlyPkg.quotaType,
+            startAt: m.monthlyPkg.startAt,
+            expiresAt: m.monthlyPkg.expiresAt
+          };
           m.monthlyPkg.remainingQuota = Number(((Number(m.monthlyPkg.remainingQuota) || 0) + Number(order.pkgUsedAmount)).toFixed(2));
         }
       }
@@ -8459,11 +8457,7 @@ function recalculateDetailedPcsFromText() {
         if (!searchQuery) return true;
         return [order.id, order.custName, order.agentName].some(value => String(value || '').toLowerCase().includes(searchQuery));
       }).sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
-      const filteredOrders = !searchQuery && orderFilter !== 'agen'
-        ? matchingOrders.slice(0, 50)
-        : matchingOrders;
-
-      if (!filteredOrders.length) {
+      if (!matchingOrders.length) {
         const emptyMessage = orderFilter === 'belum-ditandai'
           ? 'Tidak ada nota lama yang belum ditandai sebagai nota agen.'
           : 'Belum ada nota agen yang cocok.';
@@ -8471,7 +8465,7 @@ function recalculateDetailedPcsFromText() {
         return;
       }
 
-      ordersBody.innerHTML = filteredOrders.map(order => {
+      ordersBody.innerHTML = matchingOrders.map(order => {
         const orderId = /^[0-9]+$/.test(String(order.id || '')) ? order.id : '';
         const total = Number(order.total) || 0;
         const commission = order.agentId
@@ -8518,9 +8512,6 @@ function recalculateDetailedPcsFromText() {
           </tr>
         `;
       }).join('');
-      if (!searchQuery && orderFilter !== 'agen' && matchingOrders.length > filteredOrders.length) {
-        ordersBody.insertAdjacentHTML('beforeend', `<tr><td colspan="5" class="p-3 text-center text-[10px] text-slate-500">Menampilkan 50 nota terbaru dari ${matchingOrders.length}. Cari nomor nota atau nama pelanggan untuk menemukan nota lama.</td></tr>`);
-      }
     }
 
     function saveLaundryAgent(event) {
@@ -10709,6 +10700,8 @@ function recalculateDetailedPcsFromText() {
       renderEmployeeTable();
       renderMemberSection();
       renderStokAndExpenses();
+      renderReprintHistoryTable();
+      renderArchiveNota();
       if (financeUnlocked) {
         renderFinanceReport();
         calculatePayrollTable();
@@ -11997,6 +11990,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
           ['agen', 'Agen Laundry', 'store'],
           ['keuangan', 'Keuangan & Gaji', 'wallet'],
           ['setoran-agen', 'Setoran Komisi Agen', 'badge-dollar-sign'],
+          ['sampah-nota', 'Sampah Nota', 'trash-2'],
           ['setting', 'Pengaturan & Paket', 'settings-2'],
           ['laporan', 'Laporan Keuangan', 'chart-no-axes-column-increasing'],
           ['inbox', 'Inbox Admin', 'messages-square']
@@ -12417,7 +12411,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       section.className = 'ws-custom';
       section.innerHTML = `<div class="ws-heading"><div class="ws-eyebrow">LAPORAN KEUANGAN AGEN</div><h2></h2><p>Rekap nota agen, pembayaran, dan komisi yang tercatat.</p></div><div class="ws-report-stats"><article class="ws-report-stat ws-glass"><span>Total tagihan · ${orders.length} nota</span><strong>${rupiah(total)}</strong><small>Nota yang tertaut ke akun agen</small></article><article class="ws-report-stat ws-glass"><span>Sudah dibayar</span><strong>${rupiah(collected)}</strong><small>Pembayaran pelanggan tercatat</small></article><article class="ws-report-stat ws-glass"><span>Komisi tercatat</span><strong>${rupiah(commission)}</strong><small>Sesuai komisi pada tiap nota</small></article></div>`;
       section.querySelector('.ws-heading h2').textContent = `Ringkasan pendapatan · ${session.name}`;
-      const rows = orders.slice(0, 100).map(order => [
+      const rows = orders.map(order => [
         order.id,
         Number(order.createdAt) ? new Date(Number(order.createdAt)).toLocaleDateString('id-ID') : '-',
         order.custName || '-',
@@ -12802,9 +12796,172 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       renderChatMessages();
     }
 
+    function renderTrashOrders() {
+      if (workspaceRole !== 'admin') return;
+
+      const section = document.createElement('section');
+      section.className = 'ws-custom';
+      section.innerHTML = `
+        <div class="ws-heading">
+          <div class="ws-eyebrow">ARSIP ADMIN</div>
+          <h2>Sampah Nota</h2>
+          <p>Nota yang dihapus tetap tersimpan dan dapat dipulihkan. Riwayat penghapusan tetap tercatat.</p>
+        </div>
+        <div class="ws-table-card ws-glass">
+          <div class="ws-table-title">
+            <h3 id="trash-order-count">Nota terhapus</h3>
+            <input id="trash-order-search" type="search" placeholder="Cari nomor nota atau pelanggan..."
+              class="w-full max-w-sm rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+          </div>
+          <div class="ws-table-scroll">
+            <table class="ws-table">
+              <thead><tr>
+                <th>No. Nota</th><th>Tanggal</th><th>Pelanggan</th><th>Total</th>
+                <th>Dihapus oleh</th><th>Alasan</th><th>Aksi</th>
+              </tr></thead>
+              <tbody id="trash-order-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      const search = section.querySelector('#trash-order-search');
+      const count = section.querySelector('#trash-order-count');
+      const tbody = section.querySelector('#trash-order-rows');
+      const renderRows = () => {
+        const query = search.value.trim();
+        const deletedOrders = items(appData.orders)
+          .filter(order => order.isDeleted && LaundryOrderLists.matchesSearch(
+            order,
+            query,
+            ['id', 'custName', 'custPhone']
+          ))
+          .sort((left, right) => (Number(right.deletedAt) || 0) - (Number(left.deletedAt) || 0));
+        count.textContent = `${deletedOrders.length} nota di Sampah`;
+        tbody.replaceChildren();
+
+        if (!deletedOrders.length) {
+          const row = document.createElement('tr');
+          const cell = document.createElement('td');
+          cell.colSpan = 7;
+          cell.className = 'ws-empty';
+          cell.textContent = 'Tidak ada nota terhapus yang cocok.';
+          row.append(cell);
+          tbody.append(row);
+          return;
+        }
+
+        deletedOrders.forEach(order => {
+          const row = document.createElement('tr');
+          const values = [
+            order.id,
+            Number(order.createdAt) ? new Date(Number(order.createdAt)).toLocaleString('id-ID') : '-',
+            order.custName || '-',
+            rupiah(order.total),
+            order.deletedBy || 'Admin',
+            order.deleteReason || '-'
+          ];
+          values.forEach((value, index) => {
+            const cell = document.createElement('td');
+            cell.textContent = String(value);
+            if (index === 0) cell.classList.add('ws-mono');
+            row.append(cell);
+          });
+          const actionCell = document.createElement('td');
+          const restoreButton = document.createElement('button');
+          restoreButton.type = 'button';
+          restoreButton.className = 'rounded-xl bg-emerald-700 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-600';
+          restoreButton.textContent = 'Pulihkan';
+          restoreButton.addEventListener('click', () => restoreDeletedOrder(order.id));
+          actionCell.append(restoreButton);
+          row.append(actionCell);
+          tbody.append(row);
+        });
+      };
+
+      search.addEventListener('input', renderRows);
+      renderRows();
+      custom.replaceChildren(section);
+    }
+
+    function restoreDeletedOrder(orderId) {
+      if (workspaceRole !== 'admin' || !session) return;
+      const order = (appData.orders || []).find(item => String(item.id) === String(orderId));
+      if (!order || !order.isDeleted) return;
+      if (!confirm(`Pulihkan Nota ${order.id} untuk ${order.custName || 'pelanggan'}?`)) return;
+
+      const cashflows = appData.cashflows || [];
+      if (Array.isArray(order.deletedCashflowSnapshots)) {
+        order.deletedCashflowSnapshots.forEach(snapshot => {
+          const cashflow = snapshot.id != null
+            ? cashflows.find(item => String(item.id) === String(snapshot.id))
+            : cashflows.find(item =>
+              item.orderId === order.id
+              && item.timestamp === snapshot.timestamp
+              && item.amount === snapshot.amount
+              && item.type === snapshot.type
+              && item.category === snapshot.category
+              && String(item.description || '').startsWith(`[DIHAPUS ADMIN: ${order.deletedBy || 'Admin'}] `)
+            ) || cashflows[snapshot.index];
+          if (!cashflow || cashflow.orderId !== order.id) return;
+          cashflow.isDeleted = snapshot.isDeleted;
+          if (snapshot.hasDescription) cashflow.description = snapshot.description;
+          else delete cashflow.description;
+          if (snapshot.hasDeletedBy) cashflow.deletedBy = snapshot.deletedBy;
+          else delete cashflow.deletedBy;
+        });
+      } else {
+        const deleteMarker = `[DIHAPUS ADMIN: ${order.deletedBy || 'Admin'}] `;
+        cashflows.forEach(cashflow => {
+          if (cashflow.orderId !== order.id || !cashflow.isDeleted || cashflow.deletedBy !== order.deletedBy) return;
+          cashflow.isDeleted = false;
+          delete cashflow.deletedBy;
+          if (String(cashflow.description || '').startsWith(deleteMarker)) {
+            cashflow.description = cashflow.description.slice(deleteMarker.length);
+          }
+        });
+      }
+
+      let packageNeedsReview = false;
+      const usedQuota = Number(order.pkgUsedAmount) || 0;
+      if (order.memberId && usedQuota > 0) {
+        const member = (appData.members || []).find(item => String(item.id) === String(order.memberId));
+        const monthlyPkg = member?.monthlyPkg;
+        const savedPackage = order.deletedMemberPackageSnapshot;
+        const packageMatches = monthlyPkg && (savedPackage
+          ? monthlyPkg.quotaType === savedPackage.quotaType
+            && String(monthlyPkg.startAt) === String(savedPackage.startAt)
+            && String(monthlyPkg.expiresAt) === String(savedPackage.expiresAt)
+          : monthlyPkg.quotaType === order.pkgUsedType
+            && Number(monthlyPkg.startAt) <= Number(order.createdAt)
+            && Number(monthlyPkg.expiresAt) >= Number(order.createdAt));
+
+        if (packageMatches) {
+          const remainingQuota = Number(monthlyPkg.remainingQuota) || 0;
+          if (remainingQuota < usedQuota) packageNeedsReview = true;
+          monthlyPkg.remainingQuota = Number(Math.max(0, remainingQuota - usedQuota).toFixed(2));
+        } else {
+          packageNeedsReview = true;
+        }
+      }
+
+      order.isDeleted = false;
+      order.restoredAt = Date.now();
+      order.restoredBy = session.name || config.label;
+      delete order.deletedCashflowSnapshots;
+      delete order.deletedMemberPackageSnapshot;
+      syncAllMembersRealStats();
+      saveData();
+
+      alert(packageNeedsReview
+        ? `Nota ${order.id} berhasil dipulihkan. Kuota paket member tidak dapat dipulihkan secara otomatis; mohon periksa data kuota member.`
+        : `Nota ${order.id} berhasil dipulihkan.`);
+    }
+
     function renderCustomPage(id) {
       custom.hidden = false;
       if (id === 'chat' || id === 'inbox') return renderChatPage();
+      if (workspaceRole === 'admin' && id === 'sampah-nota') return renderTrashOrders();
       if (workspaceRole === 'admin' && id === 'setoran-agen') return renderAgentCommissionAdminPage();
       if (workspaceRole === 'admin' && id === 'laporan') return renderAdminReport();
       if (workspaceRole === 'agen' && id === 'laporan') return renderAgentReport();
@@ -12939,6 +13096,7 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       if (!session) return;
       updateWelcome();
       if (activeTab === 'laporan' || activeTab === 'setoran-agen') renderCustomPage(activeTab);
+      if (activeTab === 'sampah-nota') renderCustomPage(activeTab);
       if (activeTab === 'chat' || activeTab === 'inbox') {
         if (chatMessageList) renderChatMessages();
       }

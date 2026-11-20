@@ -1,12 +1,12 @@
-const CACHE_NAME = 'laundry-pos-shell-v1';
+const CACHE_NAME = 'laundry-pos-shell-v2';
 const SHELL_FILES = [
   'index.html',
   'pos.html',
   'admin.html',
   'agen.html',
   'poslaundry.html',
-  'PosLaundry.html',
-  'offline-sync.js'
+  'offline-sync.js',
+  'order-lists.js'
 ];
 const EXCLUDED_HOSTS = ['api.cloudinary.com'];
 
@@ -106,8 +106,7 @@ self.addEventListener('fetch', event => {
 
       if (request.mode === 'navigate') {
         const fallback = await cache.match(new URL('index.html', self.registration.scope).href)
-          || await cache.match(new URL('poslaundry.html', self.registration.scope).href)
-          || await cache.match(new URL('PosLaundry.html', self.registration.scope).href);
+          || await cache.match(new URL('poslaundry.html', self.registration.scope).href);
         if (fallback) return fallback;
       }
       throw error;
