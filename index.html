@@ -164,6 +164,41 @@
     .member-card-bg-yayasan {
       background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #022c22 100%);
     }
+    button:not(:disabled) {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition-duration: 140ms;
+      transition-property: transform, filter, box-shadow, background-color, border-color, color;
+      transition-timing-function: cubic-bezier(.2, .8, .2, 1);
+    }
+    button:not(:disabled):active {
+      transform: translateY(1px) scale(.97);
+      filter: brightness(.93);
+      box-shadow: inset 0 2px 6px rgba(15, 23, 42, .2);
+    }
+    button:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .55);
+      outline-offset: 2px;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .65;
+    }
+    .desk-nav-btn[aria-current="page"] {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+      box-shadow: 0 7px 18px rgba(37, 99, 235, .25), inset 0 1px 0 rgba(255, 255, 255, .25) !important;
+      transform: translateY(-1px);
+    }
+    .mob-nav-btn[aria-current="page"] {
+      color: #1d4ed8 !important;
+      background: #dbeafe !important;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .25), 0 4px 12px rgba(37, 99, 235, .12);
+      transform: translateY(-2px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      button:not(:disabled) { transition-duration: .01ms; }
+      button:not(:disabled):active { transform: none; }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24 md:pb-10 selection:bg-brand-600 selection:text-white">
@@ -195,7 +230,7 @@
 
       <!-- Desktop Navigation Menu -->
       <nav class="hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/70">
-        <button type="button" onclick="window.switchTab('home')" id="desk-nav-home" class="desk-nav-btn px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 bg-brand-600 text-white shadow-sm">
+        <button type="button" onclick="window.switchTab('home')" id="desk-nav-home" aria-current="page" class="desk-nav-btn px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 bg-brand-600 text-white shadow-sm">
           <i class="fa-solid fa-house"></i>
           <span>Beranda &amp; Harga</span>
         </button>
@@ -2036,7 +2071,7 @@
   <!-- ========================================================================= -->
   <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] px-2 py-1.5">
     <div class="grid grid-cols-4 gap-1 max-w-md mx-auto">
-      <button type="button" onclick="window.switchTab('home')" id="mob-nav-home" class="mob-nav-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl text-brand-600 bg-brand-50/80 font-extrabold transition-all">
+      <button type="button" onclick="window.switchTab('home')" id="mob-nav-home" aria-current="page" class="mob-nav-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl text-brand-600 bg-brand-50/80 font-extrabold transition-all">
         <i class="fa-solid fa-house text-base mb-1"></i>
         <span class="text-[10px] leading-tight">Beranda &amp; Harga</span>
       </button>
@@ -2188,7 +2223,7 @@
     <div id="pdf-receipt-template" class="w-[340px] bg-white p-4 text-slate-950 font-mono border border-slate-300 space-y-2 text-[10px] leading-tight">
       <!-- Header Hemat Kertas: Logo di Samping Nama & Alamat -->
       <div class="flex items-center gap-2.5 border-b border-dashed border-slate-400 pb-2">
-        <img id="pdf-store-logo" src="https://cdn-icons-png.flaticon.com/512/2975/2975175.png" alt="Logo" class="w-10 h-10 object-contain shrink-0" />
+        <img id="pdf-store-logo" alt="Logo toko" class="w-10 h-10 object-contain shrink-0" />
         <div class="min-w-0 flex-1 leading-tight">
           <h2 id="pdf-store-name" class="text-xs font-black uppercase">LAUNDRY QU</h2>
           <p id="pdf-store-tagline" class="text-[9px] font-bold text-slate-800">Unit Usaha Markaz Yatim Duafa Qurani</p>
@@ -2383,7 +2418,7 @@
         storePhone: DEFAULT_STORE_PHONE,
         storeAddress: DEFAULT_STORE_ADDRESS,
         adminPassword: "1234",
-        logoUrl: "https://cdn-icons-png.flaticon.com/512/2975/2975175.png",
+        logoUrl: "",
         lat: LAUNDRY_LAT,
         lng: LAUNDRY_LNG,
         payrollEnableBonus: true,
@@ -2474,6 +2509,11 @@
     }
 
     let appData = loadInitialData();
+    let isFirebaseInitialSnapshotLoaded = false;
+    let resolveFirebaseInitialSnapshot;
+    const firebaseInitialSnapshotPromise = new Promise(resolve => {
+      resolveFirebaseInitialSnapshot = resolve;
+    });
 
     // State UI & Navigasi
     let currentTab = 'home';
@@ -3178,6 +3218,8 @@
 
         const dBtn = document.getElementById(`desk-nav-${t}`);
         if (dBtn) {
+          if (t === tabName) dBtn.setAttribute('aria-current', 'page');
+          else dBtn.removeAttribute('aria-current');
           dBtn.className = t === tabName
             ? 'desk-nav-btn px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 bg-brand-600 text-white shadow-sm'
             : 'desk-nav-btn px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-white/60';
@@ -3185,6 +3227,8 @@
 
         const mBtn = document.getElementById(`mob-nav-${t}`);
         if (mBtn) {
+          if (t === tabName) mBtn.setAttribute('aria-current', 'page');
+          else mBtn.removeAttribute('aria-current');
           mBtn.className = t === tabName
             ? 'mob-nav-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl text-brand-600 bg-brand-50/80 font-extrabold transition-all'
             : 'mob-nav-btn flex flex-col items-center justify-center py-2 px-1 rounded-2xl text-slate-500 hover:text-slate-900 font-bold transition-all';
@@ -4003,6 +4047,13 @@
     }
 
     async function downloadTrackedOrderPdf() {
+      if (dbRef && navigator.onLine && !isFirebaseInitialSnapshotLoaded) {
+        await Promise.race([
+          firebaseInitialSnapshotPromise,
+          new Promise(resolve => setTimeout(resolve, 3500))
+        ]);
+      }
+
       const order = (appData.orders || []).find(o => !o.isDeleted && String(o.id).padStart(6, '0') === String(trackedNotaId).padStart(6, '0'));
       if (!order) {
         showToast('Struk Nota PDF dapat diunduh setelah pesanan diverifikasi menjadi Nota resmi oleh Kasir.', 'warning');
@@ -4013,8 +4064,13 @@
       const nota = String(order.id).padStart(6, '0');
       const logoImg = document.getElementById('pdf-store-logo');
       if (logoImg) {
-        logoImg.src = s.logoUrl || 'https://cdn-icons-png.flaticon.com/512/2975/2975175.png';
-        logoImg.classList.toggle('hidden', s.printerShowLogo === false);
+        const storedLogoUrl = String(s.logoUrl || '').trim();
+        const logoUrl = storedLogoUrl === 'https://cdn-icons-png.flaticon.com/512/2975/2975175.png'
+          ? ''
+          : storedLogoUrl;
+        logoImg.classList.toggle('hidden', s.printerShowLogo === false || !logoUrl);
+        logoImg.removeAttribute('src');
+        if (logoUrl && s.printerShowLogo !== false) logoImg.src = logoUrl;
       }
 
       document.getElementById('pdf-store-name').textContent = s.storeName || DEFAULT_STORE_NAME;
@@ -4126,6 +4182,18 @@
 
       showToast('Menyiapkan dokumen E-Receipt PDF...', 'info');
       try {
+        if (logoImg && !logoImg.classList.contains('hidden')) {
+          if (typeof logoImg.decode === 'function') {
+            await logoImg.decode();
+          } else if (!logoImg.complete) {
+            await new Promise((resolve, reject) => {
+              logoImg.addEventListener('load', resolve, { once: true });
+              logoImg.addEventListener('error', () => reject(new Error('Logo toko tidak dapat dimuat.')), { once: true });
+            });
+          }
+          if (!logoImg.naturalWidth) throw new Error('Logo toko dari pengaturan database tidak dapat dimuat.');
+        }
+
         const receiptCanvas = await html2canvas(element, {
           scale: 2,
           useCORS: true,
@@ -5835,10 +5903,16 @@
     }
 
     function initRealtimeFirebaseSync() {
-      if (!dbRef) return;
+      if (!dbRef) {
+        isFirebaseInitialSnapshotLoaded = true;
+        resolveFirebaseInitialSnapshot();
+        return;
+      }
       dbRef.on(
         'value',
         snapshot => {
+          isFirebaseInitialSnapshotLoaded = true;
+          resolveFirebaseInitialSnapshot();
           const remoteVal = snapshot.val();
           if (remoteVal) {
             appData = mergeWithDefaults(remoteVal);
@@ -5849,6 +5923,8 @@
           }
         },
         err => {
+          isFirebaseInitialSnapshotLoaded = true;
+          resolveFirebaseInitialSnapshot();
           console.warn('Firebase Offline Mode:', err);
           const connEl = document.getElementById('firebase-conn-text');
           if (connEl) connEl.textContent = 'Mode Lokal';

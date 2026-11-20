@@ -47,7 +47,95 @@
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-
+    button:not(:disabled),
+    [role="button"],
+    .cursor-pointer[onclick] {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition-duration: 120ms;
+      transition-property: transform, filter, box-shadow, background-color, border-color, color;
+      transition-timing-function: cubic-bezier(.2, .8, .2, 1);
+    }
+    button:not(:disabled):active,
+    [role="button"]:active,
+    .cursor-pointer[onclick]:active,
+    .pos-choice-label:active {
+      transform: translateY(1px) scale(.96);
+      filter: brightness(.88);
+      box-shadow: inset 0 2px 8px rgba(15, 23, 42, .24);
+    }
+    .pos-choice-label > div,
+    .pos-choice-label > span {
+      transition: transform 120ms ease, filter 120ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
+    }
+    .pos-choice-label.is-selected > div,
+    .pos-choice-label.is-selected > span {
+      outline: 1px solid rgba(14, 165, 233, .26);
+      outline-offset: 1px;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, .12);
+      transform: translateY(-1px);
+    }
+    #radio-service-list .service-package-choice.is-selected .service-package-card {
+      border-color: #7e22ce !important;
+      background: #faf5ff !important;
+      box-shadow: 0 0 0 2px rgba(147, 51, 234, .18), 0 8px 18px rgba(126, 34, 206, .14) !important;
+    }
+    .delivery-choice-label.is-selected .delivery-choice-card {
+      border-color: #0284c7 !important;
+      background: #e0f2fe !important;
+      color: #075985 !important;
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, .17), 0 5px 12px rgba(14, 165, 233, .12) !important;
+    }
+    .pos-choice-label:active > div,
+    .pos-choice-label:active > span,
+    .pos-choice-label.pos-click-feedback > div,
+    .pos-choice-label.pos-click-feedback > span {
+      transform: scale(.97) translateY(1px);
+      filter: brightness(.9);
+    }
+    button.pos-click-feedback,
+    [role="button"].pos-click-feedback,
+    .cursor-pointer[onclick].pos-click-feedback {
+      transform: translateY(1px) scale(.96) !important;
+      filter: brightness(.88) !important;
+      box-shadow: inset 0 2px 8px rgba(15, 23, 42, .24) !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      button:not(:disabled),
+      [role="button"],
+      .cursor-pointer[onclick],
+      .pos-choice-label > div,
+      .pos-choice-label > span { transition-duration: .01ms; }
+      button:not(:disabled):active,
+      [role="button"]:active,
+      .cursor-pointer[onclick]:active,
+      .pos-choice-label:active,
+      .pos-choice-label:active > div,
+      .pos-choice-label:active > span,
+      .pos-choice-label.pos-click-feedback > div,
+      .pos-choice-label.pos-click-feedback > span,
+      .pos-choice-label.is-selected > div,
+      .pos-choice-label.is-selected > span { transform: none; }
+      button.pos-click-feedback,
+      [role="button"].pos-click-feedback,
+      .cursor-pointer[onclick].pos-click-feedback {
+        transform: none !important;
+        filter: none !important;
+      }
+    }
+    button:focus-visible {
+      outline: 3px solid rgba(56, 189, 248, .85);
+      outline-offset: 2px;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .65;
+    }
+    .tab-btn[aria-current="page"] {
+      background: linear-gradient(135deg, #0ea5e9, #0369a1) !important;
+      box-shadow: 0 6px 16px rgba(14, 165, 233, .28), inset 0 1px 0 rgba(255, 255, 255, .25) !important;
+      transform: translateX(2px);
+    }
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
@@ -266,17 +354,18 @@
     </div>
 
     <!-- Cloud & Local Storage Status -->
-    <div class="px-4 py-2.5 bg-slate-950/60 border-b border-slate-800 flex items-center justify-between text-xs">
-      <span class="text-slate-400 flex items-center gap-1.5">
+    <div class="px-4 py-2.5 bg-slate-950/60 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <span class="min-w-0 text-slate-400 flex items-center gap-1.5">
         <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="sync-status-text">Local + Cloud Ready</span>
+        <span id="sync-status-text" class="truncate">Menyiapkan sinkronisasi...</span>
       </span>
+      <button id="sync-conflict-button" type="button" onclick="openSyncConflictModal()" class="hidden rounded-lg border border-rose-400/40 bg-rose-500/15 px-2 py-1 text-[10px] font-bold text-rose-200 hover:bg-rose-500/25">Tinjau Konflik</button>
       <span id="live-clock-sidebar" class="font-mono text-slate-300 text-[11px]">00:00</span>
     </div>
 
     <!-- Menu Navigasi 10 Modul -->
     <nav class="flex-1 overflow-y-auto p-3 space-y-1">
-      <button type="button" id="btn-tab-kasir" onclick="switchTab('kasir')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-bold transition bg-sky-600 text-white shadow-md">
+      <button type="button" id="btn-tab-kasir" aria-current="page" onclick="switchTab('kasir')" class="tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-bold transition bg-sky-600 text-white shadow-md">
         <span class="flex items-center justify-start gap-3 truncate">
           <i class="fa-solid fa-cash-register w-5 text-center"></i>
           <span class="truncate">1. Buat Nota / Kasir</span>
@@ -708,27 +797,27 @@
                 <i class="fa-solid fa-motorcycle text-sky-600 mr-1"></i> Opsi Layanan Antar / Jemput <span class="text-rose-500">*</span>
               </label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                <label class="cursor-pointer">
+                <label class="delivery-choice-label cursor-pointer">
                   <input type="radio" name="delivery_type" value="Datang Sendiri" checked onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                  <div class="delivery-choice-card p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
                     <i class="fa-solid fa-store mr-1"></i>Datang Sendiri
                   </div>
                 </label>
-                <label class="cursor-pointer">
+                <label class="delivery-choice-label cursor-pointer">
                   <input type="radio" name="delivery_type" value="Jemput Saja" onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                  <div class="delivery-choice-card p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
                     <i class="fa-solid fa-truck-pickup mr-1"></i>Jemput Saja
                   </div>
                 </label>
-                <label class="cursor-pointer">
+                <label class="delivery-choice-label cursor-pointer">
                   <input type="radio" name="delivery_type" value="Antar Saja" onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                  <div class="delivery-choice-card p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
                     <i class="fa-solid fa-paper-plane mr-1"></i>Antar Saja
                   </div>
                 </label>
-                <label class="cursor-pointer">
+                <label class="delivery-choice-label cursor-pointer">
                   <input type="radio" name="delivery_type" value="Jemput & Antar" onchange="handleDeliveryTypeChange(this.value)" class="peer sr-only" />
-                  <div class="p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
+                  <div class="delivery-choice-card p-1.5 rounded-lg border-2 border-slate-200 bg-slate-50 text-center text-[10px] sm:text-[11px] font-bold text-slate-700 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-700 transition">
                     <i class="fa-solid fa-route mr-1"></i>Jemput & Antar
                   </div>
                 </label>
@@ -3262,6 +3351,20 @@
   ========================================================================== -->
   <div id="universal-print-container" class="hidden bg-white text-slate-900"></div>
   
+  <div id="sync-conflict-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 p-3 no-print" role="dialog" aria-modal="true" aria-labelledby="sync-conflict-title">
+    <div class="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-200 bg-slate-900 p-4 text-white">
+        <div>
+          <h2 id="sync-conflict-title" class="font-extrabold">Perubahan Perlu Ditinjau</h2>
+          <p class="mt-1 text-xs text-slate-300">Data lokal dan cloud berubah bersamaan. Pilih versi yang ingin dipertahankan untuk setiap item.</p>
+        </div>
+        <button type="button" onclick="closeSyncConflictModal()" class="rounded-lg bg-slate-800 px-3 py-2 text-xs font-bold text-white hover:bg-slate-700">Tutup</button>
+      </div>
+      <div id="sync-conflict-list" class="space-y-3 overflow-y-auto p-4"></div>
+    </div>
+  </div>
+
+  <script src="./offline-sync.js"></script>
   <script>
     // =========================================================================
     // 1. KONFIGURASI FIREBASE UNIVERSAL, CLOUDINARY & KOORDINAT LAUNDRY QU
@@ -3354,6 +3457,7 @@
     // 3. STATE DATA APLIKASI UNIVERSAL TANPA DATA DUMMY
     // =========================================================================
     const STORAGE_KEY = 'laundry_qu_pos_local';
+    const PENDING_SYNC_KEY = 'laundry_qu_pos_pending_sync_v1';
     let isRemoteUpdating = false;
 
     const defaultState = {
@@ -3363,7 +3467,7 @@
         storePhone: "0823 6089 2828",
         storeAddress: "Jln. Protokol - Sei Kamah II",
         adminPassword: "1234",
-        logoUrl: "https://cdn-icons-png.flaticon.com/512/2975/2975175.png",
+        logoUrl: "",
         lat: LAUNDRY_LAT,
         lng: LAUNDRY_LNG,
         payrollEnableBonus: true,
@@ -3400,6 +3504,20 @@
     };
 
     let appData = loadLocalData();
+    const offlineSync = window.LaundryOfflineSync;
+    let pendingSyncOperations = loadPendingSyncOperations();
+    pendingSyncOperations.forEach(operation => {
+      offlineSync.apply(appData, operation, operation.afterExists, operation.afterValue, operation.afterIndex);
+    });
+    let lastSavedData = offlineSync.clone(appData);
+    let localDataVersion = 0;
+    let isFirebaseConnected = false;
+    let hasInitialRemoteSnapshot = false;
+    let isSyncingPendingChanges = false;
+    let syncErrorMessage = '';
+    let offlineCacheErrorMessage = '';
+    let pendingSyncConflicts = [];
+    let syncSchedule = null;
 
     // State Transaksi Kasir & UI
     let selectedCashierOnKasir = null;
@@ -3635,57 +3753,450 @@
       return merged;
     }
 
-    function saveData(skipFirebase = false) {
+    function loadPendingSyncOperations() {
+      try {
+        const raw = localStorage.getItem(PENDING_SYNC_KEY);
+        const operations = raw ? JSON.parse(raw) : [];
+        return Array.isArray(operations) ? operations : [];
+      } catch (error) {
+        console.error('Antrean perubahan offline tidak dapat dibaca:', error);
+        return [];
+      }
+    }
+
+    function persistPendingSyncOperations() {
+      try {
+        if (pendingSyncOperations.length) {
+          localStorage.setItem(PENDING_SYNC_KEY, JSON.stringify(pendingSyncOperations));
+        } else {
+          localStorage.removeItem(PENDING_SYNC_KEY);
+        }
+        return true;
+      } catch (error) {
+        console.error('Antrean perubahan offline tidak dapat disimpan:', error);
+        syncErrorMessage = 'Antrean sinkronisasi gagal disimpan. Jangan tutup halaman sebelum ruang penyimpanan tersedia.';
+        updateSyncIndicator();
+        return false;
+      }
+    }
+
+    function persistAppDataLocally() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-      } catch (e) {
-        console.error("LocalStorage error:", e);
+        return true;
+      } catch (error) {
+        console.error('Data lokal tidak dapat disimpan:', error);
+        syncErrorMessage = 'Penyimpanan lokal penuh atau tidak tersedia. Perubahan terakhir belum aman.';
+        updateSyncIndicator();
+        alert(syncErrorMessage);
+        return false;
       }
-      if (!skipFirebase && dbRef && !isRemoteUpdating) {
-        dbRef.set(appData).then(() => {
-          updateSyncIndicator(true);
-        }).catch(() => {
-          updateSyncIndicator(false);
-        });
+    }
+
+    function saveData(skipImmediateSync = false) {
+      const currentData = offlineSync.clone(appData);
+      const changes = isRemoteUpdating ? [] : offlineSync.diff(lastSavedData, currentData);
+      let queueSaved = true;
+      if (changes.length) {
+        pendingSyncOperations = offlineSync.coalesce(pendingSyncOperations, changes);
+        localDataVersion += 1;
+        pendingSyncConflicts = [];
+        queueSaved = persistPendingSyncOperations();
       }
+
+      const localSaved = persistAppDataLocally();
+      if (queueSaved && localSaved) lastSavedData = currentData;
+      if (queueSaved && localSaved && pendingSyncOperations.length && !skipImmediateSync) {
+        syncErrorMessage = '';
+        schedulePendingSync();
+      }
+      updateSyncIndicator();
       refreshAllViews();
     }
 
     function initFirebaseSync() {
-      if (!dbRef) return;
+      if (!dbRef) {
+        updateSyncIndicator();
+        return;
+      }
+
       dbRef.on('value', (snapshot) => {
         const remoteVal = snapshot.val();
-        if (remoteVal) {
-          isRemoteUpdating = true;
-          appData = mergeWithDefaults(remoteVal);
-          if (appData.settings && appData.settings.lat && appData.settings.lng) {
-            LAUNDRY_LAT = parseFloat(appData.settings.lat) || LAUNDRY_LAT;
-            LAUNDRY_LNG = parseFloat(appData.settings.lng) || LAUNDRY_LNG;
-          }
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-          refreshAllViews();
-          updateSyncIndicator(true);
-          isRemoteUpdating = false;
-        } else {
-          dbRef.set(appData);
+        hasInitialRemoteSnapshot = true;
+        if (isSyncingPendingChanges) return;
+        if (pendingSyncOperations.length) {
+          schedulePendingSync();
+          updateSyncIndicator();
+          return;
         }
-      }, () => {
-        updateSyncIndicator(false);
+        if (remoteVal) {
+          adoptRemoteData(remoteVal);
+        } else {
+          bootstrapEmptyRemoteData();
+        }
+      }, (error) => {
+        console.error('Gagal menerima perubahan dari Firebase:', error);
+        syncErrorMessage = 'Data cloud gagal dimuat. Periksa koneksi atau izin Firebase.';
+        updateSyncIndicator();
+      });
+
+      firebase.database().ref('.info/connected').on('value', snapshot => {
+        isFirebaseConnected = snapshot.val() === true;
+        if (isFirebaseConnected) {
+          syncErrorMessage = '';
+          if (pendingSyncOperations.length) {
+            uploadPendingClothPhotos().finally(schedulePendingSync);
+          }
+        }
+        updateSyncIndicator();
+      }, error => {
+        console.error('Status koneksi Firebase gagal dibaca:', error);
+        syncErrorMessage = 'Status koneksi Firebase tidak dapat dipastikan.';
+        updateSyncIndicator();
       });
     }
 
-    function updateSyncIndicator(isOnline) {
+    function adoptRemoteData(remoteData) {
+      isRemoteUpdating = true;
+      appData = mergeWithDefaults(remoteData);
+      if (appData.settings && appData.settings.lat && appData.settings.lng) {
+        LAUNDRY_LAT = parseFloat(appData.settings.lat) || LAUNDRY_LAT;
+        LAUNDRY_LNG = parseFloat(appData.settings.lng) || LAUNDRY_LNG;
+      }
+      const localSaved = persistAppDataLocally();
+      lastSavedData = offlineSync.clone(appData);
+      isRemoteUpdating = false;
+      if (localSaved) {
+        refreshAllViews();
+        updateSyncIndicator();
+      }
+    }
+
+    function bootstrapEmptyRemoteData() {
+      if (!dbRef || !isFirebaseConnected || pendingSyncOperations.length) return;
+      const initialData = offlineSync.clone(appData);
+      dbRef.transaction(
+        current => current === null ? initialData : undefined,
+        (error, committed, snapshot) => {
+          if (error) {
+            console.error('Inisialisasi data Firebase gagal:', error);
+            syncErrorMessage = 'Data cloud belum dapat disiapkan.';
+          } else if (committed && snapshot.val()) {
+            adoptRemoteData(snapshot.val());
+          }
+          updateSyncIndicator();
+        },
+        false
+      );
+    }
+
+    function schedulePendingSync() {
+      if (syncSchedule) clearTimeout(syncSchedule);
+      syncSchedule = setTimeout(syncPendingChanges, 250);
+    }
+
+    function syncPendingChanges() {
+      if (!dbRef || !isFirebaseConnected || !navigator.onLine || isSyncingPendingChanges || !pendingSyncOperations.length) {
+        updateSyncIndicator();
+        return;
+      }
+      if (pendingSyncConflicts.length) {
+        updateSyncIndicator();
+        return;
+      }
+
+      isSyncingPendingChanges = true;
+      const startingVersion = localDataVersion;
+      const operations = offlineSync.clone(pendingSyncOperations);
+      let latestConflicts = [];
+
+      dbRef.transaction(
+        current => {
+          latestConflicts = [];
+          const remoteData = mergeWithDefaults(current || {});
+          const outcome = offlineSync.applyPending(remoteData, operations);
+          if (!outcome.ok) {
+            latestConflicts = outcome.conflicts;
+            return undefined;
+          }
+          return outcome.changed ? outcome.data : undefined;
+        },
+        (error, committed, snapshot) => {
+          isSyncingPendingChanges = false;
+          if (error) {
+            console.error('Sinkronisasi perubahan POS gagal:', error);
+            syncErrorMessage = 'Sinkronisasi gagal. Perubahan tetap tersimpan di perangkat dan akan dicoba lagi saat tersambung.';
+            updateSyncIndicator();
+            return;
+          }
+
+          const remoteData = mergeWithDefaults(snapshot.val() || {});
+          if (latestConflicts.length) {
+            const conflicts = startingVersion === localDataVersion
+              ? latestConflicts
+              : offlineSync.applyPending(remoteData, pendingSyncOperations).conflicts;
+            if (conflicts.length) {
+              pendingSyncConflicts = conflicts;
+              syncErrorMessage = '';
+              renderSyncConflictModal();
+              updateSyncIndicator();
+              return;
+            }
+            schedulePendingSync();
+            updateSyncIndicator();
+            return;
+          }
+
+          if (!committed && !pendingSyncOperations.every(operation => {
+            const current = offlineSync.read(remoteData, operation);
+            return offlineSync.sameValue(current.exists, current.value, operation.afterExists, operation.afterValue);
+          })) {
+            const outcome = offlineSync.applyPending(remoteData, pendingSyncOperations);
+            if (outcome.conflicts.length) {
+              pendingSyncConflicts = outcome.conflicts;
+              renderSyncConflictModal();
+              updateSyncIndicator();
+              return;
+            }
+            schedulePendingSync();
+            updateSyncIndicator();
+            return;
+          }
+
+          if (startingVersion === localDataVersion) {
+            appData = remoteData;
+            pendingSyncOperations = [];
+          } else {
+            pendingSyncOperations = offlineSync.diff(remoteData, appData);
+          }
+          pendingSyncConflicts = [];
+          lastSavedData = offlineSync.clone(appData);
+          const queueSaved = persistPendingSyncOperations();
+          const localSaved = persistAppDataLocally();
+          syncErrorMessage = queueSaved && localSaved ? '' : syncErrorMessage;
+          refreshAllViews();
+          updateSyncIndicator();
+          if (queueSaved && localSaved && pendingSyncOperations.length) schedulePendingSync();
+        },
+        false
+      );
+      updateSyncIndicator();
+    }
+
+    function uploadPendingClothPhotos() {
+      if (!navigator.onLine || !CLOUDINARY_CLOUD_NAME || CLOUDINARY_CLOUD_NAME.startsWith('GANTI_')) {
+        return Promise.resolve();
+      }
+      const pendingPhotos = [];
+      (appData.orders || []).forEach(order => {
+        (order.clothPhotos || []).forEach(photo => {
+          if (photo.uploadPending && String(photo.url || '').startsWith('data:image/')) {
+            pendingPhotos.push({ order, photo });
+          }
+        });
+      });
+      if (!pendingPhotos.length) return Promise.resolve();
+
+      return (async () => {
+        let changed = false;
+        for (const { order, photo } of pendingPhotos) {
+          try {
+            const imageBlob = await fetch(photo.url).then(response => response.blob());
+            const formData = new FormData();
+            formData.append('file', imageBlob, `nota_${order.id}_${photo.id}.jpg`);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+              method: 'POST',
+              body: formData
+            });
+            if (!response.ok) throw new Error(`Cloudinary membalas ${response.status}`);
+            const result = await response.json();
+            if (!result.secure_url) throw new Error('URL foto dari Cloudinary tidak tersedia.');
+            photo.url = result.secure_url;
+            photo.uploadPending = false;
+            changed = true;
+          } catch (error) {
+            console.error(`Foto nota ${order.id} belum dapat diunggah:`, error);
+          }
+        }
+        if (changed) saveData();
+      })();
+    }
+
+    function describeSyncValue(exists, value, operation) {
+      if (!exists) return 'Data dihapus';
+      if (operation.kind === 'setting' && /password|token|secret|key/i.test(operation.key)) return 'Pengaturan sensitif diubah';
+      if (typeof value === 'string') {
+        if (value.startsWith('data:image/')) return 'Lampiran gambar';
+        return value.length > 100 ? `${value.slice(0, 100)}...` : value;
+      }
+      if (value && typeof value === 'object') {
+        const title = value.custName || value.name || value.orderNumber || value.id || value.code || '';
+        const status = value.status || value.payStatus || '';
+        return [title, status].filter(Boolean).join(' • ') || 'Data diperbarui';
+      }
+      return String(value ?? 'Nilai kosong');
+    }
+
+    function renderSyncConflictModal() {
+      const list = document.getElementById('sync-conflict-list');
+      const button = document.getElementById('sync-conflict-button');
+      if (!list || !button) return;
+      list.replaceChildren();
+      button.classList.toggle('hidden', pendingSyncConflicts.length === 0);
+      button.textContent = `Tinjau Konflik (${pendingSyncConflicts.length})`;
+
+      pendingSyncConflicts.forEach(conflict => {
+        const operation = conflict.operation;
+        const card = document.createElement('article');
+        card.className = 'rounded-xl border border-rose-200 bg-rose-50/60 p-4';
+
+        const heading = document.createElement('h3');
+        heading.className = 'font-bold text-slate-900';
+        heading.textContent = operation.kind === 'setting'
+          ? `Pengaturan: ${operation.key}`
+          : `${operation.collection}: ${operation.key}`;
+        card.append(heading);
+
+        const versions = document.createElement('div');
+        versions.className = 'mt-3 grid gap-2 text-xs sm:grid-cols-2';
+        const localVersion = document.createElement('p');
+        localVersion.className = 'rounded-lg bg-white p-3 text-slate-700';
+        localVersion.textContent = `Perangkat: ${describeSyncValue(operation.afterExists, operation.afterValue, operation)}`;
+        const cloudVersion = document.createElement('p');
+        cloudVersion.className = 'rounded-lg bg-white p-3 text-slate-700';
+        cloudVersion.textContent = `Cloud: ${describeSyncValue(conflict.remoteExists, conflict.remoteValue, operation)}`;
+        versions.append(localVersion, cloudVersion);
+        card.append(versions);
+
+        const actions = document.createElement('div');
+        actions.className = 'mt-3 flex flex-wrap gap-2';
+        [
+          ['local', 'Gunakan versi perangkat', 'bg-sky-600 hover:bg-sky-700'],
+          ['remote', 'Gunakan versi cloud', 'bg-slate-700 hover:bg-slate-800']
+        ].forEach(([choice, label, style]) => {
+          const action = document.createElement('button');
+          action.type = 'button';
+          action.className = `rounded-lg px-3 py-2 text-xs font-bold text-white ${style}`;
+          action.textContent = label;
+          action.addEventListener('click', () => resolveSyncConflict(operation.id, choice));
+          actions.append(action);
+        });
+        card.append(actions);
+        list.append(card);
+      });
+    }
+
+    function openSyncConflictModal() {
+      if (!pendingSyncConflicts.length) return;
+      renderSyncConflictModal();
+      const modal = document.getElementById('sync-conflict-modal');
+      modal?.classList.remove('hidden');
+      modal?.classList.add('flex');
+    }
+
+    function closeSyncConflictModal() {
+      const modal = document.getElementById('sync-conflict-modal');
+      modal?.classList.add('hidden');
+      modal?.classList.remove('flex');
+    }
+
+    function resolveSyncConflict(operationId, choice) {
+      const conflictIndex = pendingSyncConflicts.findIndex(conflict => conflict.operation.id === operationId);
+      const operationIndex = pendingSyncOperations.findIndex(operation => operation.id === operationId);
+      if (conflictIndex < 0 || operationIndex < 0) return;
+
+      const conflict = pendingSyncConflicts[conflictIndex];
+      const operation = pendingSyncOperations[operationIndex];
+      if (choice === 'local') {
+        operation.beforeExists = conflict.remoteExists;
+        operation.beforeValue = offlineSync.clone(conflict.remoteValue);
+        operation.beforeIndex = conflict.remoteIndex;
+      } else {
+        offlineSync.apply(appData, operation, conflict.remoteExists, conflict.remoteValue, conflict.remoteIndex);
+        pendingSyncOperations.splice(operationIndex, 1);
+        lastSavedData = offlineSync.clone(appData);
+        localDataVersion += 1;
+        persistAppDataLocally();
+      }
+
+      pendingSyncConflicts.splice(conflictIndex, 1);
+      persistPendingSyncOperations();
+      renderSyncConflictModal();
+      refreshAllViews();
+      updateSyncIndicator();
+      if (!pendingSyncConflicts.length) {
+        closeSyncConflictModal();
+        if (pendingSyncOperations.length) schedulePendingSync();
+      }
+    }
+
+    function updateSyncIndicator() {
       const dot = document.getElementById('sync-status-dot');
       const txt = document.getElementById('sync-status-text');
       if (!dot || !txt) return;
-      if (isOnline) {
-        dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
-        txt.textContent = "Cloud Firebase Sync";
+      const conflictButton = document.getElementById('sync-conflict-button');
+      if (conflictButton) {
+        conflictButton.classList.toggle('hidden', pendingSyncConflicts.length === 0);
+        conflictButton.textContent = `Tinjau Konflik (${pendingSyncConflicts.length})`;
+      }
+      if (syncErrorMessage || offlineCacheErrorMessage) {
+        dot.className = 'w-2 h-2 rounded-full bg-rose-400';
+        txt.textContent = syncErrorMessage ? 'Perlu perhatian' : 'Cache offline gagal';
+        txt.title = syncErrorMessage || offlineCacheErrorMessage;
+      } else if (pendingSyncConflicts.length) {
+        dot.className = 'w-2 h-2 rounded-full bg-rose-400';
+        txt.textContent = `${pendingSyncConflicts.length} konflik data`;
+        txt.title = 'Pilih versi perangkat atau cloud untuk melanjutkan sinkronisasi.';
+      } else if (!navigator.onLine || !isFirebaseConnected) {
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+        txt.textContent = pendingSyncOperations.length
+          ? `${pendingSyncOperations.length} perubahan menunggu`
+          : 'Mode Offline (Lokal)';
+        txt.title = 'Data disimpan di perangkat dan akan disinkronkan saat Firebase tersambung.';
+      } else if (isSyncingPendingChanges) {
+        dot.className = 'w-2 h-2 rounded-full bg-sky-400 animate-pulse';
+        txt.textContent = 'Menyinkronkan...';
+        txt.title = '';
+      } else if (pendingSyncOperations.length) {
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+        txt.textContent = `${pendingSyncOperations.length} perubahan menunggu`;
+        txt.title = 'Perubahan lokal menunggu sinkronisasi.';
+      } else if (!hasInitialRemoteSnapshot) {
+        dot.className = 'w-2 h-2 rounded-full bg-sky-400 animate-pulse';
+        txt.textContent = 'Menghubungkan Firebase...';
+        txt.title = '';
       } else {
-        dot.className = "w-2 h-2 rounded-full bg-amber-400";
-        txt.textContent = "Mode Offline (Local)";
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+        txt.textContent = 'Tersinkron dengan Firebase';
+        txt.title = '';
       }
     }
+
+    function registerOfflineSupport() {
+      if (!('serviceWorker' in navigator)) {
+        offlineCacheErrorMessage = 'Cache offline memerlukan HTTPS atau localhost.';
+        updateSyncIndicator();
+        return;
+      }
+      navigator.serviceWorker.register('./service-worker.js').then(() => {
+        offlineCacheErrorMessage = '';
+        updateSyncIndicator();
+      }).catch(error => {
+        console.error('Cache POS offline gagal disiapkan:', error);
+        offlineCacheErrorMessage = 'Cache offline gagal disiapkan. Buka POS online kembali untuk mencoba lagi.';
+        updateSyncIndicator();
+      });
+    }
+
+    window.addEventListener('online', () => {
+      syncErrorMessage = '';
+      if (isFirebaseConnected && pendingSyncOperations.length) {
+        uploadPendingClothPhotos().finally(schedulePendingSync);
+      }
+      updateSyncIndicator();
+    });
+    window.addEventListener('offline', updateSyncIndicator);
 
     // =========================================================================
     // 6. NAVIGASI TAB (9 MODUL), MOBILE DRAWER & STATISTIK ATAS
@@ -3715,8 +4226,10 @@
         }
         if (btn) {
           if (t === tabName) {
+            btn.setAttribute('aria-current', 'page');
             btn.className = "tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-bold transition bg-sky-600 text-white shadow-md";
           } else {
+            btn.removeAttribute('aria-current');
             btn.className = "tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition";
           }
         }
@@ -3934,6 +4447,9 @@
 
     function handleDeliveryTypeChange(val) {
       const mapSection = document.getElementById('delivery-map-section');
+      document.querySelectorAll('.delivery-choice-label').forEach(label => {
+        label.classList.toggle('is-selected', label.querySelector('input[type="radio"]')?.checked === true);
+      });
       if (val === 'Datang Sendiri') {
         mapSection.classList.add('hidden');
       } else {
@@ -4344,9 +4860,9 @@
         const priceUnitLabel = srv.unit === 'Bundle' ? `${srv.bundleKg || 7} Kg` : (srv.unit || 'Kg');
 
         return `
-          <label class="cursor-pointer">
+          <label class="pos-choice-label service-package-choice${checked ? ' is-selected' : ''} cursor-pointer">
             <input type="radio" name="kasir_service" value="${srv.id}" ${checked ? 'checked' : ''} onchange="updateWeightFieldLabelByService(); calculateKasirTotal()" class="peer sr-only" />
-            <div class="p-3 rounded-xl border-2 border-purple-200 bg-white peer-checked:border-purple-700 peer-checked:bg-purple-50 transition flex items-center justify-between gap-2 shadow-2xs">
+            <div class="service-package-card p-3 rounded-xl border-2 border-purple-200 bg-white peer-checked:border-purple-700 peer-checked:bg-purple-50 transition flex items-center justify-between gap-2 shadow-2xs">
               <div>
                 <div class="flex flex-wrap items-center gap-1">
                   <p class="text-xs font-extrabold text-slate-900">${srv.name}</p>
@@ -7090,26 +7606,36 @@ function recalculateDetailedPcsFromText() {
       try {
         const { blob, dataUrl } = await compressImageFile(file, 900, 0.72);
         let finalImageUrl = dataUrl;
+        let uploadPending = false;
 
-        if (CLOUDINARY_CLOUD_NAME && !CLOUDINARY_CLOUD_NAME.startsWith("GANTI_")) {
+        if (navigator.onLine && CLOUDINARY_CLOUD_NAME && !CLOUDINARY_CLOUD_NAME.startsWith("GANTI_")) {
           const formData = new FormData();
           formData.append('file', blob, `nota_${order.id}_${Date.now()}.jpg`);
           formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-          const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
-            method: 'POST',
-            body: formData
-          });
-          const data = await res.json();
-          if (data && data.secure_url) {
+          try {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+              method: 'POST',
+              body: formData
+            });
+            if (!res.ok) throw new Error(`Cloudinary membalas ${res.status}`);
+            const data = await res.json();
+            if (!data.secure_url) throw new Error('URL foto dari Cloudinary tidak tersedia.');
             finalImageUrl = data.secure_url;
+          } catch (uploadError) {
+            finalImageUrl = dataUrl;
+            uploadPending = true;
+            console.error('Foto disimpan lokal karena upload online gagal:', uploadError);
           }
+        } else if (CLOUDINARY_CLOUD_NAME && !CLOUDINARY_CLOUD_NAME.startsWith('GANTI_')) {
+          uploadPending = true;
         }
 
         if (!Array.isArray(order.clothPhotos)) order.clothPhotos = [];
         order.clothPhotos.push({
           id: 'IMG-' + Date.now(),
           url: finalImageUrl,
+          uploadPending,
           time: new Date().toLocaleString('id-ID')
         });
         saveData();
@@ -10202,6 +10728,7 @@ function recalculateDetailedPcsFromText() {
     document.addEventListener('DOMContentLoaded', () => {
       refreshAllViews();
       initFirebaseSync();
+      registerOfflineSupport();
     });
 
     // =========================================================================
@@ -11549,7 +12076,8 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       .ws-nav { display:grid; gap:5px; }
       .ws-nav button { display:flex; min-height:44px; align-items:center; gap:11px; padding:0 12px; color:#a9b8c5; text-align:left; background:transparent; border:1px solid transparent; border-radius:13px; cursor:pointer; transition:background .2s,color .2s,transform .2s; }
       .ws-nav button:hover { color:#f0fbff; background:rgba(255,255,255,.06); transform:translateX(2px); }
-      .ws-nav button.active { color:#d7fffc; background:linear-gradient(100deg,rgba(34,178,173,.19),rgba(38,101,114,.1)); border-color:rgba(119,234,224,.16); }
+      .ws-nav button.active { color:#d7fffc; background:linear-gradient(100deg,rgba(34,178,173,.19),rgba(38,101,114,.1)); border-color:rgba(119,234,224,.3); box-shadow:inset 3px 0 #43d5cb,0 7px 18px rgba(15,91,99,.17); transform:translateX(2px); font-weight:800; }
+      #workspace-shell .ws-nav button:not(:disabled):active { transform:translateY(1px) scale(.97); filter:brightness(.93); box-shadow:inset 0 2px 6px rgba(15,23,42,.18); }
       .ws-nav button span { flex:1; font-size:12px; font-weight:600; }
       .ws-nav button svg { width:18px; height:18px; }
       .ws-sidebar-bottom { display:grid; gap:10px; margin-top:auto; padding:16px 8px 3px; color:#9aacb7; font-size:11px; }
@@ -11652,7 +12180,8 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       .ws-caption { color:#566874; font-size:11px; }
       .ws-nav button { color:#435563; }
       .ws-nav button:hover { color:#142d39; background:rgba(18,65,73,.08); }
-      .ws-nav button.active { color:#145955; background:linear-gradient(100deg,rgba(34,178,173,.16),rgba(38,101,114,.08)); border-color:rgba(30,124,118,.2); }
+      .ws-nav button.active { color:#145955; background:linear-gradient(100deg,rgba(34,178,173,.2),rgba(38,101,114,.1)); border-color:rgba(30,124,118,.34); box-shadow:inset 3px 0 #279b94,0 7px 18px rgba(20,80,85,.12); transform:translateX(2px); font-weight:800; }
+      #workspace-shell .ws-nav button:not(:disabled):active { transform:translateY(1px) scale(.97); filter:brightness(.93); box-shadow:inset 0 2px 6px rgba(15,23,42,.16); }
       .ws-nav button span { font-size:13px; }
       .ws-sidebar-bottom { color:#4b5e6b; font-size:12px; }
       .ws-logout { color:#344854; background:rgba(255,255,255,.45); border-color:rgba(25,49,62,.13); }
@@ -12286,7 +12815,12 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       const tab = config.tabs.find(item => item[0] === id);
       if (!tab) return;
       activeTab = id;
-      shell.querySelectorAll('.ws-nav button').forEach(button => button.classList.toggle('active', button.dataset.tab === id));
+      shell.querySelectorAll('.ws-nav button').forEach(button => {
+        const isActive = button.dataset.tab === id;
+        button.classList.toggle('active', isActive);
+        if (isActive) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
       document.getElementById('workspace-breadcrumb').textContent = `${config.label}  /  ${tab[1]}`;
       document.getElementById('workspace-subtitle').textContent = id === 'chat' || id === 'inbox'
         ? ''
@@ -12478,6 +13012,57 @@ document.addEventListener('DOMContentLoaded', initializeInternalChat, { once: tr
       icons.onload = renderIcons;
       document.head.append(icons);
     }
+  })();
+</script>
+<script>
+  (() => {
+    const feedbackTimers = new WeakMap();
+
+    function syncRadioChoiceLabels(root = document) {
+      const labels = [];
+      if (root instanceof Element && root.matches('label')) labels.push(root);
+      if (root.querySelectorAll) labels.push(...root.querySelectorAll('label'));
+
+      labels.forEach(label => {
+        const radio = label.querySelector('input[type="radio"]');
+        if (!radio) return;
+        label.classList.add('pos-choice-label');
+        label.classList.toggle('is-selected', radio.checked);
+      });
+    }
+
+    syncRadioChoiceLabels();
+    document.addEventListener('change', event => {
+      if (event.target instanceof HTMLInputElement && event.target.type === 'radio') {
+        syncRadioChoiceLabels();
+      }
+    });
+
+    new MutationObserver(records => {
+      records.forEach(record => {
+        record.addedNodes.forEach(node => {
+          if (node instanceof Element) syncRadioChoiceLabels(node);
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+
+    document.addEventListener('click', event => {
+      if (!(event.target instanceof Element)) return;
+      const target = event.target.closest(
+        'button:not(:disabled), .pos-choice-label, [role="button"], .cursor-pointer[onclick]'
+      );
+      if (!target) return;
+
+      const previousTimer = feedbackTimers.get(target);
+      if (previousTimer) clearTimeout(previousTimer);
+      target.classList.remove('pos-click-feedback');
+      void target.offsetWidth;
+      target.classList.add('pos-click-feedback');
+      feedbackTimers.set(target, setTimeout(() => {
+        target.classList.remove('pos-click-feedback');
+        feedbackTimers.delete(target);
+      }, 220));
+    }, true);
   })();
 </script>
 </body>
