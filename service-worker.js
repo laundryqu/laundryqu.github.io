@@ -1,4 +1,4 @@
-const CACHE_NAME = 'laundry-pos-shell-v2';
+const CACHE_NAME = 'laundry-pos-shell-v4';
 const SHELL_FILES = [
   'index.html',
   'pos.html',
@@ -6,7 +6,9 @@ const SHELL_FILES = [
   'agen.html',
   'poslaundry.html',
   'offline-sync.js',
-  'order-lists.js'
+  'order-lists.js',
+  'note-corrections.js',
+  'finance-dashboard.js'
 ];
 const EXCLUDED_HOSTS = ['api.cloudinary.com'];
 

@@ -12,7 +12,7 @@ export default defineConfig({
     apply: 'build',
     closeBundle() {
       mkdirSync(outputDirectory, { recursive: true });
-      ['poslaundry.html', 'offline-sync.js', 'order-lists.js', 'service-worker.js'].forEach(file => {
+      ['poslaundry.html', 'offline-sync.js', 'order-lists.js', 'note-corrections.js', 'finance-dashboard.js', 'service-worker.js'].forEach(file => {
         copyFileSync(resolve(projectRoot, file), resolve(outputDirectory, file));
       });
     }

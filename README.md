@@ -15,7 +15,14 @@ Laundry QU menyediakan halaman pelanggan, kasir, admin, dan agen. POS lama yang 
 
 - Pembuatan nota, pencatatan pembayaran, progres cucian, cetak ulang, arsip, laporan, dan data member.
 - Arsip dan riwayat cetak ulang memuat seluruh nota aktif yang tersimpan di backend, termasuk semua tahap pengerjaan dan status pembayaran; tidak ada batas tampilan 50/100 nota.
+- Dasbor admin menampilkan omset nota aktif, seluruh pengeluaran, keuntungan, dan jumlah/tagihan nota yang belum lunas. Dasbor agen menampilkan metrik dari nota agen yang sedang masuk.
+- Grafik dasbor menunjukkan tren harian untuk bulan terpilih dan bulanan untuk tahun terpilih. Omset dihitung dari nilai total nota aktif berdasarkan tanggal nota; pengeluaran dihitung dari arus kas keluar berdasarkan tanggal transaksi. Pengeluaran agen dibatasi pada arus kas keluar yang terkait dengan nota agen.
 - Penghapusan nota oleh admin bersifat soft-delete. Nota terhapus berada di **Sampah Nota** pada workspace admin, bukan di daftar nota aktif.
+- Admin dapat membuka seluruh nota aktif melalui **Arsip Nota** dan mengubah isi nota maupun alur pengerjaan hingga tahap selesai/diambil. Nomor nota dan nama pelanggan terkunci; perubahan lain tercatat per-field beserta nilai sebelum/sesudah, waktu, admin, dan alasan di bawah nota.
+- Perubahan jumlah kg/pcs menghitung ulang kuantitas layanan, subtotal, total, status pembayaran, dan kembalian. Nilai turunan tersebut juga dicatat di riwayat koreksi.
+- Jika jumlah pembayaran diubah sebelum pakaian diambil, aplikasi menambahkan arus kas koreksi masuk/keluar agar catatan pembayaran terkait mengikuti nilai baru. Pengeluaran lain seperti komisi agen tidak ikut diubah.
+- Saat nota dikoreksi setelah pakaian diambil, nilai keuangan pada laporan dan komisi tetap memakai snapshot sebelum koreksi; rincian nota dan alur tetap dapat diperbaiki.
+- Admin dapat menghapus nota dari detail arsip.
 - Admin dapat memulihkan nota. Data arus kas yang ditautkan ikut dipulihkan; penggunaan kuota paket member dikoreksi bila paket yang digunakan masih dapat dikenali. Jika paket sudah berubah atau kuota tidak mencukupi, aplikasi memberi peringatan untuk pemeriksaan manual.
 - Antrean sinkronisasi offline menyimpan perubahan lokal dan mendeteksi konflik saat tersambung kembali.
 
@@ -30,10 +37,14 @@ Laundry QU menyediakan halaman pelanggan, kasir, admin, dan agen. POS lama yang 
 ├── poslaundry.html         # Aplikasi POS dan alur transaksi utama
 ├── offline-sync.js         # Antrean sinkronisasi dan konflik offline
 ├── order-lists.js          # Pemfilteran dan pengurutan daftar nota aktif
+├── note-corrections.js     # Penguncian identitas nota dan rekonsiliasi pembayaran
+├── finance-dashboard.js    # Agregasi metrik dan tren dasbor
 ├── service-worker.js       # Cache halaman dan aset POS untuk offline
 ├── vite.config.js          # Build multi-halaman dan salin runtime POS
 └── tests/
-    └── order-lists.test.mjs
+    ├── order-lists.test.mjs
+    ├── note-corrections.test.mjs
+    └── finance-dashboard.test.mjs
 ```
 
 `backup_pos.html` adalah salinan lama dan bukan entry point build. `poslaundry.html` menjadi sumber kanonik POS untuk seluruh halaman peran.
