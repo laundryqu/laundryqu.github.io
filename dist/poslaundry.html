@@ -266,11 +266,22 @@
       @page {
         margin: 0;
       }
+      html,
+      body {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
       body * {
         visibility: hidden !important;
       }
       .no-print {
         visibility: hidden !important;
+      }
+      body.workspace-standalone::before,
+      body.workspace-standalone::after,
+      #workspace-shell {
+        display: none !important;
       }
       .printable-active,
       .printable-active * {
@@ -282,6 +293,7 @@
       .printable-active {
         display: block !important;
         position: absolute !important;
+        z-index: 2147483647 !important;
         left: 0 !important;
         top: 0 !important;
         width: var(--thermal-width) !important;
